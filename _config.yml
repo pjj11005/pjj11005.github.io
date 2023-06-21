@@ -48,6 +48,8 @@ author:
 
 # Add links to the sidebar.
 menu:
+  - title:             Baekjoon
+    url:               /baekjoon/
   - title:             CS study
     url:               /cs/
   - title:             About
