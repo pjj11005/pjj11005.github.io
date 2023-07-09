@@ -48,6 +48,8 @@ author:
 
 # Add links to the sidebar.
 menu:
+  - title:             ML/DL
+    url:               /mldl/
   - title:             Baekjoon
     url:               /baekjoon/
   - title:             CS study
