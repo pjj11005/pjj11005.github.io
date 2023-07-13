@@ -188,7 +188,7 @@ printArray(arr, n)
 Hoare partition scheme 예시 코드 (시간 복잡도 $$O(n)$$)
 {:.figure}
 
-## 5. 결론
+## 결론
 
 1. 퀵 정렬은 평균 시간복잡도가 $$O(nlogn)$$인 빠르고 효율적인 정렬 알고리즘이라고 할 수 있다.
 
