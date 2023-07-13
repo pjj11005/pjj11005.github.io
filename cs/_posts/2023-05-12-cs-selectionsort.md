@@ -7,10 +7,13 @@ sitemap: false
 
 선택 정렬은 정렬 알고리즘 중 가장 기본적이면서 간단한 알고리즘 중 하나이다. 
 
-## 1. 정의 
+* this unordered seed list will be replaced by the toc
+{:toc}
+
+##  정의 
 선택 정렬은 정렬되지 않은 리스트에서 가장 작은 값을 찾아 첫 번째 위치와 교환하고, 그 다음으로 작은 값을 찾아 두 번째 위치와 교환하는 과정을 반복하여 정렬하는 알고리즘이다. 
 
-## 2. 동작 원리
+##  동작 원리
 
 1. 우선 주어진 리스트 중 최소값을 찾는다.
 2. 그 값을 맨 앞에 위치한 값과 교체한다.
@@ -21,7 +24,7 @@ sitemap: false
 Selection Sort 동작 방식
 {:.figure}
 
-## 3. 특성
+##  특징
 
 - 장점
 
@@ -34,10 +37,10 @@ Selection Sort 동작 방식
 
 - 단점
 
-    - 선택 정렬은 최악의 경우와 평균적인 경우에 O(n<sup>2</sup>)의 시간 복잡도를 가진다.
+    - 선택 정렬은 최악의 경우와 평균적인 경우에 $$O(n^{2})$$의 시간 복잡도를 가진다.
     - 큰 데이터 세트에서는 제대로 작동하지 않는다.
 
-## 4. 예시 코드
+##  구현 코드
 
 ~~~python
 # Python program for implementation of Selection
@@ -69,11 +72,11 @@ for i in range(len(A)):
 # 11 12 22 25 64 
 ~~~
 
-선택 정렬 구현 코드 예시 (시간 복잡도 O(n<sup>2</sup>))
+선택 정렬 구현 코드 예시 (시간 복잡도 $$O(n^{2})$$)
 {:.figure}
 
 
-#### **참고 문헌 및 사이트** 
+## **참고 문헌 및 사이트** 
 
 - [https://www.geeksforgeeks.org/selection-sort/](https://www.geeksforgeeks.org/selection-sort/)
 
