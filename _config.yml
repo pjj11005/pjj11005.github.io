@@ -22,6 +22,8 @@ lang:                  en
 # The title of your blog. Used in the sidebar and the browser tab.
 title:                 pjj11005
 
+timezone:              Asia/Seoul
+
 # A short description (~150 chars) of the page used for the meta description tag.
 # Can use markdown, but no more than one paragraph (enforced by `>`)
 description:           >
@@ -31,7 +33,7 @@ description:           >
 tagline:               꾸준함으로 승리한다
 
 # A list of keywords for your blog
-keywords:              [ML/DL]
+keywords:              [AI,ML,DL,CV,Developement]
 
 # A (square) logo for your site.
 # If provided, it will be shown at the top of the sidebar.
@@ -135,11 +137,11 @@ defaults:
       layout:          plain
       sitemap:         false
 
-  # # You can use the following to enable comments on all posts.
-  # - scope:
-  #     type:            posts
-  #   values:
-  #     comments:        true
+  # You can use the following to enable comments on all posts.
+  - scope:
+      type:            posts
+    values:
+      comments:        true
 
   # `jekyll-seo-tag` will mark collection outputs as `BlogPosting`,
   # but we want them to be `WebPage`s:
@@ -173,8 +175,20 @@ kramdown:
 # google_analytics:      UA-XXXXXXXX-X
 
 # Setting a disqus shortname will enable the comment section on
+comments:
+  # 'disqus' / 'giscus' / 'utterances' are available
+  provider:            utterances
+
+
+# "https://utteranc.es/client.js"
+utterances:
+  repo:             "pjj11005/pjj11005.github.io"
+  issue-term:       "pathname"
+  label:            "✨💬comments✨"
+  theme:            "photon-dark"
+
 # pages with `comments: true` in the front matter.
-# disqus:                <username>
+# disqus: <disqus shortname>
 
 # Setting a tinyletter username will enable the newsletter subscription box.
 # PRO version only!
