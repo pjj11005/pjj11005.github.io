@@ -1,14 +1,12 @@
 ---
 layout: about
-image: /assets/img/blog/hydejack-9.jpg
-description: >
-  A boutique Jekyll theme for hackers, nerds, and academics,
-  with a focus on personal sites that are meant to impress.
-hide_description: true
-redirect_from:
-  - /download/
+permalink: /about/
 ---
 
-# About
-
+# About 
 <!--author-->
+
+딥러닝 엔지니어로서 성장하려고 합니다.\
+꾸준하게 노력하는 개발자입니다.    
+## Education
+- 광운대학교 정보융합학부 데이터사이언스전공 재학 중 (2018~)
