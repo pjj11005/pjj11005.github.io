@@ -87,41 +87,6 @@ sitemap: false
         
         기본적으로 좌표를 이동 시키면서 조건에 맞을 때만 카운트 해주면 되었다.
     
-
-## 예제 문제
-
-- 예제 1: 왕실의 나이트
-    1. 내 풀이
-        
-        1. 우선 x,y방향으로 이동 좌표 배열 생성
-        
-        1. 그 후, 반복문을 통해 나이트가 이동 가능할 때만 카운트
-        
-        ```python
-        def solve(start_x,start_y):
-          global count
-          
-          for i in range(8):
-            nx,ny=start_x+dx[i],start_y+dy[i]
-            if 0<=nx<8 and 0<=ny<8:
-              count+=1
-        
-        start=input()
-        start_x,start_y=int(start[1])-1,ord(start[0])-ord('a')
-        dx=[2,2,-2,-2,-1,1,-1,1]
-        dy=[-1,1,-1,1,2,2,-2,-2]
-        count=0
-        solve(start_x,start_y)
-        print(count)
-        ```
-        
-    2. 풀이를 본 후
-        
-        이동 좌표를 한번에 정의할 수도 있었다…
-        
-    3. 해결한 후
-        
-        기본적으로 좌표를 이동 시키면서 조건에 맞을 때만 카운트 해주면 되었다.
         
 - 예제 2: 게임 개발
     1. 내 풀이
