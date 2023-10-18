@@ -222,7 +222,66 @@ sitemap: false
         숫자를 리스트로 바꾸는 방법말고 그저 문자열로 입력받고 처리하면 된다…
     
 
-
+- 기출 문제 2: 문자열 재정렬
+    1. 내 풀이
+        
+        1. 우선 알파벳은 리스트에 담고 숫자는 변수를 정해서 더해줬다.
+        
+        1. 그 후, 알파벳 리스트를 오름차순으로 정렬하고 숫자의 합과 연결시켜서 문자열을 만들었다.
+        
+        ```python
+        def solve(S):
+          eng=[]
+          num=0
+          
+          for i in S:
+            if 'A'<=i<='Z':
+              eng.append(i)
+            else:
+              num+=int(i)
+              
+          eng.sort()
+          eng_string = ''.join(eng)
+          answer=eng_string+str(num)
+          
+          return print(answer)
+          
+        S=input()
+        solve(S)
+        ```
+        
+    2. 풀이를 본 후
+        
+        isalpha()라는 함수에 대해서 알 수 있었다… 또한, 알파벳을 리스트에 담아 ‘’.join해줄 수도 있었다..
+        
+        ```python
+        data = input()
+        result = []
+        value = 0
+        
+        # 문자를 하나씩 확인하며
+        for x in data:
+            # 알파벳인 경우 결과 리스트에 삽입
+            if x.isalpha():
+                result.append(x)
+            # 숫자는 따로 더하기
+            else:
+                value += int(x)
+        
+        # 알파벳을 오름차순으로 정렬
+        result.sort()
+        
+        # 숫자가 하나라도 존재하는 경우 가장 뒤에 삽입
+        if value != 0:
+            result.append(str(value))
+        
+        # 최종 결과 출력(리스트를 문자열로 변환하여 출력)
+        print(''.join(result))
+        ```
+        
+    3. 해결한 후
+        
+        새로운 함수를 알 수 있었고 쉬운 문제였다…
     
 ## **참고 문헌 및 사이트** 
 
