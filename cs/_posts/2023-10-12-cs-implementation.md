@@ -283,41 +283,42 @@ sitemap: false
         
         새로운 함수를 알 수 있었고 쉬운 문제였다…
 
-    - 기출 문제 3: 문자열 압축
-    1. 내 풀이
-        
-        1. 단위의 수를 증가시키면서 압축할 수 있는 최소의 길이를 구하려고 했다.
-        
-        하지만 어떻게 구현할지 감이 오지 않았다… 
-        
-    2. 풀이를 본 후
-        
-        단위를 증가시키며 진행하는 것은 맞았다. 하지만, 단위 크기별로 인덱스를 이용하여 뒤의 문자와 비교하는 부분이 핵심이었다…
-        
-        ```python
-        def solution(s):
-            answer = len(s)
-            # 1개 단위(step)부터 압축 단위를 늘려가며 확인
-            for step in range(1, len(s) // 2 + 1):
-                compressed = ""
-                prev = s[0:step] # 앞에서부터 step만큼의 문자열 추출
-                count = 1
-                # 단위(step) 크기만큼 증가시키며 이전 문자열과 비교
-                for j in range(step, len(s), step):
-                    # 이전 상태와 동일하다면 압축 횟수(count) 증가
-                    if prev == s[j:j + step]:
-                        count += 1
-                    # 다른 문자열이 나왔다면(더 이상 압축하지 못하는 경우라면)
-                    else:
-                        compressed += str(count) + prev if count >= 2 else prev
-                        prev = s[j:j + step] # 다시 상태 초기화
-                        count = 1
-                # 남아있는 문자열에 대해서 처리
-                compressed += str(count) + prev if count >= 2 else prev
-                # 만들어지는 압축 문자열이 가장 짧은 것이 정답
-                answer = min(answer, len(compressed))
-            return answer
-        ```
+- 기출 문제 3: 문자열 압축
+
+1. 내 풀이
+    
+    1. 단위의 수를 증가시키면서 압축할 수 있는 최소의 길이를 구하려고 했다.
+    
+    하지만 어떻게 구현할지 감이 오지 않았다… 
+    
+2. 풀이를 본 후
+    
+    단위를 증가시키며 진행하는 것은 맞았다. 하지만, 단위 크기별로 인덱스를 이용하여 뒤의 문자와 비교하는 부분이 핵심이었다…
+    
+    ```python
+    def solution(s):
+        answer = len(s)
+        # 1개 단위(step)부터 압축 단위를 늘려가며 확인
+        for step in range(1, len(s) // 2 + 1):
+            compressed = ""
+            prev = s[0:step] # 앞에서부터 step만큼의 문자열 추출
+            count = 1
+            # 단위(step) 크기만큼 증가시키며 이전 문자열과 비교
+            for j in range(step, len(s), step):
+                # 이전 상태와 동일하다면 압축 횟수(count) 증가
+                if prev == s[j:j + step]:
+                    count += 1
+                # 다른 문자열이 나왔다면(더 이상 압축하지 못하는 경우라면)
+                else:
+                    compressed += str(count) + prev if count >= 2 else prev
+                    prev = s[j:j + step] # 다시 상태 초기화
+                    count = 1
+            # 남아있는 문자열에 대해서 처리
+            compressed += str(count) + prev if count >= 2 else prev
+            # 만들어지는 압축 문자열이 가장 짧은 것이 정답
+            answer = min(answer, len(compressed))
+        return answer
+    ```
     
 ## **참고 문헌 및 사이트** 
 
