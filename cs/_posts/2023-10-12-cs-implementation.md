@@ -321,6 +321,7 @@ sitemap: false
         ```
 
 - 기출 문제 4: 자물쇠와 열쇠
+
     1. 내 풀이
         
         1. 열쇠의 돌기 부분들 사이의 좌표 차이를 알아낸다.
@@ -383,6 +384,146 @@ sitemap: false
             return False
         ```
 
+- 기출 문제 5: 뱀
+
+    1. 내 풀이
+        
+        1.  우선 뱀의 머리, 꼬리, 현재 이동 방향 좌표 변수들을 정의
+        
+        1. 그 후, 시간이 지날 때마다 방향을 바꾸며 진행
+        2. 진행하면서 벽을 만나거나 자기 자신과 부딪히면 종료
+        
+        하지만 틀렸다…
+        
+        ```python
+        def change_direction(now_d,C):
+            if C=='D':
+                if now_d[0]==0:
+                    now_d[0],now_d[1]=now_d[1],now_d[0]
+                else:
+                    now_d[0],now_d[1]=now_d[1],-now_d[0]
+            else:
+                if now_d[0]==0:
+                    now_d[0],now_d[1]=-now_d[1],now_d[0]
+                else:
+                    now_d[0],now_d[1]=now_d[1],now_d[0]
+            return now_d
+        
+        def solve():
+            count=0
+            now_d=[0,1]
+            head,tail=[0,0],[0,0]
+            
+            for d in direction:
+                while count<=d[0]:
+                    x,y=head[0]+now_d[0],head[1]+now_d[1]
+                    if 0<=x<N and 0<=y<N:
+                        if board[x][y]==2:
+                            count+=1
+                            return print(count)
+                        elif board[x][y]==0:
+                            board[tail[0]][tail[1]]=0
+                            board[x][y]=2
+                            head=[x,y]
+                            tail[0]+=now_d[0]
+                            tail[1]+=now_d[1]
+                            count+=1
+                        else:
+                            board[x][y]=2
+                            head=[x,y]
+                            count+=1
+                    else:
+                        count+=1
+                        return print(count)
+                now_d=change_direction(now_d,d[1])
+                    
+        N=int(input())
+        board=[[0]*N for _ in range(N)]
+        K=int(input())
+        for i in range(K):
+            r,c=map(int,input().split())
+            board[r-1][c-1]=1
+        board[0][0]=2
+        L=int(input())
+        direction=[]
+        for i in range(L):
+            X,C=map(str,input().split())
+            direction.append((int(X),C))
+            
+        solve()
+        ```
+        
+    2. 풀이를 본 후
+        
+        >보드에서 뱀, 사과, 빈 공간이 차지하는 부분의 숫자 처리, 조건 처리 등 거의 유사했지만 마지막 처리를 하지 못했다… 마지막 방향 전환 이후에는 그냥 종료 조건까지 탐색 해야 하는데 그 조건을 넣지 않아 마지막 방향 전환 시간 이후에는 계속 종료가 되어버렸다…
+        >또한, 방향 전환의 처리를 조금 더 깔끔하게 할 수 있었다…
+        >**항상 조건을 끝까지 구현하는 것이 구현 문제의 핵심이다…**
+
+        ```python
+        n = int(input())
+        k = int(input())
+        data = [[0] * (n + 1) for _ in range(n + 1)] # 맵 정보
+        info = [] # 방향 회전 정보
+
+        # 맵 정보(사과 있는 곳은 1로 표시)
+        for _ in range(k):
+            a, b = map(int, input().split())
+            data[a][b] = 1
+
+        # 방향 회전 정보 입력
+        l = int(input())
+        for _ in range(l):
+            x, c = input().split()
+            info.append((int(x), c))
+
+        # 처음에는 오른쪽을 보고 있으므로(동, 남, 서, 북)
+        dx = [0, 1, 0, -1]
+        dy = [1, 0, -1, 0]
+
+        def turn(direction, c):
+            if c == "L":
+                direction = (direction - 1) % 4
+            else:
+                direction = (direction + 1) % 4
+            return direction
+
+        def simulate():
+            x, y = 1, 1 # 뱀의 머리 위치
+            data[x][y] = 2 # 뱀이 존재하는 위치는 2로 표시
+            direction = 0 # 처음에는 동쪽을 보고 있음
+            time = 0 # 시작한 뒤에 지난 '초' 시간
+            index = 0 # 다음에 회전할 정보
+            q = [(x, y)] # 뱀이 차지하고 있는 위치 정보(꼬리가 앞쪽)
+
+            while True:
+                nx = x + dx[direction]
+                ny = y + dy[direction]
+                # 맵 범위 안에 있고, 뱀의 몸통이 없는 위치라면
+                if 1 <= nx and nx <= n and 1 <= ny and ny <= n and data[nx][ny] != 2:
+                    # 사과가 없다면 이동 후에 꼬리 제거
+                    if data[nx][ny] == 0:
+                        data[nx][ny] = 2
+                        q.append((nx, ny))
+                        px, py = q.pop(0)
+                        data[px][py] = 0
+                    # 사과가 있다면 이동 후에 꼬리 그대로 두기
+                    if data[nx][ny] == 1:
+                        data[nx][ny] = 2
+                        q.append((nx, ny))
+                # 벽이나 뱀의 몸통과 부딪혔다면
+                else:
+                    time += 1
+                    break
+                x, y = nx, ny # 다음 위치로 머리를 이동
+                time += 1
+                if index < l and time == info[index][0]: # 회전할 시간인 경우 회전
+                    direction = turn(direction, info[index][1])
+                    index += 1
+            return time
+
+        print(simulate())
+        ```
+        
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
