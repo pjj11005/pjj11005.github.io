@@ -524,6 +524,54 @@ sitemap: false
         print(simulate())
         ```
 
+- 기출 문제 6: 기둥과 보 설치
+    
+    1. 내 풀이
+        
+        1. 우선 설치 및 삭제 가능을 확인하는 check함수 생성
+        2. build_frame 별로 check하며 작업이 가능할 때마다 기둥과 보 배열에 각각의 정보 저장
+        
+        하지만 삭제를 어떻게 구현할지 모르겠어서 실패했다…
+        
+    2. 풀이를 본 후
+        
+        >우선 굳이 기둥, 보의 좌표를 따로 저장할 필요 없이 그냥 answer 배열에 저장하면 되었다…
+        >
+        >**그리고, 삭제의 경우 삭제할 구조물과 인접해있는 요소를 생각하려고만 했다. 그런데 그게아니라 작업 진행 후 작업마다 전체 구조물의 상태를 보고 가능하면 작업 진행, 아니면 해당 작업 진행을 취소하면 된다…**
+        >
+        >부분적인 것만 보지말고 전체를 봐야겠다…
+        
+        ```python
+        # 현재 설치된 구조물이 '가능한' 구조물인지 확인하는 함수
+        def possible(answer):
+            for x, y, stuff in answer:
+                if stuff == 0: # 설치된 것이 '기둥'인 경우
+                    # '바닥 위' 혹은 '보의 한쪽 끝 부분 위' 혹은 '다른 기둥 위'라면 정상
+                    if y == 0 or [x - 1, y, 1] in answer or [x, y, 1] in answer or [x, y - 1, 0] in answer:
+                        continue
+                    return False # 아니라면 거짓(False) 반환
+                elif stuff == 1: # 설치된 것이 '보'인 경우
+                    # '한쪽 끝부분이 기둥 위' 혹은 '양쪽 끝부분이 다른 보와 동시에 연결'이라면 정상
+                    if [x, y - 1, 0] in answer or [x + 1, y - 1, 0] in answer or ([x - 1, y, 1] in answer and [x + 1, y, 1] in answer):
+                        continue
+                    return False # 아니라면 거짓(False) 반환
+            return True
+        
+        def solution(n, build_frame):
+            answer = []
+            for frame in build_frame: # 작업(frame)의 개수는 최대 1,000개
+                x, y, stuff, operate = frame
+                if operate == 0: # 삭제하는 경우
+                    answer.remove([x, y, stuff]) # 일단 삭제를 해본 뒤에
+                    if not possible(answer): # 가능한 구조물인지 확인
+                        answer.append([x, y, stuff]) # 가능한 구조물이 아니라면 다시 설치
+                if operate == 1: # 설치하는 경우
+                    answer.append([x, y, stuff]) # 일단 설치를 해본 뒤에
+                    if not possible(answer): # 가능한 구조물인지 확인
+                        answer.remove([x, y, stuff]) # 가능한 구조물이 아니라면 다시 제거
+            return sorted(answer) # 정렬된 결과를 반환
+        ```
+
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
