@@ -660,8 +660,7 @@ sitemap: false
         ```
         
         백트래킹으로 해결하는 풀이도 있었다…
-        
-        https://aigong.tistory.com/467
+        [https://aigong.tistory.com/467](https://aigong.tistory.com/467)
 
 
 ## **참고 문헌 및 사이트** 
