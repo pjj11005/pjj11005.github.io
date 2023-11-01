@@ -572,6 +572,98 @@ sitemap: false
             return sorted(answer) # 정렬된 결과를 반환
         ```
 
+- 기출 문제 7: 치킨 배달
+    
+    
+    1. 내 풀이
+        
+        1. 우선 치킨집과 집 사이의 거리를 나타내는 이차원 배열 생성
+        2. 그 후, 행의 합을 기준으로 오름차순 정렬 후, M개의 행을 선택
+        3. 그리고 각 열의 값중 최소값을 다 더해서 조시의 치킨거리 최소값 도출
+        
+        그런데 틀렸다…
+        
+        ```python
+        def solve():
+            answer = 0
+            sorted_distance = sorted(distance, key=lambda row: sum(row))
+            selected_rows = sorted_distance[:M]
+            for col in range(len(house)):
+                col_min = min(row[col] for row in selected_rows)
+                answer += col_min
+            
+            return print(answer)
+        
+        N, M = map(int, input().split())
+        city = [list(map(int, input().split())) for _ in range(N)]
+        house, chicken = [], []
+        for i in range(N):
+          for j in range(N):
+            if city[i][j] == 1:
+                house.append((i, j))
+            if city[i][j] == 2:
+                chicken.append((i, j))
+        
+        distance=[]
+        for c in chicken:
+            temp=[]
+            for h in house:
+                temp.append(abs(c[0]-h[0])+abs(c[1]-h[1]))
+            distance.append(temp)
+        
+        solve()
+        ```
+        
+    2. 풀이를 본 후
+        
+        >처음에 조합 라이브러리 사용을 생각했었지만 사용하지 않고 해결해보고 싶었다…
+        >
+        >풀이는 조합 라이브러리를 사용해서 간단하게 해결했다…
+        
+        ```python
+        from itertools import combinations
+        
+        n, m = map(int, input().split())
+        chicken, house = [], []
+        
+        for r in range(n):
+            data = list(map(int, input().split()))
+            for c in range(n):
+                if data[c] == 1:
+                    house.append((r, c)) # 일반 집
+                elif data[c] == 2:
+                    chicken.append((r, c)) # 치킨집
+        
+        # 모든 치킨 집 중에서 m개의 치킨 집을 뽑는 조합 계산
+        candidates = list(combinations(chicken, m))
+        
+        # 치킨 거리의 합을 계산하는 함수
+        def get_sum(candidate):
+            result = 0
+            # 모든 집에 대하여
+            for hx, hy in house:
+                # 가장 가까운 치킨 집을 찾기
+                temp = 1e9
+                for cx, cy in candidate:
+                    temp = min(temp, abs(hx - cx) + abs(hy - cy))
+                # 가장 가까운 치킨 집까지의 거리를 더하기
+                result += temp
+            # 치킨 거리의 합 반환
+            return result
+        
+        # 치킨 거리의 합의 최소를 찾아 출력
+        result = 1e9
+        for candidate in candidates:
+            result = min(result, get_sum(candidate))
+        
+        print(result)
+        ```
+        
+        백트래킹으로 해결하는 풀이도 있었다…
+        
+        https://aigong.tistory.com/467
+
+
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
