@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 재귀(Recursion)
+categories: 
+  - cs
+  - algorithm
 description: 재귀(Recursion) 관련 개념 정리글 입니다.
 sitemap: false
 ---

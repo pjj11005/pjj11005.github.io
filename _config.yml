@@ -52,10 +52,18 @@ author:
 menu:
   - title:             ML/DL
     url:               /mldl/
+    submenu:
+      - title:         DLCV
+        url:           /dlcv/ 
   - title:             Baekjoon
     url:               /baekjoon/
   - title:             CS study
     url:               /cs/
+    submenu:
+      - title:         Algorithm
+        url:           /algorithm/ 
+      - title:         Coding Test
+        url:           /codingtest/
   - title:             About
     url:               /about/
   

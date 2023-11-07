@@ -1,6 +1,9 @@
 ---
 layout: post
-title: 구현 (Implementation)
+title: 2. 구현 (Implementation)
+categories: 
+  - cs
+  - codingtest
 description: 이것이 취업을 위한 코딩테스트다 with 파이썬 책을 참고하여 **구현**을 공부한 내용입니다.
 sitemap: false
 ---

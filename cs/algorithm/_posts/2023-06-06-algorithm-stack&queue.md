@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 스택(Stack) & 큐(Queue)
+categories: 
+  - cs
+  - algorithm
 description: 스택(Stack) & 큐(Queue) 관련 개념 정리글 입니다.
 sitemap: false
 ---

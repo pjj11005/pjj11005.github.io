@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 해시(Hash)
+categories: 
+  - cs
+  - algorithm
 description: 해시(Hash) 관련 개념 정리글 입니다.
 sitemap: false
 ---

@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 트라이(Trie)
+categories: 
+  - cs
+  - algorithm
 description: 트라이(Trie) 관련 개념 정리글 입니다.
 sitemap: false
 ---

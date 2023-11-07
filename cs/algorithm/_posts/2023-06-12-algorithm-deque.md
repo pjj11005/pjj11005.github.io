@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 데크(Deque)
+categories: 
+  - cs
+  - algorithm
 description: 데크(Deque) 관련 개념 정리글 입니다.
 sitemap: false
 ---

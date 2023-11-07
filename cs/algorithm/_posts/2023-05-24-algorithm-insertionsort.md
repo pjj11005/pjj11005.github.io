@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 삽입 정렬(Insertion Sort)
+categories: 
+  - cs
+  - algorithm
 description: 삽입 정렬(Insertion Sort) 관련 개념 정리글 입니다.
 sitemap: false
 ---

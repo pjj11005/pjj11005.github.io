@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 배열(Array) & 연결 리스트(Linked List)
+categories: 
+  - cs
+  - algorithm
 description: 배열(Array)과 연결 리스트(Linked List) 관련 개념 정리글 입니다.
 sitemap: false
 ---

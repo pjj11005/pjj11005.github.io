@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 이진 트리(Binary Tree)
+categories: 
+  - cs
+  - algorithm
 description: 이진 트리(Binary Tree) 관련 개념 정리글 입니다.
 sitemap: false
 ---

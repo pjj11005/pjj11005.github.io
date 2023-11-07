@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 너비 우선 탐색(BFS)
+categories: 
+  - cs
+  - algorithm
 description: 너비 우선 탐색(BFS) 관련 개념 정리글 입니다.
 sitemap: false
 ---

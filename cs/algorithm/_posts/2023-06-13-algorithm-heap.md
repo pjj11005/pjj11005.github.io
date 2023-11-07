@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 힙(Heap)
+categories: 
+  - cs
+  - algorithm
 description: 힙(Heap) 관련 개념 정리글 입니다.
 sitemap: false
 ---

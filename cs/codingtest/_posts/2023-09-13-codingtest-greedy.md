@@ -1,7 +1,10 @@
 ---
 layout: post
-title: 그리디 알고리즘 (Greedy)
-description: 이것이 취업을 위한 코딩테스트다 with 파이썬 책을 참고하여 그리디 알고리즘을 공부한 내용입니다.
+title: 1. 그리디 알고리즘 (Greedy)
+categories: 
+  - cs
+  - codingtest
+description: 이것이 취업을 위한 코딩테스트다 with 파이썬 책을 참고하여 **그리디 알고리즘**을 공부한 내용입니다.
 sitemap: false
 ---
 

@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 퀵 정렬(Quick Sort)
+categories: 
+  - cs
+  - algorithm
 description: 퀵 정렬(Quick Sort) 관련 개념 정리글 입니다.
 sitemap: false
 ---

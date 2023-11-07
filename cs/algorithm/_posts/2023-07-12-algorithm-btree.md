@@ -1,6 +1,9 @@
 ---
 layout: post
 title: B 트리(B Tree)
+categories: 
+  - cs
+  - algorithm
 description: B 트리(B Tree) 관련 개념 정리글 입니다.
 sitemap: false
 ---

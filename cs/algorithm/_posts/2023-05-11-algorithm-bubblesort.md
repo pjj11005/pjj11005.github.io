@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 버블 정렬(Bubble Sort)
+categories: 
+  - cs
+  - algorithm
 description: 버블 정렬(Bubble Sort) 관련 개념 정리글 입니다.
 sitemap: false
 ---

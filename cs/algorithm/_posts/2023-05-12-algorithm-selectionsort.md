@@ -1,6 +1,9 @@
 ---
 layout: post
 title: 선택 정렬(Selection Sort)
+categories: 
+  - cs
+  - algorithm
 description: 선택 정렬(Selection Sort) 관련 개념 정리글 입니다.
 sitemap: false
 ---
