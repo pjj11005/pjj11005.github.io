@@ -149,3 +149,272 @@ sitemap: false
     | 구현 방법 | 재귀 함수 이용 | 큐 자료구조 이용 |
     
     1,2차원 배열을 그래프의 형태로 생각하여 문제 해결
+
+
+## 예제 문제
+
+- 예제 1: 음료수 얼려 먹기
+    1. 내 풀이
+        
+        1. 우선 DFS를 이용해서 얼음 틀이고 방문하지 않은 곳을 시작점으로 하여 얼음 탐색
+        
+        1. 반복하여 다른 얼음 들도 탐색하고 얼음의 개수 출력
+        
+        ```python
+        def solve(x,y):
+          for i in range(4):
+            nx,ny=x+dx[i],y+dy[i]
+            if 0<=nx<N and 0<=ny<M and ice[nx][ny]==0 and visited[nx][ny]==0:
+              visited[nx][ny]=1
+              solve(nx,ny)
+                
+        N,M=map(int,input().split())
+        ice=[list(map(int,input())) for _ in range(N)]
+        visited=[[0 for _ in range(M)] for _ in range(N)]
+        dx=[-1,1,0,0]
+        dy=[0,0,-1,1]
+        answer=0
+        
+        for i in range(N):
+          for j in range(M):
+            if ice[i][j]==0 and visited[i][j]==0:
+              visited[i][j]=1
+              solve(i,j)
+              answer+=1
+              
+        print(answer)
+        ```
+        
+    2. 풀이를 본 후
+        
+        우선 방문 노드를 만들지 않고도 방문한 얼음 틀은 1로 바꿔주면 된다. 나머지 부분은 나의 풀이와 비슷했다.
+        
+        ```python
+        # N, M을 공백을 기준으로 구분하여 입력 받기
+        n, m = map(int, input().split())
+        
+        # 2차원 리스트의 맵 정보 입력 받기
+        graph = []
+        for i in range(n):
+            graph.append(list(map(int, input())))
+        
+        # DFS로 특정한 노드를 방문한 뒤에 연결된 모든 노드들도 방문
+        def dfs(x, y):
+            # 주어진 범위를 벗어나는 경우에는 즉시 종료
+            if x <= -1 or x >= n or y <= -1 or y >= m:
+                return False
+            # 현재 노드를 아직 방문하지 않았다면
+            if graph[x][y] == 0:
+                # 해당 노드 방문 처리
+                graph[x][y] = 1
+                # 상, 하, 좌, 우의 위치들도 모두 재귀적으로 호출
+                dfs(x - 1, y)
+                dfs(x, y - 1)
+                dfs(x + 1, y)
+                dfs(x, y + 1)
+                return True
+            return False
+        
+        # 모든 노드(위치)에 대하여 음료수 채우기
+        result = 0
+        for i in range(n):
+            for j in range(m):
+                # 현재 위치에서 DFS 수행
+                if dfs(i, j) == True:
+                    result += 1
+        
+        print(result) # 정답 출력
+        ```
+        
+    3. 해결한 후
+        
+        DFS 문제는 종료 조건 설정과 종료 지점을 파악해서 구현하는 것이 중요한 것 같다.
+        
+- 예제 문제 2: 미로 탈출
+    1. 내 풀이
+        
+        1. 처음 위치의 좌표와 이동 칸의 수를 큐에 넣으며 BFS탐색
+        
+        1. 큐에 있는 좌표들을 모두 탐색한 후, 목표지점에 도달할 때 마다 이동 칸의 수를 갱신해준다.
+        2. 마지막에 answer값에 저장된 값을 출력
+        
+        ```python
+        from collections import deque
+        
+        def solve():
+          q=deque()
+          q.append((0,0,1))
+          visited[0][0]=1
+          answer=1e9
+          while q:
+            x,y,count=q.popleft()
+            for i in range(4):
+              nx,ny=x+dx[i],y+dy[i]
+        
+              if 0<=nx<N and 0<=ny<M and maze[nx][ny]==1 and visited[nx][ny]==0:
+                if nx==N-1 and ny==M-1:
+                  answer=min(answer,count+1)          
+                else:
+                  visited[nx][ny]=1
+                  q.append((nx,ny,count+1))
+        
+          return print(answer)
+          
+        N,M=map(int,input().split())
+        maze=[list(map(int,input())) for _ in range(N)]
+        visited=[[0 for _ in range(M)] for _ in range(N)]
+        dx=[-1,1,0,0]
+        dy=[0,0,-1,1]
+              
+        solve()
+        ```
+        
+    2. 풀이를 본 후
+        
+        우선 방문 노드 없이 수를 더해가며 값을 바꿔 갔고, 목표 지점에 제일 먼저 도달 할 때가 최소 거리가 되어 그저 먼저 도달하면 목표 지점의 값을 출력하면 된다.
+        
+        ```python
+        from collections import deque
+        
+        # N, M을 공백을 기준으로 구분하여 입력 받기
+        n, m = map(int, input().split())
+        # 2차원 리스트의 맵 정보 입력 받기
+        graph = []
+        for i in range(n):
+            graph.append(list(map(int, input())))
+        
+        # 이동할 네 가지 방향 정의 (상, 하, 좌, 우)
+        dx = [-1, 1, 0, 0]
+        dy = [0, 0, -1, 1]
+        
+        # BFS 소스코드 구현
+        def bfs(x, y):
+            # 큐(Queue) 구현을 위해 deque 라이브러리 사용
+            queue = deque()
+            queue.append((x, y))
+            # 큐가 빌 때까지 반복하기
+            while queue:
+                x, y = queue.popleft()
+                # 현재 위치에서 4가지 방향으로의 위치 확인
+                for i in range(4):
+                    nx = x + dx[i]
+                    ny = y + dy[i]
+                    # 미로 찾기 공간을 벗어난 경우 무시
+                    if nx < 0 or nx >= n or ny < 0 or ny >= m:
+                        continue
+                    # 벽인 경우 무시
+                    if graph[nx][ny] == 0:
+                        continue
+                    # 해당 노드를 처음 방문하는 경우에만 최단 거리 기록
+                    if graph[nx][ny] == 1:
+                        graph[nx][ny] = graph[x][y] + 1
+                        queue.append((nx, ny))
+            # 가장 오른쪽 아래까지의 최단 거리 반환
+            return graph[n - 1][m - 1]
+        
+        # BFS를 수행한 결과 출력
+        print(bfs(0, 0))
+        ```
+        
+    3. 해결한 후
+        
+        굳이 다른 변수들로 메모리를 할당하지 않고 효율적으로 할 수 있는 방법도 생각하면 좋을 것 같다.
+        
+
+## 기출 문제
+
+- 기출 문제 1: 특정 거리의 도시 찾기
+    1. 내 풀이
+        
+        1.  우선 간선의 정보를 저장한다.
+        
+        1. 그 후, BFS 탐색을 통해서 최단 거리가 K가 되는 도시들을 answer 배열에 저장한다.
+        2. 아무것도 없으면 -1을 존재하면 오름차순으로 정렬 후 출력
+        
+        PyPy3로 제출하니 맞았다…
+        
+        ```python
+        from collections import deque
+        
+        def solve():
+          q=deque()
+          q.append((X,0))
+          visited[X]=1
+          while q:
+            x,count=q.popleft()
+            for d in dist[x]:
+              if visited[d]==0:
+                if count+1==K:
+                  visited[d]=1
+                  answer.append(d)
+                else:
+                  visited[d]=1
+                  q.append((d,count+1))
+          
+        N,M,K,X=map(int,input().split())
+        dist=[[] for _ in range(N+1)]
+        for i in range(M):
+          a,b=map(int,input().split())
+          dist[a].append(b)
+          
+        visited=[0]*(N+1)
+        answer=[]   
+        solve()
+        
+        if len(answer)==0:
+          print(-1)
+        else:
+          answer.sort()
+          for a in answer:
+            print(a)
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이는 최단 거리 배열을 따로 만들어서 각 도시 까지의 최단 거리를 저장하면서 진행했다.
+        
+        시간은 내 풀이가 조금 더 빨랐다^^
+        
+        ```python
+        from collections import deque
+        
+        # 도시의 개수, 도로의 개수, 거리 정보, 출발 도시 번호
+        n, m, k, x = map(int, input().split())
+        graph = [[] for _ in range(n + 1)]
+        
+        # 모든 도로 정보 입력 받기
+        for _ in range(m):
+            a, b = map(int, input().split())
+            graph[a].append(b)
+        
+        # 모든 도시에 대한 최단 거리 초기화
+        distance = [-1] * (n + 1)
+        distance[x] = 0 # 출발 도시까지의 거리는 0으로 설정
+        
+        # 너비 우선 탐색(BFS) 수행
+        q = deque([x])
+        while q:
+            now = q.popleft()
+            # 현재 도시에서 이동할 수 있는 모든 도시를 확인
+            for next_node in graph[now]:
+                # 아직 방문하지 않은 도시라면
+                if distance[next_node] == -1:
+                    # 최단 거리 갱신
+                    distance[next_node] = distance[now] + 1
+                    q.append(next_node)
+        
+        # 최단 거리가 K인 모든 도시의 번호를 오름차순으로 출력
+        check = False
+        for i in range(1, n + 1):
+            if distance[i] == k:
+                print(i)
+                check = True
+        
+        # 만약 최단 거리가 K인 도시가 없다면, -1 출력
+        if check == False:
+            print(-1)
+        ```
+        
+    3. 해결한 후
+        
+        최단 거리나 가까운 거리부터 탐색을 진행하면 BFS로 해결할 수 있다. 또한, 문제 해결 시 조건을 제대로 파악하고 해결하자
