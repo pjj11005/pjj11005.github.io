@@ -154,6 +154,7 @@ sitemap: false
 ## 예제 문제
 
 - 예제 1: 음료수 얼려 먹기
+
     1. 내 풀이
         
         1. 우선 DFS를 이용해서 얼음 틀이고 방문하지 않은 곳을 시작점으로 하여 얼음 탐색
@@ -231,6 +232,7 @@ sitemap: false
         DFS 문제는 종료 조건 설정과 종료 지점을 파악해서 구현하는 것이 중요한 것 같다.
         
 - 예제 문제 2: 미로 탈출
+
     1. 내 풀이
         
         1. 처음 위치의 좌표와 이동 칸의 수를 큐에 넣으며 BFS탐색
@@ -324,6 +326,7 @@ sitemap: false
 ## 기출 문제
 
 - 기출 문제 1: 특정 거리의 도시 찾기
+
     1. 내 풀이
         
         1.  우선 간선의 정보를 저장한다.
@@ -418,3 +421,72 @@ sitemap: false
     3. 해결한 후
         
         최단 거리나 가까운 거리부터 탐색을 진행하면 BFS로 해결할 수 있다. 또한, 문제 해결 시 조건을 제대로 파악하고 해결하자
+
+- 기출 문제 2: 연구소
+
+    1. 내 풀이
+        
+        1. 우선 빈칸, 바이러스의 좌표를 저장해 놓는다.
+        2. 빈칸의 좌표들 중 3개를 골라서 만들 수 있는 조합을 리스트에 저장한다.
+        3. 조합 리스트를 돌면서 가장 작게 바이러스가 퍼질때의 칸의 수를 answer에 저장한다.
+        4. 마지막으로 빈칸의 개수에서 answer를 빼준다.
+        시간 초과가 발생했다.
+        
+        ```python
+        from collections import deque
+        from itertools import combinations
+        
+        def solve(x,y):
+          global count
+          for i in range(4):
+            nx,ny=x+dx[i],y+dy[i]
+            if 0<=nx<N and 0<=ny<M and visited[nx][ny]==0 and lab[nx][ny]==0:
+              visited[nx][ny]=1
+              lab[nx][ny]=2
+              count+=1
+              solve(nx,ny)
+              visited[nx][ny]=0
+              lab[nx][ny]=0
+         
+          
+        N,M=map(int,input().split())
+        lab=[list(map(int,input().split())) for _ in range(N)]
+        point=[]
+        virus=[]
+        dx=[-1,1,0,0]
+        dy=[0,0,-1,1]
+        for i in range(N):
+          for j in range(M):
+            if lab[i][j]==0:
+              point.append((i,j))
+            if lab[i][j]==2:
+              virus.append((i,j))
+              
+        comb_point=list(combinations(point, 3))
+        
+        visited=[[0]*M for _ in range(N)]
+        answer=64
+        
+        for comb in comb_point:
+          count=0
+          for c in comb:
+            lab[c[0]][c[1]]=1
+        
+          for v in virus:
+            solve(v[0],v[1])
+          
+          for c in comb:
+            lab[c[0]][c[1]]=0
+          
+          answer=min(answer,count)
+        
+        print(len(point)-answer)
+        ```
+        
+    2. 풀이를 본 후
+        
+        아이디어는 거의 유사했다. 하지만, 조합 라이브러리를 사용하지 않고 DFS 탐색 함수 내에서 완전 탐색을 이용해서 벽을 세워주고 그때마다 탐색을 해서 값을 구하도록 했다. 이 때, 안전 영역의 값은 그냥 완전 탐색하여 0의 좌표 수를 세어 주는 것으로 했다. 또한, 벽을 세울 때마다 저장할 임의의 배열도 만들었다. 
+        
+        조금만 신중하게 생각했다면 해결했을 것 같다…
+
+        
