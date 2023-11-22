@@ -329,10 +329,9 @@ sitemap: false
 
     1. 내 풀이
         
-        1.  우선 간선의 정보를 저장한다.
-        
-        1. 그 후, BFS 탐색을 통해서 최단 거리가 K가 되는 도시들을 answer 배열에 저장한다.
-        2. 아무것도 없으면 -1을 존재하면 오름차순으로 정렬 후 출력
+        1. 우선 간선의 정보를 저장한다.
+        2. 그 후, BFS 탐색을 통해서 최단 거리가 K가 되는 도시들을 answer 배열에 저장한다.
+        3. 아무것도 없으면 -1을 존재하면 오름차순으로 정렬 후 출력
         
         PyPy3로 제출하니 맞았다…
         
@@ -488,5 +487,171 @@ sitemap: false
         아이디어는 거의 유사했다. 하지만, 조합 라이브러리를 사용하지 않고 DFS 탐색 함수 내에서 완전 탐색을 이용해서 벽을 세워주고 그때마다 탐색을 해서 값을 구하도록 했다. 이 때, 안전 영역의 값은 그냥 완전 탐색하여 0의 좌표 수를 세어 주는 것으로 했다. 또한, 벽을 세울 때마다 저장할 임의의 배열도 만들었다. 
         
         조금만 신중하게 생각했다면 해결했을 것 같다…
-
         
+        ```python
+        # BOJ에서는 [언어]를 PyPy3로 설정하여 제출해주세요.
+        
+        n, m = map(int, input().split())
+        data = [] # 초기 맵 리스트
+        temp = [[0] * m for _ in range(n)] # 벽을 설치한 뒤의 맵 리스트
+        
+        for _ in range(n):
+            data.append(list(map(int, input().split())))
+        
+        # 4가지 이동 방향에 대한 리스트
+        dx = [-1, 0, 1, 0]
+        dy = [0, 1, 0, -1]
+        
+        result = 0
+        
+        # 깊이 우선 탐색(DFS)을 이용해 각 바이러스가 사방으로 퍼지도록 하기
+        def virus(x, y):
+            for i in range(4):
+                nx = x + dx[i]
+                ny = y + dy[i]
+                # 상, 하, 좌, 우 중에서 바이러스가 퍼질 수 있는 경우
+                if nx >= 0 and nx < n and ny >= 0 and ny < m:
+                    if temp[nx][ny] == 0:
+                        # 해당 위치에 바이러스 배치하고, 다시 재귀적으로 수행
+                        temp[nx][ny] = 2
+                        virus(nx, ny)
+        
+        # 현재 맵에서 안전 영역의 크기 계산하는 메서드
+        def get_score():
+            score = 0
+            for i in range(n):
+                for j in range(m):
+                    if temp[i][j] == 0:
+                        score += 1
+            return score
+        
+        # 깊이 우선 탐색(DFS)을 이용해 울타리를 설치하면서, 매 번 안전 영역의 크기 계산
+        def dfs(count):
+            global result
+            # 울타리가 3개 설치된 경우
+            if count == 3:
+                for i in range(n):
+                    for j in range(m):
+                        temp[i][j] = data[i][j]
+                # 각 바이러스의 위치에서 전파 진행
+                for i in range(n):
+                    for j in range(m):
+                        if temp[i][j] == 2:
+                            virus(i, j)
+                # 안전 영역의 최대값 계산
+                result = max(result, get_score())
+                return
+            # 빈 공간에 울타리를 설치
+            for i in range(n):
+                for j in range(m):
+                    if data[i][j] == 0:
+                        data[i][j] = 1
+                        count += 1
+                        dfs(count)
+                        data[i][j] = 0
+                        count -= 1
+        
+        dfs(0)
+        print(result)
+        ```
+        
+
+- 기출 문제 3: 경쟁적 전염
+    1. 내 풀이
+        1. 우선 초기 바이러스 위치, 바이러스 종류, 시간 값을 virus 리스트에 저장 후 작은 값부터 오름차순으로 정렬
+        2. 그 후, BFS탐색을 시행하여 시간 S까지 탐색
+        3. 최종적으로 X,Y 좌표 출력
+        
+        반복문 종료에서 어이없이 실수를 해서 조금 오래걸렸다.
+        
+        ```python
+         from collections import deque
+        
+        def solve():
+          q = deque(virus)
+          
+          while q:
+            x, y, v, time = q.popleft()
+            if time == S:
+              break
+              
+            for i in range(4):
+              nx, ny = x + dx[i], y + dy[i]
+              if 0 <= nx < N and 0 <= ny < N and test[nx][ny] == 0:
+                test[nx][ny] = v
+                q.append((nx, ny, v, time + 1))
+        
+        N, K = map(int, input().split())
+        test = [list(map(int, input().split())) for _ in range(N)]
+        S, X, Y = map(int, input().split())
+        
+        virus = []
+        for i in range(N):
+          for j in range(N):
+            if test[i][j] != 0:
+              virus.append((i, j, test[i][j],0))
+        
+        virus = sorted(virus, key=lambda x: x[2])
+        dx = [-1, 1, 0, 0]
+        dy = [0, 0, -1, 1]
+        
+        solve()
+        print(test[X - 1][Y - 1])
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이의 방법도 거의 유사했다.
+        
+        ```python
+        from collections import deque
+        
+        n, k = map(int, input().split())
+        
+        graph = [] # 전체 보드 정보를 담는 리스트
+        data = [] # 바이러스에 대한 정보를 담는 리스트
+        
+        for i in range(n):
+            # 보드 정보를 한 줄 단위로 입력
+            graph.append(list(map(int, input().split())))
+            for j in range(n):
+                # 해당 위치에 바이러스가 존재하는 경우
+                if graph[i][j] != 0:
+                    # (바이러스 종류, 시간, 위치 X, 위치 Y) 삽입
+                    data.append((graph[i][j], 0, i, j))
+        
+        # 정렬 이후에 큐로 옮기기 (낮은 번호의 바이러스가 먼저 증식하므로)
+        data.sort()
+        q = deque(data)
+         
+        target_s, target_x, target_y = map(int, input().split())
+         
+        # 바이러스가 퍼져나갈 수 있는 4가지의 위치
+        dx = [-1, 0, 1, 0]
+        dy = [0, 1, 0, -1]
+        
+        # 너비 우선 탐색(BFS) 진행
+        while q:
+            virus, s, x, y = q.popleft()
+            # 정확히 s초가 지나거나, 큐가 빌 때까지 반복
+            if s == target_s:
+                break
+            # 현재 노드에서 주변 4가지 위치를 각각 확인
+            for i in range(4):
+                nx = x + dx[i]
+                ny = y + dy[i]
+                # 해당 위치로 이동할 수 있는 경우
+                if 0 <= nx and nx < n and 0 <= ny and ny < n:
+                    # 아직 방문하지 않은 위치라면, 그 위치에 바이러스 넣기
+                    if graph[nx][ny] == 0:
+                        graph[nx][ny] = virus
+                        q.append((virus, s + 1, nx, ny))
+        
+        print(graph[target_x - 1][target_y - 1])
+        ```
+        
+    3. 해결한 후
+        
+        나의 풀이가 시간이 조금 더 빨랐다^^
+        
+        항상 반복문의 종료 조건, 탈출 조건을 조금 더 신중하게 고려하기 
