@@ -655,3 +655,100 @@ sitemap: false
         나의 풀이가 시간이 조금 더 빨랐다^^
         
         항상 반복문의 종료 조건, 탈출 조건을 조금 더 신중하게 고려하기 
+
+- 기출 문제 4: 괄호 변환
+    1. 내 풀이
+        1. 우선 앞에서부터 여는괄호와 닫는 괄호의 수를 세서 같아질 때까지가 u, 그리고 나머지가 v
+        2. 그 후, 조건에 맞게 함수 구현
+        
+        재귀적으로 탐색하면서 원본 문자열을 어떻게 처리할지 모르겠어서 실패
+        
+        ```python
+         from collections import deque
+        
+        def solution(p):
+          if p=='':
+            return ''
+            
+          answer = ''
+          u,v='',''
+          open_count,close_count=0,0
+          
+          for i in p:
+              if p[i]=='(':
+                  open_count+=1
+              else:
+                  close_count+=1
+          
+              if open_count-close_count==0:
+                  u=p[:i+1]
+                  v=p[i+1:]
+                  break
+        
+          if u[0]=='(':
+            answer=answer+u
+            solution(v)
+          else:
+            temp=
+                
+          return answer
+        
+        p=input()
+        ```
+        
+    2. 풀이를 본 후
+        
+        >주어진 조건을 그대로 실수 없이 차근차근 구현하는 것이 핵심이었다. 
+        >
+        >균형 잡힌 괄호 문자열 인덱스 반환, 올바른 괄호 문자열 판단 함수들을 구현하는 것이 중요했다.
+        >
+        >그 후, 재귀 함수 solution을 이용해서 조건대로 구현하고 그저 더해주면 된다. 원본 문자열에 재귀 함수를 더해주면 재귀적으로 탐색하면서 최종적인 문자열이 구해진다…
+        
+        ```python
+        # "균형잡힌 괄호 문자열"의 인덱스 반환
+        def balanced_index(p):
+            count = 0 # 왼쪽 괄호의 개수
+            for i in range(len(p)):
+                if p[i] == '(':
+                    count += 1
+                else:
+                    count -= 1
+                if count == 0:
+                    return i
+        
+        # "올바른 괄호 문자열"인지 판단
+        def check_proper(p):
+            count = 0 # 왼쪽 괄호의 개수
+            for i in p:
+                if i == '(':
+                    count += 1
+                else:
+                    if count == 0: # 쌍이 맞지 않는 경우에 False 반환
+                        return False
+                    count -= 1
+            return True # 쌍이 맞는 경우에 True 반환
+        
+        def solution(p):
+            answer = ''
+            if p == '':
+                return answer
+            index = balanced_index(p)
+            u = p[:index + 1]
+            v = p[index + 1:]
+            # "올바른 괄호 문자열"이면, v에 대해 함수를 수행한 결과를 붙여 반환
+            if check_proper(u):
+                answer = u + solution(v)
+            # "올바른 괄호 문자열"이 아니라면 아래의 과정을 수행
+            else:
+                answer = '('
+                answer += solution(v)
+                answer += ')'
+                u = list(u[1:-1]) # 첫 번째와 마지막 문자를 제거
+                for i in range(len(u)):
+                    if u[i] == '(':
+                        u[i] = ')'
+                    else:
+                        u[i] = '('
+                answer += "".join(u)
+            return answer
+        ```
