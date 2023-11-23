@@ -557,6 +557,7 @@ sitemap: false
         
 
 - 기출 문제 3: 경쟁적 전염
+
     1. 내 풀이
         1. 우선 초기 바이러스 위치, 바이러스 종류, 시간 값을 virus 리스트에 저장 후 작은 값부터 오름차순으로 정렬
         2. 그 후, BFS탐색을 시행하여 시간 S까지 탐색
@@ -657,6 +658,7 @@ sitemap: false
         항상 반복문의 종료 조건, 탈출 조건을 조금 더 신중하게 고려하기 
 
 - 기출 문제 4: 괄호 변환
+
     1. 내 풀이
         1. 우선 앞에서부터 여는괄호와 닫는 괄호의 수를 세서 같아질 때까지가 u, 그리고 나머지가 v
         2. 그 후, 조건에 맞게 함수 구현
@@ -752,3 +754,300 @@ sitemap: false
                 answer += "".join(u)
             return answer
         ```
+
+- 기출 문제 5:  연산자 끼워넣기
+
+    1. 내 풀이
+        1. DFS로 탐색하면서 연산자의 개수가 남아있는 것들을 탐색하도록 했다.
+        2. 연산을 N-1번 하면 최소, 최대값을 갱신시켜줬다.
+        
+        하지만 연산을 이어나가는 처리를 제대로 하지 못했다.
+        
+        ```python
+        from collections import deque
+        
+        def solve(sum,plus,minus,multi,divide,idx):
+          global minimum,maximum
+          if idx==N:
+            minimum=min(sum,minimum)
+            maximum=max(sum,maximum)
+            return
+            
+          for i in range(idx,N):
+            if plus>0:
+              solve(sum+A[i],plus-1,minus,multi,divide,idx+1)
+            if minus>0:
+              solve(sum-A[i],plus,minus-1,multi,divide,idx+1)
+            if multi>0:
+              solve(sum*A[i],plus,minus,multi-1,divide,idx+1)
+            if divide>0:
+              solve(sum/A[i],plus,minus,multi,divide-1,idx+1)
+        
+          return
+        
+        N=int(input())
+        A=list(map(int,input().split()))
+        op=list(map(int,input().split()))
+        
+        minimum=1e9
+        maximum=-1e9
+        solve(A[0],op[0],op[1],op[2],op[3],1)
+        print(maximum)
+        print(minimum)
+        ```
+        
+    2. 풀이를 본 후
+        
+        거의 맞았지만 안쪽에서 반복문을 돌 필요가 없었다. idx값이 어차피 증가하면서 연산할 값을 지정해주기 때문이다. 조금 신중하지 못했다.
+        
+        ```python
+        N = int(input())
+        num = list(map(int, input().split()))
+        op = list(map(int, input().split()))  # +, -, *, //
+        
+        maximum = -1e9
+        minimum = 1e9
+        
+        def dfs(depth, total, plus, minus, multiply, divide):
+            global maximum, minimum
+            if depth == N:
+                maximum = max(total, maximum)
+                minimum = min(total, minimum)
+                return
+        
+            if plus:
+                dfs(depth + 1, total + num[depth], plus - 1, minus, multiply, divide)
+            if minus:
+                dfs(depth + 1, total - num[depth], plus, minus - 1, multiply, divide)
+            if multiply:
+                dfs(depth + 1, total * num[depth], plus, minus, multiply - 1, divide)
+            if divide:
+                dfs(depth + 1, int(total / num[depth]), plus, minus, multiply, divide - 1)
+        
+        dfs(1, num[0], op[0], op[1], op[2], op[3])
+        print(maximum)
+        print(minimum)
+        ```
+        
+        내 예전 풀이
+        {:.figcaption}
+        
+        ```python
+        n = int(input())
+        # 연산을 수행하고자 하는 수 리스트
+        data = list(map(int, input().split()))
+        # 더하기, 빼기, 곱하기, 나누기 연산자 개수
+        add, sub, mul, div = map(int, input().split())
+        
+        # 최솟값과 최댓값 초기화
+        min_value = 1e9
+        max_value = -1e9
+        
+        # 깊이 우선 탐색 (DFS) 메서드
+        def dfs(i, now):
+            global min_value, max_value, add, sub, mul, div
+            # 모든 연산자를 다 사용한 경우, 최솟값과 최댓값 업데이트
+            if i == n:
+                min_value = min(min_value, now)
+                max_value = max(max_value, now)
+            else:
+                # 각 연산자에 대하여 재귀적으로 수행
+                if add > 0:
+                    add -= 1
+                    dfs(i + 1, now + data[i])
+                    add += 1
+                if sub > 0:
+                    sub -= 1
+                    dfs(i + 1, now - data[i])
+                    sub += 1
+                if mul > 0:
+                    mul -= 1
+                    dfs(i + 1, now * data[i])
+                    mul += 1
+                if div > 0:
+                    div -= 1
+                    dfs(i + 1, int(now / data[i])) # 나눌 때는 나머지를 제거
+                    div += 1
+        
+        # DFS 메서드 호출
+        dfs(1, data[0])
+        
+        # 최댓값과 최솟값 차례대로 출력
+        print(max_value)
+        print(min_value)
+        ```
+        
+        책의 풀이
+        {:.figcaption}
+
+        
+        >책의 풀이도 내 예전 풀이와 유사했다. DFS 문제 해결시 종료조건, 탐색하는 기본 방식을 생각하면서 풀어야겠다.
+        
+- 기출 문제 6: 감시 피하기
+
+    1. 내 풀이
+        1. 전체 복도에서 완전 탐색을 하여 벽을 3개 설치
+        2. 그 때마다 선생님을 상하좌우로 이동시켜서 벽 or 범위 밖 전까지 만나는 좌표들을 ‘T’로 변경
+        3. 그 후, 학생의 수의 변화 유무로 판단
+        
+        푸는데 1시간 반 정도가 걸렸다…
+        
+        ```python
+        def move(x,y,dx,dy):
+          while True:
+            nx,ny=x+dx,y+dy
+            if nx<0 or nx>=N or ny<0 or ny>=N:
+              break
+            if 0<=nx<N and 0<=ny<N:
+              if temp[nx][ny]=='O':
+                break
+              else:
+                temp[nx][ny]='T'
+                x,y=nx,ny
+              
+        def solve(count):
+          global answer
+          if count==3:
+            s_count=0
+            for i in range(N):
+              for j in range(N):
+                temp[i][j]=land[i][j]
+        
+            for i in range(4):
+              for t in teacher:
+                move(t[0],t[1],dx[i],dy[i])
+        
+            for i in range(N):
+              for j in range(N):
+                if temp[i][j]=='S':
+                  s_count+=1
+        
+            if s_count==len(student):
+              answer='YES'
+            return
+            
+          for i in range(N):
+            for j in range(N):
+              if land[i][j]=='X':
+                count+=1
+                land[i][j]='O'
+                solve(count)
+                count-=1
+                land[i][j]='X'
+                
+        N=int(input())
+        land=[list(input().split()) for _ in range(N)]
+        temp=[['']*N for _ in range(N)]
+        student=[]
+        teacher=[]
+        answer='NO'
+        
+        dx=[-1,1,0,0]
+        dy=[0,0,-1,1]
+        
+        for i in range(N):
+          for j in range(N):
+            if land[i][j]=='S':
+              student.append((i,j))
+            if land[i][j]=='T':
+              teacher.append((i,j))
+              
+        solve(0)
+        print(answer)
+        ```
+        
+    2. 풀이를 본 후
+        
+        조합과 감시에 걸렸는지를 판단하는 방식으로 진행했다. 감시할 방향 선정과 조합을 이용해서 빈 공간을 바꿨다가 다시 돌려놓는 방법이다. 이런 방법도 알아 놔야 할 것 같다. 
+        
+        ```python
+        from itertools import combinations
+        
+        n = int(input()) # 복도의 크기
+        board = [] # 복도 정보 (N x N)
+        teachers = [] # 모든 선생님 위치 정보
+        spaces = [] # 모든 빈 공간 위치 정보
+        
+        for i in range(n):
+            board.append(list(input().split()))
+            for j in range(n):
+                # 선생님이 존재하는 위치 저장
+                if board[i][j] == 'T':
+                    teachers.append((i, j))
+                # 장애물을 설치할 수 있는 (빈 공간) 위치 저장
+                if board[i][j] == 'X':
+                    spaces.append((i, j))
+        
+        # 특정 방향으로 감시를 진행 (학생 발견: True, 학생 미발견: False)
+        def watch(x, y, direction):
+            # 왼쪽 방향으로 감시
+            if direction == 0:
+                while y >= 0:
+                    if board[x][y] == 'S': # 학생이 있는 경우
+                        return True
+                    if board[x][y] == 'O': # 장애물이 있는 경우
+                        return False
+                    y -= 1
+            # 오른쪽 방향으로 감시
+            if direction == 1:
+                while y < n:
+                    if board[x][y] == 'S': # 학생이 있는 경우
+                        return True
+                    if board[x][y] == 'O': # 장애물이 있는 경우
+                        return False
+                    y += 1
+            # 위쪽 방향으로 감시
+            if direction == 2:
+                while x >= 0:
+                    if board[x][y] == 'S': # 학생이 있는 경우
+                        return True
+                    if board[x][y] == 'O': # 장애물이 있는 경우
+                        return False
+                    x -= 1
+            # 아래쪽 방향으로 감시
+            if direction == 3:
+                while x < n:
+                    if board[x][y] == 'S': # 학생이 있는 경우
+                        return True
+                    if board[x][y] == 'O': # 장애물이 있는 경우
+                        return False
+                    x += 1
+            return False
+        
+        # 장애물 설치 이후에, 한 명이라도 학생이 감지되는지 검사
+        def process():
+            # 모든 선생의 위치를 하나씩 확인
+            for x, y in teachers:
+                # 4가지 방향으로 학생을 감지할 수 있는지 확인
+                for i in range(4):
+                    if watch(x, y, i):
+                        return True
+            return False
+        
+        find = False # 학생이 한 명도 감지되지 않도록 설치할 수 있는지의 여부
+        
+        # 빈 공간에서 3개를 뽑는 모든 조합을 확인
+        for data in combinations(spaces, 3):
+            # 장애물들을 설치해보기
+            for x, y in data:
+                board[x][y] = 'O'
+            # 학생이 한 명도 감지되지 않는 경우
+            if not process():
+                # 원하는 경우를 발견한 것임
+                find = True
+                break
+            # 설치된 장애물을 다시 없애기
+            for x, y in data:
+                board[x][y] = 'X'
+        
+        if find:
+            print('YES')
+        else:
+            print('NO')
+        ```
+        
+    3. 해결한 후
+        
+        사실 처음의 아이디어는 책의 풀이와 같았지만 구현에서 어려움이 있어 변경했다. 최대한 아이디어를 구현해낼 수 있도록 연습이 필요하다.
+        
+        책의 풀이가 시간이 훨씬 적게 걸린다…
