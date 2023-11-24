@@ -1179,3 +1179,53 @@ sitemap: false
         # 인구 이동 횟수 출력
         print(total_count)
         ```
+
+- 기출 문제 8: 블록 이동하기
+    1. 내 풀이
+        1. 상하좌우, 회전 이동을 나누어서 BFS로 시행
+        2. N,N 좌표에 도달하면 시간 출력
+        
+        하지만 test case 4개만 정답, 나머지 10개 틀림
+        
+        ```python
+        from collections import deque
+        
+        def solution(board):
+            answer = 0
+            N=len(board)
+            visited1=[[0]*N for _ in range(N)]
+            visited2=[[0]*N for _ in range(N)]
+            dx1=[-1,1,0,0]
+            dx2=[-1,-1,1,1]
+            dy1=[0,0,-1,1]
+            dy2=[-1,1,-1,1]
+        
+            q=deque([(0,0,0,1,0)])
+            visited1[0][0],visited2[0][1]=1,1
+            while q:
+                x1,y1,x2,y2,time=q.popleft()
+                if (x1==N-1 and y1==N-1) or (x2==N-1 and y2==N-1):
+                    answer=time
+                    break
+                for i in range(4):
+                    nx1,ny1,nx2,ny2=x1+dx1[i],y1+dy1[i],x2+dx1[i],y2+dy1[i]
+                    if 0<=nx1<N and 0<=ny1<N and 0<=nx2<N and 0<=ny2<N:
+                        if board[nx1][ny1]==0 and board[nx2][ny2]==0 and visited1[nx1][ny1]==0 and visited2[nx2][ny2]==0:
+                            visited1[nx1][ny1],visited2[nx2][ny2]=1,1
+                            q.append((nx1,ny1,nx2,ny2,time+1))
+        
+                for i in range(4):
+                    nx1,ny1,nx2,ny2=x1+dx2[i],y1+dy2[i],x2+dx2[i],y2+dy2[i]
+                    if 0<=nx1<N and 0<=ny1<N and abs(nx1-x2)+abs(ny1-y2)==1:
+                        if board[nx1][ny1]==0 and (board[nx1][y1]==0 or board[x1][ny1]==0) and visited1[nx1][ny1]==0:
+                            visited1[nx1][ny1]=1
+                            q.append((nx1,ny1,x2,y2,time+1))
+                    if 0<=nx2<N and 0<=ny2<N and abs(x1-nx2)+abs(y1-ny2)==1:
+                        if board[nx2][ny2]==0 and (board[nx2][y2]==0 or board[x2][ny2]==0) and visited2[nx2][ny2]==0:
+                            visited2[nx2][ny2]=1
+                            q.append((x1,y1,nx2,ny2,time+1))  
+        
+            return answer
+        ```
+        
+    2. 풀이를 본 후
