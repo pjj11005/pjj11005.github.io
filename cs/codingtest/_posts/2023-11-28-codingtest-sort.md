@@ -408,3 +408,52 @@ sitemap: false
     3. 해결한 후
         
         sort(), sorted()에서 key 속성에 값을 대입하여 정렬 가능했고, 우선순위와 -유무로 튜플을 정렬할 수 있다는 사실을 알았다.
+
+
+- 기출 문제 2: 안테나
+
+    1. 내 풀이
+        1. 집의 위치 오름차순 정렬
+        2. 중간 인덱스와 그 다음 인덱스 위치의 값을 선정
+        3. 각각의 위치에서의 거리 측정
+        4. 비교하여 최소의 거리 위치 선정
+        
+        ```python
+        N = int(input())
+        
+        house = list(map(int, input().split()))
+        house.sort()
+        
+        index1=(N//2)-1
+        index2=index1+1
+        num1,num2=house[index1],house[index2]
+        sum1,sum2=0,0
+        
+        for h in house:
+          sum1+=abs(h-num1)
+          sum2+=abs(h-num2)
+        
+        if sum1<sum2:
+          print(num1)
+        elif sum1==sum2:
+          print(min(num1,num2))
+        else:
+          print(num2)
+        ```
+        
+    2. 풀이를 본 후
+        
+        단순히 중간 인덱스의 위치 값을 출력하면 해결되었다…
+        
+        ```python
+        n = int(input())
+        a = list(map(int, input().split()))
+        a.sort()
+        
+        # 중간값(median)을 출력
+        print(a[(n - 1) // 2])
+        ```
+        
+    3. 해결한 후
+        
+        조금 더 세심하게 생각해보는 것도 좋을 것 같다.
