@@ -457,3 +457,77 @@ sitemap: false
     3. 해결한 후
         
         조금 더 세심하게 생각해보는 것도 좋을 것 같다.
+
+- 기출 문제 3: 실패율
+
+    1. 내 풀이
+        1. 계수 정렬을 이용하여 N까지의 숫자는 따로 배열에 개수를 저장
+        2. N+1이상의 수의 개수는 overcount 변수에 합쳐서 저장
+        3. fail 배열에 stage수와 실패율 저장
+        4. 내림차순 및 오름차순 정렬 후 stage 값 answer에 저장
+        
+        메모리 용량이 작아 정답까지 꽤 걸렸다…
+        
+        ```python
+        def solution(N, stages):
+            answer = []
+            fail=[]
+            array=[0]*501
+            overcount=0
+            for stage in stages:
+                if stage>=N+1:
+                    overcount+=1
+                else:
+                    array[stage]+=1
+            
+            s=sum(array)+overcount
+            for i in range(1,N+1):
+                if array[i]==0:
+                    failure=0
+                else:
+                    failure=array[i]/s
+                fail.append((i,failure))
+                x=array[i]
+                s-=x
+            fail.sort(key=lambda x: (-x[1],x[0]))
+            
+            for f in fail:
+                answer.append(f[0])
+            return answer
+        ```
+        
+    2. 풀이를 본 후
+        
+        방법은 거의 비슷했다. 다만, count 함수 사용, 조건 분기의 차이, 배열을 하나 더 만들지 않은 점이 차이였다.
+        
+        ```python
+        def solution(N, stages):
+            answer = []
+            length = len(stages)
+        
+            # 스테이지 번호를 1부터 N까지 증가시키며
+            for i in range(1, N + 1):
+                # 해당 스테이지에 머물러 있는 사람의 수 계산
+                count = stages.count(i)
+                
+                # 실패율 계산
+                if length == 0:
+                    fail = 0
+                else:
+                    fail = count / length
+                
+                # 리스트에 (스테이지 번호, 실패율) 원소 삽입
+                answer.append((i, fail))
+                length -= count
+        
+            # 실패율을 기준으로 각 스테이지를 내림차순 정렬
+            answer = sorted(answer, key=lambda t: t[1], reverse=True)
+            
+            # 정렬된 스테이지 번호 반환
+            answer = [i[0] for i in answer]
+            return answer
+        ```
+        
+    3. 해결한 후
+        
+        count함수와 배열에서 한 가지의 원소만 빼낼 때의 방법도 알게 되었다.
