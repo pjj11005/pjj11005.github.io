@@ -56,7 +56,9 @@ menu:
     url:               /mldl/
     submenu:
       - title:         DLCV
-        url:           /dlcv/ 
+        url:           /dlcv/
+      - title:         Handson-ml2
+        url:           /handsonml2/
   - title:             Baekjoon
     url:               /baekjoon/
   - title:             CS study
