@@ -531,3 +531,59 @@ sitemap: false
     3. 해결한 후
         
         count함수와 배열에서 한 가지의 원소만 빼낼 때의 방법도 알게 되었다.
+
+- 기출 문제 4: 카드 정렬하기
+
+    1. 내 풀이
+        1. 입력된 카드 수들을 오름차순으로 정렬
+        2. 그리고 작은 수들을 최대한 많이 더하도록 하여 합을 구함
+        
+        하지만, (50,60,70,80)인 경우에는 다르게 나온다. 
+        
+        ```python
+        N = int(input())
+        num=[]
+        for i in range(N):
+          num.append(int(input()))
+        num.sort()
+        
+        result=num[0]*(N-1)
+        for i in range(1,N):
+          result+=num[i]*(N-i)
+        
+        print(result)
+        ```
+        
+    2. 풀이를 본 후
+        
+        카드를 두개 씩 합치면서 그 때 마다 가장 작은 두 카드를 합쳐야 한다. 따라서, 우선 순위 큐를 이용하여 해결했다.
+        
+        ```python
+        import heapq
+        
+        n = int(input())
+        
+        # 힙(Heap)에 초기 카드 묶음을 모두 삽입
+        heap = []
+        for i in range(n):
+            data = int(input())
+            heapq.heappush(heap, data)
+        
+        result = 0
+        
+        # 힙(Heap)에 원소가 1개 남을 때까지
+        while len(heap) != 1:
+            # 가장 작은 2개의 카드 묶음 꺼내기
+            one = heapq.heappop(heap)
+            two = heapq.heappop(heap)
+            # 카드 묶음을 합쳐서 다시 삽입
+            sum_value = one + two
+            result += sum_value
+            heapq.heappush(heap, sum_value)
+        
+        print(result)
+        ```
+        
+    3. 해결한 후
+        
+        문제의 상황을 자세히 보고 완벽히 이해해야 한다. 우선순위 큐를 이용하는 방법을 숙지하자.
