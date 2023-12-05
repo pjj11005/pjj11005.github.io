@@ -391,3 +391,70 @@ sitemap: false
     3. 해결한 후
         
         시간 제한을 지키기 위해 항상 고려를 해야 한다. 그리고 bisect 라이브러리에 대해서 알게 되었다.
+
+- 기출 문제 2: 고정점 찾기
+
+    1. 내 풀이
+        1. 중간 값과 중간 값이 가리키는 지점의 값을 기준으로 이진 탐색 진행
+        2. 찾으면 중간 값을 못 찾으면 -1을 출력한다.
+        
+        ```python
+        def binarysearch():
+          answer=-1
+          start,end=0,N-1
+          while start<=end:
+            mid=(start+end)//2
+        
+            if array[mid]==mid:
+              answer=mid
+              break
+            elif array[mid]>mid:
+              end=mid-1
+            else:
+              start=mid+1
+          return answer
+        
+        N = int(input())
+        array=list(map(int,input().split()))
+          
+        result=binarysearch()
+        print(result)
+        ```
+        
+    2. 풀이를 본 후
+        
+        나의 풀이를 재귀 형태로 구현했다.
+        
+        ```python
+        # 이진 탐색 소스코드 구현(재귀 함수)
+        def binary_search(array, start, end):
+            if start > end:
+                return None
+            mid = (start + end) // 2
+            # 고정점을 찾은 경우 인덱스 반환
+            if array[mid] == mid:
+                return mid
+            # 중간점이 가리키는 값보다 중간점이 작은 경우 왼쪽 확인
+            elif array[mid] > mid:
+                return binary_search(array, start, mid - 1)
+            # 중간점이 가리키는 값보다 중간점이 큰 경우 오른쪽 확인
+            else:
+                return binary_search(array, mid + 1, end)
+        
+        n = int(input())
+        array = list(map(int, input().split()))
+        
+        # 이진 탐색(Binary Search) 수행
+        index = binary_search(array, 0, n - 1)
+        
+        # 고정점이 없는 경우 -1 출력
+        if index == None:
+            print(-1)
+        # 고정점이 있는 경우 해당 인덱스 출력
+        else:
+            print(index)
+        ```
+        
+    3. 해결한 후
+        
+        이진 탐색에서는 비교 기준에 따라 탐색 범위를 지정하는 것이 중요하다.
