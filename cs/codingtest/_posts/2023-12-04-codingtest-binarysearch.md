@@ -307,3 +307,87 @@ sitemap: false
     3. 해결한 후
         
         이진 탐색의 기초 설정부터 다시 복습할 수 있는 좋은 문제였다.
+
+## 기출 문제
+
+- 기출 문제 1: 정렬된 배열에서 특정 수의 개수 구하기
+
+    1. 내 풀이
+        1. x를 찾을 때 가장 작은 인덱스, 가장 큰 인덱스를 찾는 함수를 구현
+        2. 두개의 인덱스 차를 이용해서 개수를 구한다.
+        
+        처음에는 계수 정렬로 구현했으나, 시간 초과를 막기 위해 인덱스를 찾는 함수 구현
+        
+        ```python
+        def binarysearch1(x):
+          idx=-1
+          start,end=0,N-1
+          while start<=end:
+            mid=(start+end)//2
+        
+            if array[mid]==x:
+              idx=mid
+              end=mid-1
+            elif array[mid]>x:
+              end=mid-1
+            else:
+              start=mid+1
+          return idx
+        
+        def binarysearch2(x):
+          idx=-1
+          start,end=0,N-1
+          while start<=end:
+            mid=(start+end)//2
+          
+            if array[mid]==x:
+              idx=mid
+              start=mid+1
+            elif array[mid]>x:
+              end=mid-1
+            else:
+              start=mid+1
+          return idx
+        
+        N,x = map(int,input().split())
+        array=list(map(int,input().split()))
+          
+        idx1=binarysearch1(x)
+        idx2=binarysearch2(x)
+        
+        if idx1==-1 and idx2==-1:
+          print(-1)
+        else:
+          print(idx2-idx1+1)
+        ```
+        
+    2. 풀이를 본 후
+        
+        재귀와 bisect라이브러리를 이용하여 해결했다. 방식은 내 풀이와 비슷했다.
+        
+        ```python
+        from bisect import bisect_left, bisect_right
+        
+        # 값이 [left_value, right_value]인 데이터의 개수를 반환하는 함수
+        def count_by_range(array, left_value, right_value):
+            right_index = bisect_right(array, right_value)
+            left_index = bisect_left(array, left_value)
+            return right_index - left_index
+        
+        n, x = map(int, input().split()) # 데이터의 개수 N, 찾고자 하는 값 x 입력 받기
+        array = list(map(int, input().split())) # 전체 데이터 입력 받기
+        
+        # 값이 [x, x] 범위에 있는 데이터의 개수 계산
+        count = count_by_range(array, x, x)
+        
+        # 값이 x인 원소가 존재하지 않는다면
+        if count == 0:
+            print(-1)
+        # 값이 x인 원소가 존재한다면
+        else:
+            print(count)
+        ```
+        
+    3. 해결한 후
+        
+        시간 제한을 지키기 위해 항상 고려를 해야 한다. 그리고 bisect 라이브러리에 대해서 알게 되었다.
