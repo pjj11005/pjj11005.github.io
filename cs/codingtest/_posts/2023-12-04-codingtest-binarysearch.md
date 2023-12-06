@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 5. 이진 탐색 (Binary Search)
+title: 이것이 취업을 위한 코딩테스트다 | 5. 이진 탐색 (Binary Search)
 categories: 
   - cs
   - codingtest

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 2. 구현 (Implementation)
+title: 이것이 취업을 위한 코딩테스트다 | 2. 구현 (Implementation)
 categories: 
   - cs
   - codingtest

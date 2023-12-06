@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 1. 그리디 알고리즘 (Greedy)
+title: 이것이 취업을 위한 코딩테스트다 | 1. 그리디 알고리즘 (Greedy)
 categories: 
   - cs
   - codingtest
