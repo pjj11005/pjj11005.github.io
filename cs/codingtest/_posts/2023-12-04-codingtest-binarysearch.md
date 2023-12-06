@@ -458,3 +458,87 @@ sitemap: false
     3. 해결한 후
         
         이진 탐색에서는 비교 기준에 따라 탐색 범위를 지정하는 것이 중요하다.
+
+- 기출 문제 3: 공유기 설치
+
+    1. 내 풀이
+        1. 집의 좌표 오름차순으로 정렬
+        2. 이진 탐색으로 mid값 구한 후 첫번째 집의 위치부터 mid이상으로 떨어진 집의 개수 구함
+        3. 집의 개수를 기준으로 최대거리 탐색 후 출력
+        
+        input()에서 시간 초과가 나와 PyPy3로 제출하니 해결했다. 푸는데 시간이 1시간 정도 걸렸다…
+        
+        ```python
+        def binarysearch():
+          answer=0
+          start,end=0,array[N-1]
+          while start<=end:
+            mid=(start+end)//2
+            count=1
+            temp=array[0]
+            for i in range(1,N):
+              if array[i]-temp>=mid:
+                count+=1
+                temp=array[i]
+        
+            if count>=C:
+              answer=mid
+              start=mid+1
+            else:
+              end=mid-1
+          return answer
+        
+        N,C= map(int,input().split())
+        array=[]
+        for i in range(N):
+          array.append(int(input()))
+        
+        array.sort()
+        result=0
+        if N==2:
+          result=array[1]-array[0]
+        else:
+          result=binarysearch()
+        print(result)
+        ```
+        
+    2. 풀이를 본 후
+        
+        나의 풀이와 거의 유사했다. start, end의 값을 인접 거리의 최소, 최대로 해줬다.
+        
+        ```python
+        # 집의 개수(N)와 공유기의 개수(C)를 입력 받기
+        n, c = list(map(int, input().split(' ')))
+        
+        # 전체 집의 좌표 정보를 입력 받기
+        array = []
+        for _ in range(n):
+             array.append(int(input()))
+        array.sort() # 이진 탐색 수행을 위해 정렬 수행
+        
+        start = 1 # 가능한 최소 거리(min gap)
+        end = array[-1] - array[0] # 가능한 최대 거리(max gap)
+        result = 0
+        
+        while(start <= end):
+            mid = (start + end) // 2 # mid는 가장 인접한 두 공유기 사이의 거리(gap)을 의미
+            # 첫째 집에는 무조건 공유기를 설치한다고 가정
+            value = array[0]
+            count = 1
+            # 현재의 mid 값을 이용해 공유기를 설치하기
+            for i in range(1, n): # 앞에서부터 차근차근 설치 
+                if array[i] >= value + mid:
+                    value = array[i]
+                    count += 1
+            if count >= c: # C개 이상의 공유기를 설치할 수 있는 경우, 거리를 증가시키기
+                start = mid + 1
+                result = mid # 최적의 결과를 저장
+            else: # C개 이상의 공유기를 설치할 수 없는 경우, 거리를 감소시키기
+                end = mid - 1
+        
+        print(result)
+        ```
+        
+    3. 해결한 후
+        
+        예전에 틀렸던 문제였지만 다시 보고 탐색할 값을 잘 지정하니 해결했다. 이진 탐색에서는 구하고자 하는 것을 기준으로 이진 탐색을 수행하면 된다.
