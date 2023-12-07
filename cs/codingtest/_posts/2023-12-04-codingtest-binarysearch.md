@@ -543,6 +543,90 @@ sitemap: false
         
         예전에 틀렸던 문제였지만 다시 보고 탐색할 값을 잘 지정하니 해결했다. 이진 탐색에서는 구하고자 하는 것을 기준으로 이진 탐색을 수행하면 된다.
 
+- 기출 문제 4: 가사 검색
+    1. 내 풀이
+        1. 검색 키워드의 “?”의 왼쪽 인덱스, 오른쪽 인덱스를 구한다.
+        2. 그 후, “?”부분이 접미사, 접두사, 전체일 때로 나누어 각 words의 단어들과 비교
+        3. 매치된 단어 수 answer 배열에 저장
+        
+        이진 탐색으로서의 풀이를 생각하지 못해 인덱스를 찾아 비교하는 방식으로 풀었다. 정확성은 통과 했지만, 효용성 테스트에서 몇 개가 틀렸다.
+        
+        >채점 결과\
+        >정확성: 25.0\
+        >효율성: 30.0\
+        >합계: 55.0 / 100.0
+        
+        ```python
+        def word_count(q,words):
+            count=0
+            n=len(q)
+            idx1=q.find("?")
+            idx2=q.rfind("?")
+            if idx1==0:
+                if idx2==n-1:
+                    for w in words:
+                        if len(w)==n:
+                            count+=1
+                else:
+                    for w in words:
+                        if len(w)==n and q[idx2+1:]==w[idx2+1:]:
+                            count+=1
+            else:
+                for w in words:
+                        if len(w)==n and q[:idx1]==w[:idx1]:
+                            count+=1
+            return count
+        
+        def solution(words, queries):
+            answer = []
+            for q in queries:
+                a=word_count(q,words)
+                answer.append(a)
+                        
+            return answer
+        ```
+        
+    2. 풀이를 본 후
+        
+        단어 리스트를 단어의 길이에 따라 나누고 정렬한다. 그 후, 키워드의 길이에 맞게 이진 탐색을 수행한다. ?가 아닌 나머지 부분이 일치하는 단어의 맨 왼쪽과 오른쪽 인덱스를 통해 개수를 구한다.
+        
+        **이진 탐색은 항상 정렬된 리스트를 탐색한다는 것을 알아야 한다…**
+        
+        ```python
+        from bisect import bisect_left, bisect_right
+        
+        # 값이 [left_value, right_value]인 데이터의 개수를 반환하는 함수
+        def count_by_range(a, left_value, right_value):
+            right_index = bisect_right(a, right_value)
+            left_index = bisect_left(a, left_value)
+            return right_index - left_index
+        
+        # 모든 단어들을 길이마다 나누어서 저장하기 위한 리스트
+        array = [[] for _ in range(10001)]
+        # 모든 단어들을 길이마다 나누어서 뒤집어 저장하기 위한 리스트
+        reversed_array = [[] for _ in range(10001)]
+        
+        def solution(words, queries):
+            answer = []
+            for word in words: # 모든 단어를 접미사 와일드카드 배열, 접두사 와일드카드 배열에 각각 삽입
+                array[len(word)].append(word) # 단어를 삽입
+                reversed_array[len(word)].append(word[::-1]) # 단어를 뒤집어서 삽입
+        
+            for i in range(10001): # 이진 탐색을 수행하기 위해 각 단어 리스트 정렬 수행
+                array[i].sort()
+                reversed_array[i].sort()
+        
+            for q in queries: # 쿼리를 하나씩 확인하며 처리
+                if q[0] != '?': # 접미사에 와일드 카드가 붙은 경우
+                    res = count_by_range(array[len(q)], q.replace('?', 'a'), q.replace('?', 'z'))
+                else: # 접두사에 와일드 카드가 붙은 경우
+                    res = count_by_range(reversed_array[len(q)], q[::-1].replace('?', 'a'), q[::-1].replace('?', 'z'))
+                # 검색된 단어의 개수를 저장
+                answer.append(res)
+            return answer
+        ```
+
+
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
