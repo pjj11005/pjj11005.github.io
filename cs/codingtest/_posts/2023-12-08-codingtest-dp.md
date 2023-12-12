@@ -174,7 +174,97 @@ sitemap: false
     3. 해결한 후
         
         보텀업 방식을 다시 제대로 보고 이전의 저장된 값을 이용하여 큰 문제를 해결하도록 코드를 구현해야한다. 그리고 최대한 시간복잡도가 $$O(N)$$이 되도록 구현해야한다…
+
+- 예제 2: 개미 전사
+    1. 내 풀이
+        1. n≥3일 때의 점화식 max(dp[n-2]+현재값, dp[n-1])을 구함
+        2. n번째까지 반복문 수행하여 dp[n] 값 출력
         
+        ```python
+        def solve(n):
+          for i in range(3,n+1):
+            dp[i]=max(dp[i-2]+array[i-1],dp[i-1])
+          return print(dp[n])
+              
+        n=int(input())
+        array=list(map(int,input().split()))
+        dp=[0]*(n+1)
+        dp[1]=array[0]
+        dp[2]=max(array[0],array[1])
+        solve(n)
+        ```
+        
+    2. 풀이를 본 후
+        
+        나와 같은 방식으로 구현
+        
+        ```python
+        # 정수 N을 입력 받기
+        n = int(input())
+        # 모든 식량 정보 입력 받기
+        array = list(map(int, input().split()))
+        
+        # 앞서 계산된 결과를 저장하기 위한 DP 테이블 초기화
+        d = [0] * 100
+        
+        # 다이나믹 프로그래밍(Dynamic Programming) 진행 (보텀업)
+        d[0] = array[0]
+        d[1] = max(array[0], array[1]) 
+        for i in range(2, n):
+            d[i] = max(d[i - 1], d[i - 2] + array[i])
+        
+        # 계산된 결과 출력
+        print(d[n - 1])
+        ```
+        
+    3. 해결한 후
+        
+        다이나믹 프로그래밍 = 보텀업 방식 + 작은 문제들을 합쳐서 큰 문제 해결을 숙지
+        
+
+- 예제 3: 바닥 공사
+    1. 내 풀이
+        1. n≥3일 때, n-2까지의 dp가 2번, n-1까지의 dp가 1번 더해지는 규칙 발견
+        2. 이를 이용하여 dp[n] 구함
+        
+        ```python
+        def solve(n):
+          for i in range(3,n+1):
+            dp[i]=(2*dp[i-2])+dp[i-1]
+          return print(dp[n]%796796)
+              
+        n=int(input())
+        dp=[0]*1001
+        dp[1]=1
+        dp[2]=3
+        solve(n)
+        ```
+        
+    2. 풀이를 본 후
+        
+        내 풀이와 같다.
+        
+        ```python
+        # 정수 N을 입력 받기
+        n = int(input())
+        
+        # 앞서 계산된 결과를 저장하기 위한 DP 테이블 초기화
+        d = [0] * 1001
+        
+        # 다이나믹 프로그래밍(Dynamic Programming) 진행 (보텀업)
+        d[1] = 1
+        d[2] = 3
+        for i in range(3, n + 1):
+            d[i] = (d[i - 1] + 2 * d[i - 2]) % 796796
+        
+        # 계산된 결과 출력
+        print(d[n])
+        ```
+        
+    3. 해결한 후
+        
+        타일 채우기 같은 그림 문제는 꼭 그림을 그려서 문제를 파악하자. 또한, 전체를 부분으로 나누어 관련성을 보면 빠르게 찾을 수 있다.
+
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
