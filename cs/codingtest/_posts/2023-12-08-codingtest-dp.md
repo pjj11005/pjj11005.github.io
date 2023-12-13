@@ -265,6 +265,209 @@ sitemap: false
         
         타일 채우기 같은 그림 문제는 꼭 그림을 그려서 문제를 파악하자. 또한, 전체를 부분으로 나누어 관련성을 보면 빠르게 찾을 수 있다.
 
+- 예제 4: 효율적인 화폐 구하기
+    1. 내 풀이
+        1. 화폐단위를 큰 단위부터 내림차순으로 정렬
+        2. 그 후, 화폐를 나누고 개수를 더해서 출력
+        
+        다이나믹 프로그래밍으로의 풀이를 구현 못해서 단순히 구현
+        
+        ```python
+        def solve(m):
+          count=0
+          for a in array:
+            if m==0:
+              break
+            else:
+              count+=m//a
+              m=(m%a)
+        
+          if m!=0:
+            return print(-1)
+          else:
+            return print(count)
+              
+        n,m=map(int,input().split())
+        array=[]
+        for i in range(n):
+          array.append(int(input()))
+        array.sort(reverse=True)
+        solve(m)
+        ```
+        
+    2. 풀이를 본 후
+        
+        우선, m을 기준으로 dp를 진행하고 인덱스를 이용하여 전에 만들 수 있는 값이 있으면 비교를 해주는 방법으로 진행한다…
+        
+        항상 구하고자 하는 것을 기준으로 한다면 해결 가능하다…
+        
+        ```python
+        # 정수 N, M을 입력 받기
+        n, m = map(int, input().split())
+        # N개의 화폐 단위 정보를 입력 받기
+        array = []
+        for i in range(n):
+            array.append(int(input()))
+        
+        # 한 번 계산된 결과를 저장하기 위한 DP 테이블 초기화
+        d = [10001] * (m + 1)
+        
+        # 다이나믹 프로그래밍(Dynamic Programming) 진행(보텀업)
+        d[0] = 0
+        for i in range(n):
+            for j in range(array[i], m + 1):
+                if d[j - array[i]] != 10001: # (i - k)원을 만드는 방법이 존재하는 경우
+                    d[j] = min(d[j], d[j - array[i]] + 1)
+        
+        # 계산된 결과 출력
+        if d[m] == 10001: # 최종적으로 M원을 만드는 방법이 없는 경우
+            print(-1)
+        else:
+            print(d[m])
+        ```
+
+## 기출 문제
+
+- 기출 문제 1: 금광
+    1. 내 풀이
+        1. 우선 입력된 값들을 array에 저장 후, 다시 dp에 저장한다.
+        2. 그 후, 왼쪽 위, 왼쪽, 왼쪽 아래에서 오는 경우 중 큰 값을 다음 열의 값에 더해간다.
+        3. 최종적으로 마지막 열의 값들 중에서 최대 값을 출력한다.
+        
+        ```python
+        def solve(n,m):
+          for i in range(1,m):
+            for j in range(n):
+              if j==0:
+                dp[j][i]+=max(dp[j+1][i-1],dp[j][i-1])
+              elif j==n-1:
+                dp[j][i]+=max(dp[j-1][i-1],dp[j][i-1])
+              else:
+                dp[j][i]+=max(dp[j-1][i-1],dp[j+1][i-1],dp[j][i-1])
+        
+          column = [row[m-1] for row in dp]
+          return print(max(column))
+          
+        T = int(input())
+        for i in range(T):
+          n, m = map(int, input().split())
+          array = list(map(int, input().split()))
+          dp = [[0]*m for _ in range(n)]
+          for i in range(n):
+            for j in range(m):
+              a=array.pop(0)
+              dp[i][j]=a
+          solve(n,m)
+        ```
+        
+    2. 풀이를 본 후
+        
+        dp에 저장할 때, 행을 기준으로 삽입하는 방법, 경우에 따라 값을 0으로 바꾸는 방법이 유용한것 같다.
+        
+        ```python
+        # 테스트 케이스(Test Case) 입력
+        for tc in range(int(input())):
+            # 금광 정보 입력
+            n, m = map(int, input().split())
+            array = list(map(int, input().split()))
+        
+            # 다이나믹 프로그래밍을 위한 2차원 DP 테이블 초기화
+            dp = []
+            index = 0
+            for i in range(n):
+                dp.append(array[index:index + m])
+                index += m
+        
+            # 다이나믹 프로그래밍 진행
+            for j in range(1, m):
+                for i in range(n):
+                    # 왼쪽 위에서 오는 경우
+                    if i == 0:
+                        left_up = 0
+                    else:
+                        left_up = dp[i - 1][j - 1]
+                    # 왼쪽 아래에서 오는 경우
+                    if i == n - 1:
+                        left_down = 0
+                    else:
+                        left_down = dp[i + 1][j - 1]
+                    # 왼쪽에서 오는 경우
+                    left = dp[i][j - 1]
+                    dp[i][j] = dp[i][j] + max(left_up, left_down, left)
+        
+            result = 0
+            for i in range(n):
+                result = max(result, dp[i][m - 1])
+        
+            print(result)
+        ```
+        
+    3. 해결한 후
+        
+        행을 기준으로 여러번 삽입하면 이차원 배열을 만들 수 있었다. 이 부분에서 조금 시간이 걸린 것 같다.
+        
+
+- 기출 문제 2: 정수 삼각형
+    1. 내 풀이
+        1. 양 끝의 지점 들은 각각 위쪽 줄의 바로 인접한 값들을 더해간다.
+        2. 나머지는 왼쪽 대각선 위, 오른쪽 대각선 위의 값들 중에서 큰 값을 더해간다.
+        3. 최종적으로 마지막 행의 값들 중에서 최대 값을 출력한다.
+        
+        ```python
+        def solve(n):
+          for i in range(1,n):
+            for j in range(i+1):
+              if j==0:
+                dp[i][j]+=dp[i-1][0]
+              elif j==i:
+                dp[i][j]+=dp[i-1][i-1]
+              else:
+                dp[i][j]+=max(dp[i-1][j-1],dp[i-1][j])
+          
+          return print(max(dp[n-1]))
+          
+        n = int(input())
+        dp=[]
+        for i in range(n):
+          array=list(map(int,input().split()))
+          dp.append(array)
+        solve(n)
+        ```
+        
+    2. 풀이를 본 후
+        
+        인덱스를 기준으로 값을 0으로 지정하여 구했다.
+        
+        ```python
+        n = int(input())
+        dp = [] # 다이나믹 프로그래밍을 위한 DP 테이블 초기화
+        
+        for _ in range(n):
+            dp.append(list(map(int, input().split())))
+        
+        # 다이나믹 프로그래밍으로 2번째 줄부터 내려가면서 확인
+        for i in range(1, n):
+            for j in range(i + 1):
+                # 왼쪽 위에서 내려오는 경우
+                if j == 0:
+                    up_left = 0
+                else:
+                    up_left = dp[i - 1][j - 1]
+                # 바로 위에서 내려오는 경우
+                if j == i:
+                    up = 0
+                else:
+                    up = dp[i - 1][j]
+                # 최대 합을 저장
+                dp[i][j] = dp[i][j] + max(up_left, up)
+        
+        print(max(dp[n - 1]))
+        ```
+        
+    3. 해결한 후
+        
+        책의 풀이와 같은 방법도 알고 있어야겠다.
+
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
