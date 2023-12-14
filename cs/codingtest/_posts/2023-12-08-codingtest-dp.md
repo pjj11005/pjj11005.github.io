@@ -468,6 +468,68 @@ sitemap: false
         
         책의 풀이와 같은 방법도 알고 있어야겠다.
 
+- 기출 문제 3: 퇴사
+    1. 내 풀이
+        1. 우선 임의의 날짜까지 얻을 수 있는 최대 수익을 갱신하면서 dp값으로 넣어준다.
+        2. 최종적으로 마지막 부분의 dp값이 얻을 수 있는 최대 이익이 된다.
+        
+        일수를 더해나가는 방식으로 너무 단순하게 생각해서 오래걸렸다…
+        
+        ```python
+        def solve(n):
+          for i in range(n+1):
+            for j in range(i):
+              if j+T[j] <= i:
+                dp[i]=max(dp[i],dp[j]+P[j])
+            
+          return print(dp[n])
+          
+        n = int(input())
+        dp=[0]*16
+        T,P=[],[]
+        for i in range(n):
+          t,p=map(int,input().split())
+          T.append(t)
+          P.append(p)
+        
+        solve(n)
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이는 뒤쪽 부터 최대 값을 지정하면서 진행해왔다. 
+        
+        ```python
+        n = int(input()) # 전체 상담 개수
+        t = [] # 각 상담을 완료하는데 걸리는 기간
+        p = [] # 각 상담을 완료했을 때 받을 수 있는 금액
+        dp = [0] * (n + 1) # 다이나믹 프로그래밍을 위한 1차원 DP 테이블 초기화
+        max_value = 0
+        
+        for _ in range(n):
+            x, y = map(int, input().split())
+            t.append(x)
+            p.append(y)
+        
+        # 리스트를 뒤에서부터 거꾸로 확인
+        for i in range(n - 1, -1, -1):
+            time = t[i] + i
+            # 상담이 기간 안에 끝나는 경우
+            if time <= n:
+                # 점화식에 맞게, 현재까지의 최고 이익 계산
+                dp[i] = max(p[i] + dp[time], max_value)
+                max_value = dp[i]
+            # 상담이 기간을 벗어나는 경우
+            else:
+                dp[i] = max_value
+        
+        print(max_value)
+        ```
+        
+    3. 해결한 후
+        
+        문제를 제대로 읽고 조건과 진행 상황을 제대로 파악해야한다.
+
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
