@@ -530,6 +530,61 @@ sitemap: false
         
         문제를 제대로 읽고 조건과 진행 상황을 제대로 파악해야한다.
 
+- 기출 문제 4: 병사 배치하기
+    1. 내 풀이
+        1. 우선 전투력 배열을 거꾸로 뒤집는다
+        2. 그 후, 증가하는 최대의 길이를 dp값으로 구한다
+        3. n-dp[n]으로 값을 구한다
+        
+        그런데 틀렸다. 
+        
+        ```python
+        def solve(n):
+          for i in range(1, n):
+            for j in range(i):
+              if array[i] >= array[j]:
+                dp[i + 1] = max(dp[i + 1], dp[j + 1] + 1)
+              else:
+                dp[i + 1] = max(dp[i + 1], dp[j + 1])
+        
+          return print(n - dp[n])
+        
+        n = int(input())
+        dp = [0] * 2001
+        dp[1] = 1
+        array = list(map(int, input().split()))
+        array.reverse()
+        solve(n)
+        ```
+        
+    2. 풀이를 본 후
+        
+        우선 풀이의 개념은 맞았지만 구현에서 문제가 있었다. 
+        
+        - 첫번째로 모든 dp테이블을 1로 두고 하는 것이 더 편했다.
+        - 두번째는 증가하는 부분이 아니면 넘어가야 한다. 증가하는 경우만 처리해야 정확하게 개수가 세어지기 때문이다.
+        - 마지막은 dp에서 최대 값을 빼줘야 한다. 항상 끝 부분에서 최대 길이가 나오지 않을 수 있기 때문이다.
+        
+        ```python
+        n = int(input())
+        array = list(map(int, input().split()))
+        # 순서를 뒤집어 '최장 증가 부분 수열' 문제로 변환
+        array.reverse()
+        
+        # 다이나믹 프로그래밍을 위한 1차원 DP 테이블 초기화
+        dp = [1] * n
+        
+        # 가장 긴 증가하는 부분 수열(LIS) 알고리즘 수행
+        for i in range(1, n):
+            for j in range(0, i):
+                if array[j] < array[i]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+        
+        # 열외해야 하는 병사의 최소 수를 출력
+        print(n - max(dp))
+        ```
+
+
 ## **참고 문헌 및 사이트** 
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
