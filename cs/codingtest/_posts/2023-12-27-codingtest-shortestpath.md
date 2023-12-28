@@ -441,7 +441,188 @@ for a in range(1, n + 1):
         
         우선순위 큐를 이용하여 다익스트라를 구현하는 방법을 반드시 외우고 있어야겠다.
 
+## 기출 문제
 
+- 기출 문제 1: 플로이드
+    1. 내 풀이
+        1. 플로이드 워셜 알고리즘을 이용하여 초기 테이블 생성
+        2. 이 때 도시간 이동 비용는 최소값을 넣어준다.
+        3. 최종적인 최소 이동 비용 출력 
+        
+        도시간 노선이 한개 이상, 도시간 이동 불가 처리를 추가적으로 해야했다.
+        
+        ```python
+        import sys
+        input=sys.stdin.readline
+        INF=int(1e9)
+        
+        def solve():
+          for k in range(1,N+1):
+            for i in range(1,N+1):
+              for j in range(1,N+1):
+                graph[i][j]=min(graph[i][j],graph[i][k]+graph[k][j])
+        
+          for i in range(1,N+1):
+            for j in range(1,N+1):
+              if graph[i][j]==INF:
+                print(0,end=" ")
+              else:
+                print(graph[i][j],end=" ")
+            print()
+        
+        N=int(input())
+        M=int(input())
+        graph=[[INF]*(N+1) for _ in range(N+1)]
+        
+        for i in range(1,N+1):
+          for j in range(1,N+1):
+            if i==j:
+              graph[i][j]=0
+              
+        for i in range(M):
+          a,b,c=map(int,input().split())
+          graph[a][b]=min(graph[a][b],c)
+        
+        solve()
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이도 같은 방법이다
+        
+        ```python
+        INF = int(1e9) # 무한을 의미하는 값으로 10억을 설정
+        
+        # 노드의 개수 및 간선의 개수를 입력받기
+        n = int(input())
+        m = int(input())
+        # 2차원 리스트(그래프 표현)를 만들고, 모든 값을 무한으로 초기화
+        graph = [[INF] * (n + 1) for _ in range(n + 1)]
+        
+        # 자기 자신에서 자기 자신으로 가는 비용은 0으로 초기화
+        for a in range(1, n + 1):
+            for b in range(1, n + 1):
+                if a == b:
+                    graph[a][b] = 0
+        
+        # 각 간선에 대한 정보를 입력받아, 그 값으로 초기화
+        for _ in range(m):
+            # A에서 B로 가는 비용은 C라고 설정
+            a, b, c = map(int, input().split())
+            # 가장 짧은 간선 정보만 저장
+            if c < graph[a][b]:
+                graph[a][b] = c
+        
+        # 점화식에 따라 플로이드 워셜 알고리즘을 수행
+        for k in range(1, n + 1):
+            for a in range(1, n + 1):
+                for b in range(1, n + 1):
+                    graph[a][b] = min(graph[a][b], graph[a][k] + graph[k][b])
+        
+        # 수행된 결과를 출력
+        for a in range(1, n + 1):
+            for b in range(1, n + 1):
+                # 도달할 수 없는 경우, 0을 출력
+                if graph[a][b] == INF:
+                    print(0, end=" ")
+                # 도달할 수 있는 경우 거리를 출력
+                else:
+                    print(graph[a][b], end=" ")
+            print()
+        ```
+        
+    3. 해결한 후
+        
+        플로이드 워셜 알고리즘 구현 방법은 알고있는게 당연하고 문제의 조건도 항상 유심히 봐야한다.
+        
+- 기출 문제 2: 정확한 순위
+    1. 내 풀이
+        1. 플로이드 워셜을 이용하여 최단거리의 모든 쌍을 구한다.
+        2. 특정 학생을 기준으로 다른 모든 학생들과 들어가고 나가고가 한번이라도 가능하면 정확한 순위를 알 수 있다.
+        3. 최종적인 정확한 순위 알 수 있는 학생의 수 출력
+        
+        ```python
+        import sys
+        input=sys.stdin.readline
+        INF=int(1e9)
+        
+        def solve():
+          count=0
+          for k in range(1,N+1):
+            for i in range(1,N+1):
+              for j in range(1,N+1):
+                graph[i][j]=min(graph[i][j],graph[i][k]+graph[k][j])
+        
+          for i in range(1,N+1):
+            temp=True
+            for j in range(1,N+1):
+              if graph[i][j]==INF and graph[j][i]==INF:
+                temp=False
+                break
+            if temp:
+              count+=1
+          return print(count)
+        
+        N,M=map(int,input().split())
+        graph=[[INF]*(N+1) for _ in range(N+1)]
+        
+        for i in range(1,N+1):
+          for j in range(1,N+1):
+            if i==j:
+              graph[i][j]=0
+              
+        for i in range(M):
+          a,b=map(int,input().split())
+          graph[a][b]=1
+        
+        solve()
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이도 같은 방법이다
+        
+        ```python
+        INF = int(1e9) # 무한을 의미하는 값으로 10억을 설정
+        
+        # 노드의 개수, 간선의 개수를 입력받기
+        n, m = map(int, input().split())
+        # 2차원 리스트(그래프 표현)를 만들고, 모든 값을 무한으로 초기화
+        graph = [[INF] * (n + 1) for _ in range(n + 1)]
+         
+        # 자기 자신에서 자기 자신으로 가는 비용은 0으로 초기화
+        for a in range(1, n + 1):
+            for b in range(1, n + 1):
+                if a == b:
+                    graph[a][b] = 0
+         
+        # 각 간선에 대한 정보를 입력 받아, 그 값으로 초기화
+        for _ in range(m):
+            # A에서 B로 가는 비용을 1로 설정
+            a, b = map(int, input().split())
+            graph[a][b] = 1
+         
+        # 점화식에 따라 플로이드 워셜 알고리즘을 수행
+        for k in range(1, n + 1):
+            for a in range(1, n + 1):
+                for b in range(1, n + 1):
+                    graph[a][b] = min(graph[a][b], graph[a][k] + graph[k][b])
+        
+        result = 0
+        # 각 학생을 번호에 따라 한 명씩 확인하며 도달 가능한지 체크
+        for i in range(1, n + 1):
+            count = 0
+            for j in range(1, n + 1):
+                if graph[i][j] != INF or graph[j][i] != INF:
+                    count += 1
+            if count == n:
+                result += 1
+        print(result)
+        ```
+        
+    3. 해결한 후
+        
+        정확한 순위를 알 수 있는 조건을 판단하는 것이 중요한 문제였다.
 
 ## 출처
 
