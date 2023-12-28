@@ -93,7 +93,7 @@ for i in range(len(arr)):
 입력이 무작위로 주어진 경우, 각 원소를 삽입할 위치를 찾기 위해 평균적으로 $$\frac{n}{2}$$번의 비교가 수행된다. 외부 반복문은 $$n-1$$번 실행되므로, 전체적인 시간 복잡도는 $$O(n^{2})$$이다.
 
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [https://www.geeksforgeeks.org/insertion-sort/](https://www.geeksforgeeks.org/insertion-sort/)
 

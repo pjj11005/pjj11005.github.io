@@ -169,10 +169,10 @@ class ArrayDeque:
             if not self.is_empty():
                 return self.tail.value
             return None
-~~~
+    ~~~
 
-연결리스트 기반 데크 코드 구현
-{:.figure}
+    연결리스트 기반 데크 코드 구현
+    {:.figure}
 
 ### 3. 구현 방법 비교
 
@@ -208,7 +208,7 @@ class ArrayDeque:
 - 예시: 함수 호출 스택, 우선순위 큐, 버퍼 관리, 프로세스 스케줄링 등
 
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [https://jee-young.tistory.com/31](https://jee-young.tistory.com/31)
 

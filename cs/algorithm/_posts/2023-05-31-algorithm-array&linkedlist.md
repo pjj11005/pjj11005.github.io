@@ -319,7 +319,7 @@ doubly_linked_list.traverse()
 이중 연결 리스트 순회/삽입/삭제 코드 구현
 {:.figure}
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [geeksforgeeks-Linked list](https://www.geeksforgeeks.org/data-structures/linked-list/)
 

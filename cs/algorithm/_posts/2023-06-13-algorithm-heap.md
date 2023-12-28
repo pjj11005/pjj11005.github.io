@@ -155,7 +155,7 @@ sitemap: false
 
 3. 최댓값 또는 최솟값 검색: 힙은 최댓값 또는 최솟값을 빠르게 찾을 수 있는 자료구조이다. 따라서 최댓값이나 최솟값을 반복적으로 찾아야 하는 상황에서 효율적으로 사용할 수 있다.
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [https://gmlwjd9405.github.io/2018/05/10/data-structure-heap.html](https://gmlwjd9405.github.io/2018/05/10/data-structure-heap.html)
 

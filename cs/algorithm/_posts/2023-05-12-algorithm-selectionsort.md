@@ -79,7 +79,7 @@ for i in range(len(A)):
 {:.figure}
 
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [https://www.geeksforgeeks.org/selection-sort/](https://www.geeksforgeeks.org/selection-sort/)
 

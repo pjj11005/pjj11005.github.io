@@ -185,7 +185,7 @@ sitemap: false
 
 3. 자연어 처리: 트라이는 자연어 처리 분야에서도 활용된다. 형태소 분석, 문장 구문 분석, 개체명 인식 등의 작업에서 단어들을 저장하고 검색하는 데에 트라이를 사용할 수 있다.
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [https://velog.io/@kimdukbae/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%ED%8A%B8%EB%9D%BC%EC%9D%B4-Trie](https://velog.io/@kimdukbae/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%ED%8A%B8%EB%9D%BC%EC%9D%B4-Trie)
 

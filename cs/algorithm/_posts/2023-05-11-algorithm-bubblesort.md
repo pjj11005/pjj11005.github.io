@@ -184,7 +184,7 @@ if __name__ == "__main__":
     - 최상의 경우는 배열이 이미 정렬되어 있을 때 발생한다.
 
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [https://www.geeksforgeeks.org/bubble-sort/](https://www.geeksforgeeks.org/bubble-sort/)
 

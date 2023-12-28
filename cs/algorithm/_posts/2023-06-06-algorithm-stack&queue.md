@@ -270,7 +270,7 @@ class LinkedListQueue:
     - 스택은 주로 요소의 추가와 제거가 스택의 맨 위에서 이루어지는 경우에 사용되고, 큐는 요소의 추가와 제거가 각각 한쪽 끝에서 이루어지는 경우에 사용된다.
 
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [jud00.tistory.com / 자료구조-스택Stack과-큐Queue에-대해서-알아보자](https://jud00.tistory.com/entry/%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%EC%8A%A4%ED%83%9DStack%EA%B3%BC-%ED%81%90Queue%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90)
 

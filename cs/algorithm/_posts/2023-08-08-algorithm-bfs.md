@@ -191,7 +191,7 @@ BFS의 단점:
 BFS와 DFS 특징 비교
 {:.figcaption}
 
-## **참고 문헌 및 사이트** 
+## 참고 문헌 및 사이트
 
 - [https://gmlwjd9405.github.io/2018/08/15/algorithm-bfs.html](https://gmlwjd9405.github.io/2018/08/15/algorithm-bfs.html)
 
