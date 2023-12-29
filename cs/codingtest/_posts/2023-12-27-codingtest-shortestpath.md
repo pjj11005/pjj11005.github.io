@@ -624,6 +624,220 @@ for a in range(1, n + 1):
         
         정확한 순위를 알 수 있는 조건을 판단하는 것이 중요한 문제였다.
 
+- 기출 문제 3: 화성 탐사
+    1. 내 풀이
+        1. 각 테스트 케이스 마다 방문하지 않은 노드를 방문하며 더해진 비용과 좌표 값을 넣는다.
+        2. (N-1,N-1)에 도달할 때 마다 최소 비용의 값을 갱신한다.
+        3. 우선순위 큐의 요소가 다 빠지면 최소 비용을 출력
+        
+        ```python
+        import heapq
+        import sys
+        input=sys.stdin.readline
+        INF=int(1e9)
+        
+        def solve(x,y):
+          answer=INF
+          q=[]
+          heapq.heappush(q,(graph[x][y],(x,y)))
+          visited[x][y]=1
+          while q:
+            cost,(x,y)=heapq.heappop(q)
+            if x==N-1 and y==N-1:
+              answer=min(answer,cost)
+              
+            for i in range(4):
+              nx,ny=x+dx[i],y+dy[i]
+              if 0<=nx<N and 0<=ny<N and not visited[nx][ny]:
+                visited[nx][ny]=1
+                heapq.heappush(q,(graph[nx][ny]+cost,(nx,ny)))
+                
+          return print(answer)
+        
+        T=int(input())
+        dx=[-1,1,0,0]
+        dy=[0,0,-1,1]
+        
+        for i in range(T):
+          N=int(input())
+          graph=[]
+          visited=[[0]*N for _ in range(N)]
+          for j in range(N):
+            graph.append(list(map(int,input().split())))
+        
+          solve(0,0)
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이는 다익스트라 알고리즘을 정석으로 사용하여 따로 최단 거리 2차원 테이블을 만들어 주었다. 방문의 개념이 아닌 처리된 적이 있는 지로 해결했다.
+        
+        ```python
+        import heapq
+        import sys
+        input = sys.stdin.readline
+        INF = int(1e9) # 무한을 의미하는 값으로 10억을 설정
+        
+        dx = [-1, 0, 1, 0]
+        dy = [0, 1, 0, -1]
+        
+        # 전체 테스트 케이스(Test Case)만큼 반복
+        for tc in range(int(input())):
+            # 노드의 개수를 입력받기
+            n = int(input())
+        
+            # 전체 맵 정보를 입력받기
+            graph = []
+            for i in range(n):
+                graph.append(list(map(int, input().split())))
+        
+            # 최단 거리 테이블을 모두 무한으로 초기화
+            distance = [[INF] * n for _ in range(n)]
+        
+            x, y = 0, 0 # 시작 위치는 (0, 0)
+            # 시작 노드로 가기 위한 비용은 (0, 0) 위치의 값으로 설정하여, 큐에 삽입
+            q = [(graph[x][y], x, y)]
+            distance[x][y] = graph[x][y]
+        
+            # 다익스트라 알고리즘을 수행
+            while q:
+                  # 가장 최단 거리가 짧은 노드에 대한 정보를 꺼내기
+                  dist, x, y = heapq.heappop(q)
+                  # 현재 노드가 이미 처리된 적이 있는 노드라면 무시
+                  if distance[x][y] < dist:
+                      continue
+                  # 현재 노드와 연결된 다른 인접한 노드들을 확인
+                  for i in range(4):
+                      nx = x + dx[i]
+                      ny = y + dy[i]
+                      # 맵의 범위를 벗어나는 경우 무시
+                      if nx < 0 or nx >= n or ny < 0 or ny >= n:
+                          continue
+                      cost = dist + graph[nx][ny]
+                      # 현재 노드를 거쳐서, 다른 노드로 이동하는 거리가 더 짧은 경우
+                      if cost < distance[nx][ny]:
+                          distance[nx][ny] = cost
+                          heapq.heappush(q, (cost, nx, ny))
+        
+            print(distance[n - 1][n - 1])
+        ```
+        
+    3. 해결한 후
+        
+        다익스트라 알고리즘으로서의 최단 거리 테이블을 이용하는 풀이를 외우고 있자
+        
+- 기출 문제 4: 숨바꼭질
+    1. 내 풀이
+        1. 다익스트라 알고리즘을 이용하여 1을 출발점으로 하는 최단거리 테이블을 완성한다.
+        2. 그 후, 가장 큰 값을 갖는 요소들을 answer배열에 저장
+        3. 조건에 맞게 출력
+        
+        ```python
+        import heapq
+        import sys
+        input=sys.stdin.readline
+        INF=int(1e9)
+        
+        def solve(start):
+          q=[]
+          heapq.heappush(q,(0,start))
+          while q:
+            cost, x = heapq.heappop(q)
+            for g in graph[x]:
+              if distance[g[0]]>cost+g[1]:
+                distance[g[0]]=cost+g[1]
+                heapq.heappush(q,(distance[g[0]],g[0]))
+          
+          answer=[]
+          maximum=max(distance[1:])
+          for i in range(1,N+1):
+            if distance[i]==maximum:
+              answer.append(i)
+              
+          return print(answer[0], maximum, len(answer))
+        
+        N,M=map(int,input().split())
+        graph=[[] for _ in range(N+1)]
+        distance=[INF]*(N+1)
+        distance[1]=0
+        for i in range(M):
+          a,b=map(int,input().split())
+          graph[a].append((b,1))
+          graph[b].append((a,1))
+          
+        solve(1)
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이는 다익스트라 알고리즘을 사용하여 나와 거의 비슷하게 풀었다. 다만, 이미 처리된 노드를 무시하는 코드를 내 코드에서는 구현하지 않았다. 
+        
+        ```python
+        import heapq
+        import sys
+        input = sys.stdin.readline
+        INF = int(1e9) # 무한을 의미하는 값으로 10억을 설정
+        
+        # 노드의 개수, 간선의 개수를 입력받기
+        n, m = map(int, input().split())
+        # 시작 노드를 1번 헛간으로 설정
+        start = 1
+        # 각 노드에 연결되어 있는 노드에 대한 정보를 담는 리스트를 만들기
+        graph = [[] for i in range(n + 1)]
+        # 최단 거리 테이블을 모두 무한으로 초기화
+        distance = [INF] * (n + 1)
+        
+        # 모든 간선 정보를 입력받기
+        for _ in range(m):
+            a, b = map(int, input().split())
+            # a번 노드와 b번 노드의 이동 비용이 1이라는 의미(양방향)
+            graph[a].append((b, 1))
+            graph[b].append((a, 1))
+        
+        def dijkstra(start):
+            q = []
+            # 시작 노드로 가기 위한 최단 경로는 0으로 설정하여, 큐에 삽입
+            heapq.heappush(q, (0, start))
+            distance[start] = 0
+            while q: # 큐가 비어있지 않다면
+                # 가장 최단 거리가 짧은 노드에 대한 정보를 꺼내기
+                dist, now = heapq.heappop(q)
+                # 현재 노드가 이미 처리된 적이 있는 노드라면 무시
+                if distance[now] < dist:
+                    continue
+                # 현재 노드와 연결된 다른 인접한 노드들을 확인
+                for i in graph[now]:
+                    cost = dist + i[1]
+                    # 현재 노드를 거쳐서, 다른 노드로 이동하는 거리가 더 짧은 경우
+                    if cost < distance[i[0]]:
+                        distance[i[0]] = cost
+                        heapq.heappush(q, (cost, i[0]))
+        
+        # 다익스트라 알고리즘을 수행
+        dijkstra(start)
+        
+        # 가장 최단 거리가 먼 노드 번호(동빈이가 숨을 헛간의 번호)
+        max_node = 0
+        # 도달할 수 있는 노드 중에서, 가장 최단 거리가 먼 노드와의 최단 거리
+        max_distance = 0
+        # 가장 최단 거리가 먼 노드와의 최단 거리와 동일한 최단 거리를 가지는 노드들의 리스트
+        result = []
+        
+        for i in range(1, n + 1):
+            if max_distance < distance[i]:
+                max_node = i
+                max_distance = distance[i]
+                result = [max_node]
+            elif max_distance == distance[i]:
+                result.append(i)
+        
+        print(max_node, max_distance, len(result))
+        ```
+        
+    3. 해결한 후
+        
+        다익스트라 알고리즘에서 이미 처리된 노드를 재방문하지 않도록 하자
+
 ## 출처
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
