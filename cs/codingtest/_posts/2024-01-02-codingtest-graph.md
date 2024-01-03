@@ -336,7 +336,302 @@ topology_sort()
 - 모든 노드를 확인하면서 해당 노드에서 출발하는 간선을 확인하기 때문
 
 
+## 예제 문제
 
+- 예제 1: 팀 결성
+    1. 내 풀이
+        1. 서로소 집합 알고리즘을 이용하여 find, union 연산 구현
+        2. 그 후, 조건에 맞게 연산 수
+        
+        ```python
+        import sys
+        input=sys.stdin.readline
+        
+        def find_parent(parent, x):
+          if parent[x] != x:
+            parent[x] = find_parent(parent, parent[x])
+          return parent[x]
+          
+        def union(a,b):
+          a = find_parent(parent, a)
+          b = find_parent(parent, b)
+          if a<b:
+            parent[b]=a
+          else:
+            parent[a]=b
+        
+        N,M=map(int,input().split())
+        parent=[0]*(N+1)
+        
+        for i in range(N+1):
+          parent[i]=i
+          
+        for i in range(M):
+          op,a,b=map(int,input().split())
+          if op==0:
+            union(a,b)
+          else:
+            if find_parent(parent,a)==find_parent(parent,b):
+              print("YES")
+            else:
+              print("NO")
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이도 같다
+        
+        ```python
+        # 특정 원소가 속한 집합을 찾기
+        def find_parent(parent, x):
+            # 루트 노드가 아니라면, 루트 노드를 찾을 때까지 재귀적으로 호출
+            if parent[x] != x:
+                parent[x] = find_parent(parent, parent[x])
+            return parent[x]
+        
+        # 두 원소가 속한 집합을 합치기
+        def union_parent(parent, a, b):
+            a = find_parent(parent, a)
+            b = find_parent(parent, b)
+            if a < b:
+                parent[b] = a
+            else:
+                parent[a] = b
+        
+        n, m = map(int, input().split())
+        parent = [0] * (n + 1) # 부모 테이블 초기화
+        
+        # 부모 테이블상에서, 부모를 자기 자신으로 초기화
+        for i in range(0, n + 1):
+            parent[i] = i
+        
+        # 각 연산을 하나씩 확인
+        for i in range(m):
+            oper, a, b = map(int, input().split())
+            # 합치합(Union) 연산인 경우
+            if oper == 0:
+                union_parent(parent, a, b)
+            # 찾기(Find) 연산인 경우
+            elif oper == 1:
+                if find_parent(parent, a) == find_parent(parent, b):
+                    print('YES')
+                else:
+                    print('NO')
+        ```
+        
+    3. 해결한 후
+        
+        서로소 집합 알고리즘 연산들 구현 숙지
+        
+- 예제 2: 도시 분할 계획
+    1. 내 풀이
+        1. 크루스칼 알고리즘을 통해 최소 신장 트리를 구한다.
+        2. 그 후, 도시간의 간선 중에서 가장 큰 간선을 제거한다.
+        3. 마지막으로 간선들의 총합을 구한다.
+        
+        ```python
+        import sys
+        input=sys.stdin.readline
+        
+        def find_parent(parent, x):
+          if parent[x] != x:
+            parent[x] = find_parent(parent, parent[x])
+          return parent[x]
+          
+        def union(a,b):
+          a = find_parent(parent, a)
+          b = find_parent(parent, b)
+          if a<b:
+            parent[b]=a
+          else:
+            parent[a]=b
+        
+        N,M=map(int,input().split())
+        edges=[]
+        result=0
+        
+        parent=[0]*(N+1)
+        for i in range(N+1):
+          parent[i]=i
+          
+        for i in range(M):
+          a,b,cost=map(int,input().split())
+          edges.append((cost,a,b))
+        
+        edges.sort()
+        max_cost=0
+        for edge in edges:
+          cost,a,b=edge
+          if find_parent(parent, a) != find_parent(parent, b):
+            union(a,b)
+            max_cost=max(max_cost, cost)
+            result+=cost
+        
+        print(result-max_cost)
+        ```
+        
+    2. 풀이를 본 후
+        
+        풀이도 같다
+        
+        ```python
+        # 특정 원소가 속한 집합을 찾기
+        def find_parent(parent, x):
+            # 루트 노드가 아니라면, 루트 노드를 찾을 때까지 재귀적으로 호출
+            if parent[x] != x:
+                parent[x] = find_parent(parent, parent[x])
+            return parent[x]
+        
+        # 두 원소가 속한 집합을 합치기
+        def union_parent(parent, a, b):
+            a = find_parent(parent, a)
+            b = find_parent(parent, b)
+            if a < b:
+                parent[b] = a
+            else:
+                parent[a] = b
+        
+        # 노드의 개수와 간선(Union 연산)의 개수 입력받기
+        v, e = map(int, input().split())
+        parent = [0] * (v + 1) # 부모 테이블 초기화
+        
+        # 모든 간선을 담을 리스트와, 최종 비용을 담을 변수
+        edges = []
+        result = 0
+        
+        # 부모 테이블상에서, 부모를 자기 자신으로 초기화
+        for i in range(1, v + 1):
+            parent[i] = i
+        
+        # 모든 간선에 대한 정보를 입력받기
+        for _ in range(e):
+            a, b, cost = map(int, input().split())
+            # 비용순으로 정렬하기 위해서 튜플의 첫 번째 원소를 비용으로 설정
+            edges.append((cost, a, b))
+        
+        # 간선을 비용순으로 정렬
+        edges.sort()
+        last = 0 # 최소 신장 트리에 포함되는 간선 중에서 가장 비용이 큰 간선
+        
+        # 간선을 하나씩 확인하며
+        for edge in edges:
+            cost, a, b = edge
+            # 사이클이 발생하지 않는 경우에만 집합에 포함
+            if find_parent(parent, a) != find_parent(parent, b):
+                union_parent(parent, a, b)
+                result += cost
+                last = cost
+        
+        print(result - last)
+        ```
+        
+    3. 해결한 후
+        
+        도시간 거리의 최소 비용 등의 문제가 나오면 크루스칼 알고리즘 떠올리기
+        
+- 예제 3: 커리큘럼
+    1. 내 풀이
+        1. 위상 정렬과 강의 시간을 담을 리스트 구현
+        2. 알고리즘을 진행하면서 선행 과목의 강의 시간을 더해주면서 강의 시간 갱신
+        3. 최종적인 최소 수강 시간 출력
+        
+        ```python
+        from collections import deque
+        import sys
+        input=sys.stdin.readline
+        
+        def topology_sort():
+          q=deque()
+        
+          for i in range(1,N+1):
+            if indegree[i]==0:
+              q.append(i)
+        
+          while q:
+            now=q.popleft()
+            for i in graph[now]:
+              indegree[i]-=1
+              if indegree[i]==0:
+                result[i]+=result[now]
+                q.append(i)
+        
+          for i in range(1,N+1):
+            print(result[i])
+                
+        N=int(input())
+        indegree=[0]*(N+1)
+        graph=[[] for _ in range(N+1)]
+        result=[0]*(N+1)
+        
+        for i in range(N):
+          temp=list(map(int,input().split()))
+          result[i+1]=temp[0]
+          num=temp[1:-1]
+          for n in num:
+            graph[n].append(i+1)
+            indegree[i+1]+=1
+            
+        topology_sort()
+        ```
+        
+    2. 풀이를 본 후
+        
+        인접한 노드에 대해서 현재 저장된 시간보다 강의 시간이 더 긴 경우가 있다면 갱신을 해줘야한다. 
+        
+        ```python
+        from collections import deque
+        import copy
+        
+        # 노드의 개수 입력받기
+        v = int(input())
+        # 모든 노드에 대한 진입차수는 0으로 초기화
+        indegree = [0] * (v + 1)
+        # 각 노드에 연결된 간선 정보를 담기 위한 연결 리스트(그래프) 초기화
+        graph = [[] for i in range(v + 1)]
+        # 각 강의 시간을 0으로 초기화
+        time = [0] * (v + 1)
+        
+        # 방향 그래프의 모든 간선 정보를 입력받기
+        for i in range(1, v + 1):
+            data = list(map(int, input().split()))
+            time[i] = data[0] # 첫 번째 수는 시간 정보를 담고 있음
+            for x in data[1:-1]:
+                indegree[i] += 1
+                graph[x].append(i)
+        
+        # 위상 정렬 함수
+        def topology_sort():
+            result = copy.deepcopy(time) # 알고리즘 수행 결과를 담을 리스트
+            q = deque() # 큐 기능을 위한 deque 라이브러리 사용
+        
+            # 처음 시작할 때는 진입차수가 0인 노드를 큐에 삽입
+            for i in range(1, v + 1):
+                if indegree[i] == 0:
+                    q.append(i)
+        
+            # 큐가 빌 때까지 반복
+            while q:
+                # 큐에서 원소 꺼내기
+                now = q.popleft()
+                # 해당 원소와 연결된 노드들의 진입차수에서 1 빼기
+                for i in graph[now]:
+                    result[i] = max(result[i], result[now] + time[i])
+                    indegree[i] -= 1
+                    # 새롭게 진입차수가 0이 되는 노드를 큐에 삽입
+                    if indegree[i] == 0:
+                        q.append(i)
+        
+            # 위상 정렬을 수행한 결과 출력
+            for i in range(1, v + 1):
+                print(result[i])
+        
+        topology_sort()
+        ```
+        
+    3. 해결한 후
+        
+        문제의 예시를 잘못 해석해서 틀렸다. 선행 과목을 다 수강 해야 하므로 최대의 시간으로 저장해야 한다.
+        
 ## 출처
 
 - 이것이 취업을 위한 코딩테스트다 with 파이썬
