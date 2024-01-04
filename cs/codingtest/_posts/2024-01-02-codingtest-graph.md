@@ -737,6 +737,54 @@ topology_sort()
         
         행렬 정보를 입력 받으면서 union연산까지 진행 할 수 있었다…
 
+- 기출 문제 2: 탑승구
+    1. 내 풀이
+        
+        문제의 예시를 이해하지 못해서 답을 못 구했다…
+        
+    2. 풀이를 본 후
+        
+        서로소 집합을 이용하여 탑승구 끼리 union 연산을 수행했다. 탐색할 수 있는 가장 큰 탑승구를 선택하여 선택한 탑승구의 루트가 0이면 탐색을 종료한다…
+        
+        항상 구하고자 하는 것을 기준으로 생각하면 답이 보인다…
+        
+        ```python
+        # 특정 원소가 속한 집합을 찾기
+        def find_parent(parent, x):
+            # 루트 노드가 아니라면, 루트 노드를 찾을 때까지 재귀적으로 호출
+            if parent[x] != x:
+                parent[x] = find_parent(parent, parent[x])
+            return parent[x]
+        
+        # 두 원소가 속한 집합을 합치기
+        def union_parent(parent, a, b):
+            a = find_parent(parent, a)
+            b = find_parent(parent, b)
+            if a < b:
+                parent[b] = a
+            else:
+                parent[a] = b
+        
+        # 탑승구의 개수 입력받기
+        g = int(input())
+        # 비행기의 개수 입력받기
+        p = int(input())
+        parent = [0] * (g + 1) # 부모 테이블 초기화
+        
+        # 부모 테이블상에서, 부모를 자기 자신으로 초기화
+        for i in range(1, g + 1):
+            parent[i] = i
+        
+        result = 0
+        for _ in range(p):
+            data = find_parent(parent, int(input())) # 현재 비행기의 탑승구의 루트 확인
+            if data == 0: # 현재 루트가 0이라면, 종료
+                break
+            union_parent(parent, data, data - 1) # 그렇지 않다면 바로 왼쪽의 집합과 합치기
+            result += 1
+        
+        print(result)
+        ```
 
 ## 출처
 
