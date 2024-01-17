@@ -177,7 +177,165 @@ sitemap: false
     ```
 
 
+### 기출 문제 2: 청소년 상어
 
+1. 내 풀이
+    1. array에 물고기 번호, 방향 저장
+    2. fishes에 물고기 번호, 방향, 좌표 최소힙으로 저장
+    3. 물고기 이동시키고 상어 이동으로 구현
+    
+    구현에 실패했다…
+    
+    ```python
+    import heapq
+    from collections import deque
+    INF = 1e9 # 무한을 의미하는 값으로 10억을 설정
+    
+    array=[] # 좌표, 방향
+    fishes=[] # 번호, 방향, 좌표
+    
+    dx = [-1, -1, 0, 1, 1, 1, 0, -1]
+    dy = [0, -1, -1, -1, 0, 1, 1, 1, 1]
+    
+    for i in range(4):
+        temp = list(map(int, input().split()))
+        array.append([(temp[0],temp[1]),(temp[2],temp[3]),(temp[4],temp[5]),(temp[6],temp[7])]) # array에 (번호, 방향)
+    
+    x, y, direct = 0, 0, 0 # 초기 상어 좌표, 방향
+    result=0 # 물고기 번호 최댓값
+    result+=array[x][y][0]
+    direct=array[x][y][1]
+    array[x][y]=17
+    
+    for i in range(4):
+      for j in range(4):
+        fish=array[i][j]
+        heapq.heappush(fishes, (fish[0], fish[1], i, j))
+    
+    while fishes:
+      num, d, a, b=heapq.heappop(fishes) # 물고기 번호, 방향, x, y
+      for i in range(8):
+        nd=(d-1+i)%8
+        na, nb = a+dx[nd], b+dy[nd]
+        if array[na][nb]==17 or na<0 or na>=4 or nb<0 or nb>=4: # 이동 불가
+          continue
+        if 0<=array[na][nb]<=16: # 교환 가능
+          fish2=array[na][nb]
+          array[a][b], array[na][nb] = (fish2[0], fish2[1]), (num, nd)
+          break
+    
+    maximum=0
+    while True:
+      ndirect=direct-1
+      nx, ny = x+dx[ndirect], y+dy[ndirect]
+    
+      if nx<0 or nx>=4 or ny<0 or ny>=4:
+        direct=array[nx][ny][1]
+        result+=maximum
+        break
+      else:
+        if maximum<array[nx][ny][0]:
+          maximum=array[nx][ny][0]
+          x, y=nx, ny
+    ```
+    
+2. 풀이를 본 후
+    
+    물고기의 좌표와 방향을 저장해 놓고 완전 탐색으로 물고기와 상어의 위치 변경 까지는 맞았다… 하지만, 풀이는 상어가 이동하는 위치에 따라 경우들이 나뉘어지고 이 경우들을 처리해주기 위해 DFS를 이용했다. 이로써, 상어 이동이 불가할 때 마다 최대 값을 갱신하여 정답을 출력한다… 그리고 경우에 따라 배열의 값들이 달라지면 안되므로 copy를 이용했다.
+    
+     종료 조건과 문제의 조건을 바탕으로 차근차근 구현하도록 해야겠다…
+    
+    ```python
+    import copy
+    
+    # 4 X 4 크기 격자에 존재하는 각 물고기의 번호(없으면 -1)와 방향 값을 담는 테이블
+    array = [[None] * 4 for _ in range(4)]
+    
+    for i in range(4):
+        data = list(map(int, input().split()))
+        # 매 줄마다 4마리의 물고기를 하나씩 확인하며
+        for j in range(4):
+            # 각 위치마다 [물고기의 번호, 방향]을 저장
+            array[i][j] = [data[j * 2], data[j * 2 + 1] - 1]
+    
+    # 8가지 방향에 대한 정의
+    dx = [-1, -1, 0, 1, 1, 1, 0, -1]
+    dy = [0, -1, -1, -1, 0, 1, 1, 1]
+    
+    # 현재 위치에서 왼쪽으로 회전된 결과 반환
+    def turn_left(direction):
+        return (direction + 1) % 8
+    
+    result = 0 # 최종 결과
+    
+    # 현재 배열에서 특정한 번호의 물고기 위치 찾기
+    def find_fish(array, index):
+        for i in range(4):
+            for j in range(4):
+                if array[i][j][0] == index:
+                    return (i, j)
+        return None
+    
+    # 모든 물고기를 회전 및 이동시키는 함수
+    def move_all_fishes(array, now_x, now_y):
+        # 1번부터 16번까지의 물고기를 차례대로 (낮은 번호부터) 확인
+        for i in range(1, 17):
+            # 해당 물고기의 위치를 찾기
+            position = find_fish(array, i)
+            if position != None:
+                x, y = position[0], position[1]
+                direction = array[x][y][1]
+                # 해당 물고기의 방향을 왼쪽으로 계속 회전시키며 이동이 가능한지 확인
+                for j in range(8):
+                    nx = x + dx[direction]
+                    ny = y + dy[direction]
+                    # 해당 방향으로 이동이 가능하다면 이동 시키기
+                    if 0 <= nx and nx < 4 and 0 <= ny and ny < 4:
+                        if not (nx == now_x and ny == now_y):
+                            array[x][y][1] = direction
+                            array[x][y], array[nx][ny] = array[nx][ny], array[x][y]
+                            break
+                    direction = turn_left(direction)
+            
+    # 상어가 현재 위치에서 먹을 수 있는 모든 물고기의 위치 반환
+    def get_possible_positions(array, now_x, now_y):
+        positions = []
+        direction = array[now_x][now_y][1]
+        # 현재의 방향으로 쭉 이동하기
+        for i in range(4):
+            now_x += dx[direction]
+            now_y += dy[direction]
+            # 범위를 벗어나지 않는지 확인하며
+            if 0 <= now_x and now_x < 4 and 0 <= now_y and now_y < 4:
+                # 물고기가 존재하는 경우
+                if array[now_x][now_y][0] != -1:
+                    positions.append((now_x, now_y))
+        return positions
+    
+    # 모든 경우를 탐색하기 위한 DFS 함수
+    def dfs(array, now_x, now_y, total):
+        global result
+        array = copy.deepcopy(array) # 리스트를 통째로 복사
+        
+        total += array[now_x][now_y][0] # 현재 위치의 물고기 먹기
+        array[now_x][now_y][0] = -1 # 물고기를 먹었으므로 번호 값을 -1로 변환
+        
+        move_all_fishes(array, now_x, now_y) # 전체 물고기 이동 시키기
+    
+        # 이제 다시 상어가 이동할 차례이므로, 이동 가능한 위치 찾기
+        positions = get_possible_positions(array, now_x, now_y)
+        # 이동할 수 있는 위치가 하나도 없다면 종료
+        if len(positions) == 0:
+            result = max(result, total) # 최댓값 저장
+            return 
+        # 모든 이동할 수 있는 위치로 재귀적으로 수행
+        for next_x, next_y in positions:
+            dfs(array, next_x, next_y, total)
+    
+    # 청소년 상어의 시작 위치(0, 0)에서부터 재귀적으로 모든 경우 탐색
+    dfs(array, 0, 0, 0)
+    print(result)
+    ```
 
 
 
