@@ -59,8 +59,6 @@ menu:
         url:           /dlcv/
       - title:         Handson-ml2
         url:           /handsonml2/
-  - title:             Baekjoon
-    url:               /baekjoon/
   - title:             CS study
     url:               /cs/
     submenu:
@@ -68,6 +66,8 @@ menu:
         url:           /algorithm/ 
       - title:         Coding Test
         url:           /codingtest/
+      - title:         Baekjoon
+        url:           /baekjoon/
   - title:             About
     url:               /about/
   
