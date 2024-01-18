@@ -337,7 +337,208 @@ sitemap: false
     print(result)
     ```
 
+### 기출 문제 3: 어른 상어
 
+1. 내 풀이
+    1. array에 상어 번호, 남은 시간, 방향 저장
+    2. 동시에 이동을 처리하기 위해 각 상어들의 이동 가능 좌표들 저장 후, 나중에 한번에 이동 처리
+    3. 1번만 남거나, 1000초 넘을 때 종료
+    
+    구현에 실패했다… 2시간 정도 소요…
+    
+    ```python
+    import sys
+    
+    input = sys.stdin.readline
+    
+    n, m, k = map(int, input().split())
+    array = [[None] * n for _ in range(n)]
+    for i in range(n):
+      data = list(map(int, input().split()))
+      for j in range(n):
+        if data[j] == 0:
+          array[i][j] = [0, 0, 0]
+        else:
+          array[i][j] = [data[j], k, 0]
+    
+    first_direction = list(map(int, input().split()))
+    for i in range(1, m + 1):
+      for a in range(n):
+        for b in range(n):
+          if i == array[a][b][0]:
+            array[a][b][2] = first_direction[i - 1]
+    
+    rule = [[] for _ in range(m)]
+    for i in range(m):
+      for j in range(4):
+        rule[i].append(list(map(int, input().split())))
+    
+    # 상, 하, 좌, 우
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    
+    play_time = 0
+    while True:
+      # move
+      temp=[]
+      for i in range(1, m + 1):
+        for a in range(n):
+          for b in range(n):
+            num, time, direct = array[a][b]  # 번호, 남은 시간, 방향
+            if num != 0 and direct == 0:  # 냄새 칸
+              time -= 1
+              if time == 0:  # 사라짐
+                array[a][b] = [0, 0, 0]
+              else:  # 시간 줄음
+                array[a][b] = [num, time, direct]
+    
+            if i == num and direct != 0:  # 해당 번호 상어 찾음
+              d = direct - 1  # 상, 하, 좌, 우 인덱스
+              rule[num - 1][d]  # 현재 방향에 대한 우선 순위 방향들
+              for r in rule[num - 1][d]:  # 이동 가능할 때의 이동한 위치의 값들 저장
+                na, nb = a + dx[r - 1], b + dy[r - 1]
+                if na < 0 or na >= n or nb < 0 or nb >= n:  # 범위 밖
+                  continue
+                num2, time2, direct2 = array[na][nb]  # 이동할 곳의 번호, 남은 시간, 방향
+                if 0 <= na < n and 0 <= nb < n:  # 격자 안쪽
+                  if num2 == 0 or num == num2:  # 빈 칸 or 자기 냄새 칸
+                    temp.append((a, b, na, nb))
+                    break
+    
+      for t in temp:
+        a, b, na, nb = t
+        num, time, direct = array[a][b]
+        num2, time2, direct2 = array[na][nb]
+        if num2 == 0 or num2 == num:  # 바로 진입 가능 or 우선순위 높은 곳
+          array[a][b], array[na][nb] = [num, time - 1, 0], [num, time, direct]
+        else:  # 이미 강한 상어가 자리한 경우
+          array[a][b] = [num, time - 1, 0]
+          
+      play_time += 1
+    
+      # check
+      count = 0
+      for i in range(1, m + 1):
+        for a in range(n):
+          for b in range(n):
+            num, time, direct = array[a][b]
+            if num == i and direct != 0:  # 상어
+              count += 1
+    
+      if count == 1:  # 1번만 남았을 때
+        print(play_time)
+        break
+    
+      if play_time > 1000:  # 1000초 넘어갈 때
+        print(-1)
+        break
+    ```
+    
+2. 풀이를 본 후
+    
+    풀이는 냄새 정보 만을 저장하는 배열을 따로 만들어서 혼동을 줄였다. 또한, 상어가 이동 가능할 때 방향을 바꿔주는 것을 까먹었다…
+    
+    시뮬레이션 및 구현 문제에서는 문제의 조건을 빠짐없이 차근차근 구현해 나가는 것이 핵심이다.
+    
+    ```python
+    n, m, k = map(int, input().split())
+    
+    # 모든 상어의 위치와 방향 정보를 포함하는 2차원 리스트
+    array = []
+    for i in range(n):
+        array.append(list(map(int, input().split())))
+    
+    # 모든 상어의 현재 방향 정보
+    directions = list(map(int, input().split()))
+    
+    # 각 위치마다 [특정 냄새의 상어 번호, 특정 냄새의 남은 시간]을 저장하는 2차원 리스트
+    smell = [[[0, 0]] * n for _ in range(n)]
+    
+    # 각 상어의 회전 우선순위 정보
+    priorities = [[] for _ in range(m)]
+    for i in range(m):
+        for j in range(4):
+            priorities[i].append(list(map(int, input().split())))
+    
+    # 특정 위치에서 이동 가능한 4가지 방향
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    
+    # 모든 냄새 정보를 업데이트
+    def update_smell():
+        # 각 위치를 하나씩 확인하며
+        for i in range(n):
+            for j in range(n):
+                # 냄새가 존재하는 경우, 시간을 1만큼 감소시키기
+                if smell[i][j][1] > 0:
+                    smell[i][j][1] -= 1
+                # 상어가 존재하는 해당 위치의 냄새를 k로 설정
+                if array[i][j] != 0:
+                    smell[i][j] = [array[i][j], k]
+    
+    # 모든 상어를 이동시키는 함수
+    def move():
+        # 이동 결과를 담기 위한 임시 결과 테이블 초기화
+        new_array = [[0] * n for _ in range(n)]
+        # 각 위치를 하나씩 확인하며
+        for x in range(n):
+            for y in range(n):
+                # 상어가 존재하는 경우
+                if array[x][y] != 0:
+                    direction = directions[array[x][y] - 1] # 현재 상어의 방향
+                    found = False
+                    # 일단 냄새가 존재하지 않는 곳이 있는지 확인
+                    for index in range(4):
+                        nx = x + dx[priorities[array[x][y] - 1][direction - 1][index] - 1]
+                        ny = y + dy[priorities[array[x][y] - 1][direction - 1][index] - 1]
+                        if 0 <= nx and nx < n and 0 <= ny and ny < n:
+                            if smell[nx][ny][1] == 0: # 냄새가 존재하지 않는 곳이면
+                                # 해당 상어의 방향 이동시키기
+                                directions[array[x][y] - 1] = priorities[array[x][y] - 1][direction - 1][index]
+                                # 상어 이동시키기 (만약 이미 다른 상어가 있다면 번호가 낮은 것이 들어가도록)
+                                if new_array[nx][ny] == 0:
+                                    new_array[nx][ny] = array[x][y]
+                                else:
+                                    new_array[nx][ny] = min(new_array[nx][ny], array[x][y])
+                                found = True
+                                break
+                    if found:
+                        continue
+                    # 주변에 모두 냄새가 남아 있다면, 자신의 냄새가 있는 곳으로 이동
+                    for index in range(4):
+                        nx = x + dx[priorities[array[x][y] - 1][direction - 1][index] - 1]
+                        ny = y + dy[priorities[array[x][y] - 1][direction - 1][index] - 1]
+                        if 0 <= nx and nx < n and 0 <= ny and ny < n:
+                            if smell[nx][ny][0] == array[x][y]: # 자신의 냄새가 있는 곳이면
+                                # 해당 상어의 방향 이동시키기
+                                directions[array[x][y] - 1] = priorities[array[x][y] - 1][direction - 1][index]
+                                # 상어 이동시키기
+                                new_array[nx][ny] = array[x][y]
+                                break
+        return new_array
+    
+    time = 0
+    while True:
+        update_smell() # 모든 위치의 냄새를 업데이트
+        new_array = move() # 모든 상어를 이동시키기
+        array = new_array # 맵 업데이트
+        time += 1 # 시간 증가
+    
+        # 1번 상어만 남았는지 체크
+        check = True
+        for i in range(n):
+            for j in range(n):
+                if array[i][j] > 1:
+                    check = False
+        if check:
+            print(time)
+            break
+    
+        # 1000초가 지날 때까지 끝나지 않았다면
+        if time >= 1000:
+            print(-1)
+            break
+    ```
 
 ## 출처
 
