@@ -332,13 +332,15 @@ sitemap: false
     
 
 - 기출 문제 3: 문자열 뒤집기
-
+    
+    [https://www.acmicpc.net/problem/1439](https://www.acmicpc.net/problem/1439)
+    
     1. 내 풀이
         
+        <처음 풀이>
         1. 우선, 0의 덩어리 수, 1의 덩어리 수를 각각  zero, one으로 정의했다.
-        
-        1. 맨 처음 숫자부터 시작해서 끝자리까지 서로 비교하며 0과 1의 덩어리수를 구해줬다.
-        2. 최종적으로 더 적은 덩어리 수를 가진 값을 출력하게했다.
+        2. 맨 처음 숫자부터 시작해서 끝자리까지 서로 비교하며 0과 1의 덩어리수를 구해줬다.
+        3. 최종적으로 더 적은 덩어리 수를 가진 값을 출력하게했다.
         
         ```python
         S=input()
@@ -346,22 +348,53 @@ sitemap: false
         
         temp=S[0]
         if temp=='0':
-        zero+=1
+            zero+=1
         else:
-        one+=1
+            one+=1
         
         for i in range(1,len(S)):
-        if S[i]!=temp:
-            if S[i]=='0':
-            temp=S[i]
-            one+=1
-            else:
-            temp=S[i]
-            zero+=1
+            if S[i]!=temp:
+                if S[i]=='0':
+                    temp=S[i]
+                    one+=1
+                else:
+                    temp=S[i]
+                    zero+=1
         
         print(min(one,zero))
         ```
         
+        <두번째 풀이>
+
+        1. s의 0과 1 덩어리의 수를 구한 후, 최소 덩어리의 수를 출력
+            
+            더 작은 덩어리를 뒤집는게 최소 행동 횟수가 된다.
+            
+
+        ```python
+        s=input()
+        zero, one=0, 0 # s에서 0 or 1 덩어리 개수
+        first=int(s[0]) # 처음 숫자
+
+        if first==0:
+            zero+=1
+        else:
+            one+=1
+
+        for i in range(1,len(s)):
+            second=int(s[i]) # 비교할 숫자
+            if first==second: # 같을 때
+                continue
+            else: # 다를 때
+                if second==0:
+                    zero+=1
+                else:
+                    one+=1
+                    first=second
+
+        print(min(zero, one))
+        ```
+
     2. 풀이를 본 후
         
         풀이도 거의 유사했다. 풀이는 0으로 바꾸는 경우, 1로 바꾸는 경우로 변수를 설정하고 진행했다.
