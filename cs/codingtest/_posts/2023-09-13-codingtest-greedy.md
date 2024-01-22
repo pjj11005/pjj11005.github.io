@@ -224,8 +224,8 @@ sitemap: false
         maximum,left,right=0,0,0
         temp=0
         while right<N:
-        if right+gongpo[right]<N:
-            right+=gongpo[right]
+            if right+gongpo[right]<N:
+                right+=gongpo[right]
             
         
         print(maximum)
@@ -269,20 +269,40 @@ sitemap: false
 
     1. 내 풀이
         
+        <처음 풀이>
         1. 우선 maximum변수에 제일 앞에 있는 수를 저장한다.
-        
-        1. 그리고 다음 수를 차례대로 곱하기 혹은 더하기 연산 진행 후 더 큰 값을 maximum으로 넣어준다.
+        2. 그리고 다음 수를 차례대로 곱하기 혹은 더하기 연산 진행 후 더 큰 값을 maximum으로 넣어준다.
         
         ```python
+        # 처음 풀이
         S=list(str(input()))
         maximum=int(S[0])
         
         for i in range(1,len(S)):
-        maximum=max(maximum+int(S[i]),maximum*int(S[i]))
+            maximum=max(maximum+int(S[i]),maximum*int(S[i]))
         
         print(maximum)
         ```
         
+        <두번째 풀이>
+        1. 연산 시 둘 중 하나라도 0이나 1이면 더하기, 나머지 경우는 곱하기 진행
+    
+        ```python
+        # 두번째 풀이
+        s=input()
+        result=0
+        first=int(s[0]) # 연산 앞부분 
+        
+        for i in range(1,len(s)):
+            second=int(s[i]) # 연산 뒷부분
+            if 0<=first<=1 or 0<=second<=1: # 둘 중 하나라도 0이나1일 떄 (더하기 연산)
+                first+=second
+            else: # 곱하기 연산
+                first*=second
+        
+        print(first)
+        ```
+
     2. 풀이를 본 후
         
         우선, 풀이를 보니 연산할 두 개의 숫자 중에서 하나라도 0 혹은 1이면 더하기를 진행하도록 했다. 또한, 굳이 문자열 형태로 받지 않아도 인덱스로 구분 가능했다.
