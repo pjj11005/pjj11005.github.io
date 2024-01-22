@@ -269,39 +269,39 @@ sitemap: false
 
     1. 내 풀이
         
-        <처음 풀이>
-        1. 우선 maximum변수에 제일 앞에 있는 수를 저장한다.
-        2. 그리고 다음 수를 차례대로 곱하기 혹은 더하기 연산 진행 후 더 큰 값을 maximum으로 넣어준다.
+        - 처음 풀이
+            1. 우선 maximum변수에 제일 앞에 있는 수를 저장한다.
+            2. 그리고 다음 수를 차례대로 곱하기 혹은 더하기 연산 진행 후 더 큰 값을 maximum으로 넣어준다.
+            
+            ```python
+            # 처음 풀이
+            S=list(str(input()))
+            maximum=int(S[0])
+            
+            for i in range(1,len(S)):
+                maximum=max(maximum+int(S[i]),maximum*int(S[i]))
+            
+            print(maximum)
+            ```
         
-        ```python
-        # 처음 풀이
-        S=list(str(input()))
-        maximum=int(S[0])
+        - 두번째 풀이
+            1. 연산 시 둘 중 하나라도 0이나 1이면 더하기, 나머지 경우는 곱하기 진행
         
-        for i in range(1,len(S)):
-            maximum=max(maximum+int(S[i]),maximum*int(S[i]))
-        
-        print(maximum)
-        ```
-        
-        <두번째 풀이>
-        1. 연산 시 둘 중 하나라도 0이나 1이면 더하기, 나머지 경우는 곱하기 진행
-    
-        ```python
-        # 두번째 풀이
-        s=input()
-        result=0
-        first=int(s[0]) # 연산 앞부분 
-        
-        for i in range(1,len(s)):
-            second=int(s[i]) # 연산 뒷부분
-            if 0<=first<=1 or 0<=second<=1: # 둘 중 하나라도 0이나1일 떄 (더하기 연산)
-                first+=second
-            else: # 곱하기 연산
-                first*=second
-        
-        print(first)
-        ```
+            ```python
+            # 두번째 풀이
+            s=input()
+            result=0
+            first=int(s[0]) # 연산 앞부분 
+            
+            for i in range(1,len(s)):
+                second=int(s[i]) # 연산 뒷부분
+                if 0<=first<=1 or 0<=second<=1: # 둘 중 하나라도 0이나1일 떄 (더하기 연산)
+                    first+=second
+                else: # 곱하기 연산
+                    first*=second
+            
+            print(first)
+            ```
 
     2. 풀이를 본 후
         
@@ -337,63 +337,63 @@ sitemap: false
     
     1. 내 풀이
         
-        <처음 풀이>
-        1. 우선, 0의 덩어리 수, 1의 덩어리 수를 각각  zero, one으로 정의했다.
-        2. 맨 처음 숫자부터 시작해서 끝자리까지 서로 비교하며 0과 1의 덩어리수를 구해줬다.
-        3. 최종적으로 더 적은 덩어리 수를 가진 값을 출력하게했다.
-        
-        ```python
-        S=input()
-        zero,one=0,0
-        
-        temp=S[0]
-        if temp=='0':
-            zero+=1
-        else:
-            one+=1
-        
-        for i in range(1,len(S)):
-            if S[i]!=temp:
-                if S[i]=='0':
-                    temp=S[i]
-                    one+=1
-                else:
-                    temp=S[i]
-                    zero+=1
-        
-        print(min(one,zero))
-        ```
-        
-        <두번째 풀이>
-
-        1. s의 0과 1 덩어리의 수를 구한 후, 최소 덩어리의 수를 출력
+        - 처음 풀이
+            1. 우선, 0의 덩어리 수, 1의 덩어리 수를 각각  zero, one으로 정의했다.
+            2. 맨 처음 숫자부터 시작해서 끝자리까지 서로 비교하며 0과 1의 덩어리수를 구해줬다.
+            3. 최종적으로 더 적은 덩어리 수를 가진 값을 출력하게했다.
             
-            더 작은 덩어리를 뒤집는게 최소 행동 횟수가 된다.
+            ```python
+            S=input()
+            zero,one=0,0
             
+            temp=S[0]
+            if temp=='0':
+                zero+=1
+            else:
+                one+=1
+            
+            for i in range(1,len(S)):
+                if S[i]!=temp:
+                    if S[i]=='0':
+                        temp=S[i]
+                        one+=1
+                    else:
+                        temp=S[i]
+                        zero+=1
+            
+            print(min(one,zero))
+            ```
+        
+        - 두번째 풀이
 
-        ```python
-        s=input()
-        zero, one=0, 0 # s에서 0 or 1 덩어리 개수
-        first=int(s[0]) # 처음 숫자
+            1. s의 0과 1 덩어리의 수를 구한 후, 최소 덩어리의 수를 출력
+                
+                더 작은 덩어리를 뒤집는게 최소 행동 횟수가 된다.
+                
 
-        if first==0:
-            zero+=1
-        else:
-            one+=1
+            ```python
+            s=input()
+            zero, one=0, 0 # s에서 0 or 1 덩어리 개수
+            first=int(s[0]) # 처음 숫자
 
-        for i in range(1,len(s)):
-            second=int(s[i]) # 비교할 숫자
-            if first==second: # 같을 때
-                continue
-            else: # 다를 때
-                if second==0:
-                    zero+=1
-                else:
-                    one+=1
-                    first=second
+            if first==0:
+                zero+=1
+            else:
+                one+=1
 
-        print(min(zero, one))
-        ```
+            for i in range(1,len(s)):
+                second=int(s[i]) # 비교할 숫자
+                if first==second: # 같을 때
+                    continue
+                else: # 다를 때
+                    if second==0:
+                        zero+=1
+                    else:
+                        one+=1
+                        first=second
+
+            print(min(zero, one))
+            ```
 
     2. 풀이를 본 후
         
