@@ -498,22 +498,44 @@ sitemap: false
 
     1. 내 풀이
         
-        1. 단순하게 배열의 첫번째 요소부터 다른 무게의 볼링공과 짝지을 때만 개수를 세주었다…
-        
-        하지만, 시간복잡도가 너무 높아 조금 더 쉽게 계산 하는법을 찾다가 실패했다.
-        
-        ```python
-        N,M= map(int, input().split())
-        ball = list(map(int, input().split()))
-        result=0
-        
-        for i in range(N-1):
-        for j in range(i+1,N):
-            if ball[i]!=ball[j]:
-            result+=1
-        
-        print(result)
-        ```
+        - 처음 풀이
+
+            1. 단순하게 배열의 첫번째 요소부터 다른 무게의 볼링공과 짝지을 때만 개수를 세주었다…
+            
+            하지만, 시간복잡도가 너무 높아 조금 더 쉽게 계산 하는법을 찾다가 실패했다.
+            
+            ```python
+            N,M= map(int, input().split())
+            ball = list(map(int, input().split()))
+            result=0
+            
+            for i in range(N-1):
+                for j in range(i+1,N):
+                    if ball[i]!=ball[j]:
+                        result+=1
+            
+            print(result)
+            ```
+            
+        - 두번째 풀이
+            1. 공의 개수 저장 배열 생성
+            2. 무게가 작은 공부터 만들 수 있는 조합의 수를 더해간다.
+            
+            ```python
+            n, m=map(int, input().split()) # 볼링공의 수, 공의 최대 무게
+            ball=list(map(int, input().split())) # 각 공의 무게
+            ball_count=[0]*(m+1) # 공의 개수
+            result=0 # 볼링공 번호 조합의 수
+            
+            for b in ball:
+                ball_count[b]+=1
+            
+            for i in range(1, m): # (조합하지 않은 공 X 현재 공의 개수) 반복
+                n-=ball_count[i]
+                result+=n*ball_count[i]
+            
+            print(result)
+            ```
         
     2. 풀이를 본 후
         
