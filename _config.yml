@@ -38,7 +38,7 @@ keywords:              [AI,ML,DL,CV,Developement]
 # A (square) logo for your site.
 # If provided, it will be shown at the top of the sidebar.
 # It also used by the `jekyll-seo-tag` plugin.
-logo:                  /assets/img/blog/logo2.jpg
+logo:                  /assets/img/blog/study.jpg
 
 # This should be the same author as first entry in `_data/authors.yml`.
 author:
