@@ -570,46 +570,84 @@ sitemap: false
 
     1. 내 풀이
         
-        1. 우선 k를 감소 및 인덱스를 증가 시키면서 음식을 먹게 진행 시켰다.
-        
-        1. 그리고 k=-1일 때, 중단 시키고 먹어야 할 음식의 번호를 출력했다…
-        
-        하지만 런타임 에러가 발생했다…
-        
-        ```python
-        def solution(food_times, k):
-        answer = 0
-        n=len(food_times)
-        
-        while k>-1:
-            if sum(food_times)==0:
-            return -1
+        - 처음 풀이
+            1. 우선 k를 감소 및 인덱스를 증가 시키면서 음식을 먹게 진행 시켰다.
+            2. 그리고 k=-1일 때, 중단 시키고 먹어야 할 음식의 번호를 출력했다…
             
-            if food_times[answer]==0:
-            if answer==n-1:
-                answer=0
-            else:
-                answer+=1
-            else:
-            if answer==n-1:
-                k-=1
-                food_times[answer]-=1
-                answer=0
-            else:
-                k-=1
-                food_times[answer]-=1
-                answer+=1
-        
-        if answer==0:
-            answer=n
+            하지만 런타임 에러가 발생했다…
             
-        return answer
-        
-        food_times = list(map(int, input().split()))
-        k=int(input())
-        result=solution(food_times,k)
-        print(result)
-        ```
+            ```python
+            def solution(food_times, k):
+            answer = 0
+            n=len(food_times)
+            
+            while k>-1:
+                if sum(food_times)==0:
+                    return -1
+                
+                if food_times[answer]==0:
+                    if answer==n-1:
+                        answer=0
+                    else:
+                        answer+=1
+                else:
+                    if answer==n-1:
+                        k-=1
+                        food_times[answer]-=1
+                        answer=0
+                    else:
+                        k-=1
+                        food_times[answer]-=1
+                        answer+=1
+                
+            if answer==0:
+                answer=n
+                
+            return answer
+            ```
+            
+        - 두번째 풀이
+            1. 번호 순서대로 힙에 넣어준 후 번호 순서대로 시간 차감
+            2. k초가 지나면 그 다음 음식을 출력
+            
+            ```
+            채점 결과
+            정확성: 37.5
+            효율성: 0.0
+            합계: 37.5 / 100.0
+            ```
+            
+            ```python
+            import heapq
+            
+            def solution(food_times, k):
+                answer, time = 0, 0
+                n = len(food_times)
+                q = []
+                for i in range(n):
+                    heapq.heappush(q, (i+1, food_times[i]))
+            
+                while True:
+                    temp=[]
+                    while q: 
+                        food_num, food_time = heapq.heappop(q) # 번호, 남은 시간 
+                        if time==k:
+                            answer=food_num
+                            break
+            
+                        food_time-=1
+                        if food_time > 0:
+                            temp.append((food_num, food_time))
+            
+                        time+=1
+                    
+                    if answer>0:
+                        break
+                    else:
+                        q=temp
+            
+                return answer
+            ```
         
     2. 풀이를 본 후
         
