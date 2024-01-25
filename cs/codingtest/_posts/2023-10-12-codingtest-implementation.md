@@ -174,27 +174,49 @@ sitemap: false
 - 기출 문제 1: 럭키 스트레이트
     1. 내 풀이
         
-        1. 입력받은 숫자를 문자열로 바꾼 후 리스트로 만들어준다.
-        
-        1. 반으로 나눈 후 왼쪽 리스트와 오른쪽 리스트의 합을 비교한다.
-        
-        ```python
-        def solve(N):
-          N_str = str(N)
-          # 문자열의 각 문자를 리스트로 변환
-          list_n = [int(digit) for digit in N_str]
-          middle=len(list_n) //2
-          left=list_n[:middle]
-          right=list_n[middle:]
-          
-          if sum(left)==sum(right):
-            return print("LUCKY")
-          else:
-            return print("READY")
-        
-        N=int(input())
-        solve(N)
-        ```
+        - 처음 풀이
+            1. 입력 받은 숫자를 문자열로 바꾼 후 리스트로 만들어준다.
+            2. 반으로 나눈 후 왼쪽 리스트와 오른쪽 리스트의 합을 비교한다.
+            
+            ```python
+            def solve(N):
+                N_str = str(N)
+                # 문자열의 각 문자를 리스트로 변환
+                list_n = [int(digit) for digit in N_str]
+                middle=len(list_n) //2
+                left=list_n[:middle]
+                right=list_n[middle:]
+                
+                if sum(left)==sum(right):
+                    return print("LUCKY")
+                else:
+                    return print("READY")
+            
+            N=int(input())
+            solve(N)
+            ```
+            
+        - 두 번째 풀이
+            1. 입력 받은 점수 문자열 변환
+            2. 앞 부분의 합과 뒷 부분의 합의 차를 이용하여 결과 출력
+            
+            ```python
+            n=int(input()) # 점수
+            n_str=str(n) # 점수 문자열 변환
+            length=len(n_str)
+            sum=0
+            
+            for i in range(length//2): # 앞부분의 합
+                sum+=int(n_str[i])
+            
+            for i in range(length//2, length): # 앞부분의 합과 뒷부분의 합의 차
+                sum-=int(n_str[i])
+            
+            if sum==0:
+                print('LUCKY')
+            else:
+                print('READY')
+            ```
         
     2. 풀이를 본 후
         
@@ -228,30 +250,49 @@ sitemap: false
 - 기출 문제 2: 문자열 재정렬
     1. 내 풀이
         
-        1. 우선 알파벳은 리스트에 담고 숫자는 변수를 정해서 더해줬다.
-        
-        1. 그 후, 알파벳 리스트를 오름차순으로 정렬하고 숫자의 합과 연결시켜서 문자열을 만들었다.
-        
-        ```python
-        def solve(S):
-          eng=[]
-          num=0
-          
-          for i in S:
-            if 'A'<=i<='Z':
-              eng.append(i)
-            else:
-              num+=int(i)
-              
-          eng.sort()
-          eng_string = ''.join(eng)
-          answer=eng_string+str(num)
-          
-          return print(answer)
-          
-        S=input()
-        solve(S)
-        ```
+        - 처음 풀이
+            1. 우선 알파벳은 리스트에 담고 숫자는 변수를 정해서 더해줬다.
+            2. 그 후, 알파벳 리스트를 오름차순으로 정렬하고 숫자의 합과 연결시켜서 문자열을 만들었다.
+            
+            ```python
+            def solve(S):
+                eng=[]
+                num=0
+                
+                for i in S:
+                    if 'A'<=i<='Z':
+                        eng.append(i)
+                    else:
+                        num+=int(i)
+                    
+                eng.sort()
+                eng_string = ''.join(eng)
+                answer=eng_string+str(num)
+                
+                return print(answer)
+            
+            S=input()
+            solve(S)
+            ```
+            
+        - 두번째 풀이
+            1. 대문자 알파벳과 숫자를 따로 추출하고 각각 정렬 or 합을 구함
+            2. 문자열로 만들어 연결
+            
+            ```python
+            S=input() # 문자열 입력
+            
+            str_string = ''.join(char for char in S if not char.isdigit()) # 대문자 알파벳
+            num = sum(int(char) for char in S if char.isdigit()) # 숫자들의 합
+            sorted_string=''.join(sorted(str_string)) # 알파벳 정렬
+            
+            if num>0: # 숫자 존재
+                result=sorted_string + str(num) # 알파벳 + 숫자 합
+            else: # 숫자 없을 때
+                result=sorted_string # 알파벳
+            
+            print(result)
+            ```
         
     2. 풀이를 본 후
         
