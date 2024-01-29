@@ -331,9 +331,51 @@ sitemap: false
 
     1. 내 풀이
         
-        1. 단위의 수를 증가시키면서 압축할 수 있는 최소의 길이를 구하려고 했다.
-        
-        하지만 어떻게 구현할지 감이 오지 않았다… 
+        - 처음 풀이
+            1. 단위의 수를 증가시키면서 압축할 수 있는 최소의 길이를 구하려고 했다.
+            
+            하지만 어떻게 구현할지 감이 오지 않았다… 
+            
+        - 두번째 풀이
+            1. 단위 크기를 증가시키면서 문자열을 단위 크기로 나눈 토큰들을 비교하며 압축길이 구함
+            2. 하지만, 마지막 토큰 부분 처리에서 실패했다…
+            
+            풀이를 보니 마지막 토큰 부분은 압축 길이 계산 반복문을 탈출한 후에 처리해주면 되었다… 신중하게 문제 풀이 시도할 것…
+            
+            ```python
+            s=input() # 문자열 입력
+            length=len(s) # 문자열 길이
+            unit=1 # 단위
+            minimum=length
+            
+            while unit*2<=length:
+                token=[s[i:i+unit] for i in range(0, len(s), unit)]
+                result=0
+                index=0
+                while index<len(token)-1:
+                    t=token[index]
+                    substring=token[index+1:]
+                    count=1
+                    for sub in substring:
+                        if token==sub:
+                            count+=1
+                        else:
+                            break
+                        
+                    if count==1:
+                        result+=len(t)
+                    else:
+                        result+=len(str(count))+len(t)
+                    
+                    index+=count
+                    
+                if result<length:
+                    minimum=min(minimum, result)
+                
+                unit+=1
+                            
+            print(minimum)
+            ```
         
     2. 풀이를 본 후
         
