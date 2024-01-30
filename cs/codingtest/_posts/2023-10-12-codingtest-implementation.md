@@ -410,11 +410,74 @@ sitemap: false
 
     1. 내 풀이
         
-        1. 열쇠의 돌기 부분들 사이의 좌표 차이를 알아낸다.
-        2. 그 후, 자물쇠의 구멍 부분 좌표를 탐색하며 열쇠가 자물쇠의 구멍에 들어갈 수 있으면 해제 가능
-        
-        하지만, 구현을 하다가 막혔다…
-        
+        - 처음 풀이
+            1. 열쇠의 돌기 부분들 사이의 좌표 차이를 알아낸다.
+            2. 그 후, 자물쇠의 구멍 부분 좌표를 탐색하며 열쇠가 자물쇠의 구멍에 들어갈 수 있으면 해제 가능
+            
+            하지만, 구현을 하다가 막혔다…
+
+        - 두 번째 풀이
+            1. 열쇠로 자물쇠를 탐색하기 위해 자물쇠 배열의 크기를 3배하고 가운데에 자물쇠 정보 입력
+            2. 네 방향 마다 탐색 범위를 이동하면서 자물쇠의 홈을 다 채울 수 있는지 확인
+            
+            하지만 일부만 맞았다…
+            
+            >- **자물쇠의 홈이 다 채워졌는지 확인하는 부분에서 합으로 체크하면 안된다. 홈이 다 채워진다는 뜻은 모든 요소가 1이라는 것이지 합이 $$N \times N$$ 인 것이 아니다 (요소가 0, 1, 2로 합이 $$N \times N$$ 이면 맞다고 판단하는 경우가 발생)**
+            >- **그리고, 굳이 3배 자물쇠 배열을 계속 만들지 않고 열쇠로 더한 부분을 빼주기만하면 초기에 만들어 놓고 재사용 가능, 탐색 범위도 구체적인 것도 좋지만 범용적인 범위가 사용 가능하면 사용, 2차원 배열을 90도 회전하는 방법 숙지**
+
+
+            ```
+            채점 결과
+            정확성: 26.0
+            합계: 26.0 / 100.0
+            ```
+            
+            ```python
+            def rotate(key):
+                # 행과 열의 길이
+                rows = len(key)
+                cols = len(key[0])
+                
+                # 결과 배열 초기화
+                rotated_matrix = [[0] * rows for _ in range(cols)]
+                
+                # 회전된 배열 생성
+                for i in range(rows):
+                    for j in range(cols):
+                        rotated_matrix[j][rows - 1 - i] = key[i][j]
+                
+                return rotated_matrix
+            
+            def solution(key, lock):
+                answer = False
+                m=len(key)
+                n=len(lock)
+                for i in range(4): # 네 방향
+                    for j in range(n-m+1, (2*n)+m-1): # 3배 확장 자물쇠 탐색
+                        for k in range(n-m+1, (2*n)+m-1):
+                            lock_3=[[0]*(3*n) for _ in range(3*n)] # 자물쇠 3배
+                            for r in range(n):
+                                for c in range(n):
+                                    lock_3[r+n][c+n]=lock[r][c]
+                
+                            for r in range(m): # 이동 위치에 따라 열쇠의 값 더함
+                                for c in range(m):
+                                    lock_3[j+r][k+c]+=key[r][c]
+                
+                            sum=0
+                            for r in range(n, 2*n): # 자물쇠 위치의 합 구하기
+                                for c in range(n, 2*n):
+                                    sum+=lock_3[r][c]
+                
+                            if sum==n**2: # 자물쇠의 모든 홈이 채워지면
+                                answer=True
+                                return answer
+                
+                    key=rotate(key) # 시계방향으로 90도 회전
+                
+                return answer
+            ```
+                
     2. 풀이를 본 후
         
         우선 탐색의 효율성을 위해서 자물쇠의 크기를 3배로 증가 시킨 후, 기존 자물쇠의 값을 가운데에 넣는다. 그 후, 4가지 방향에 대해서 열쇠를 이동 시키면서 자물쇠의 겹치는 부분과의 합을 구한다. 최종으로 가운데 부분 요소들이 모두 1일 때가 True이다…
