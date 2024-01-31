@@ -537,70 +537,143 @@ sitemap: false
 
     1. 내 풀이
         
-        1.  우선 뱀의 머리, 꼬리, 현재 이동 방향 좌표 변수들을 정의
-        
-        1. 그 후, 시간이 지날 때마다 방향을 바꾸며 진행
-        2. 진행하면서 벽을 만나거나 자기 자신과 부딪히면 종료
-        
-        하지만 틀렸다…
-        
-        ```python
-        def change_direction(now_d,C):
-            if C=='D':
-                if now_d[0]==0:
-                    now_d[0],now_d[1]=now_d[1],now_d[0]
-                else:
-                    now_d[0],now_d[1]=now_d[1],-now_d[0]
-            else:
-                if now_d[0]==0:
-                    now_d[0],now_d[1]=-now_d[1],now_d[0]
-                else:
-                    now_d[0],now_d[1]=now_d[1],now_d[0]
-            return now_d
-        
-        def solve():
-            count=0
-            now_d=[0,1]
-            head,tail=[0,0],[0,0]
+        - 처음 풀이
+            1. 우선 뱀의 머리, 꼬리, 현재 이동 방향 좌표 변수들을 정의
+            2. 그 후, 시간이 지날 때마다 방향을 바꾸며 진행
+            3. 진행하면서 벽을 만나거나 자기 자신과 부딪히면 종료
             
-            for d in direction:
-                while count<=d[0]:
-                    x,y=head[0]+now_d[0],head[1]+now_d[1]
-                    if 0<=x<N and 0<=y<N:
-                        if board[x][y]==2:
+            하지만 틀렸다…
+            
+            ```python
+            def change_direction(now_d,C):
+                if C=='D':
+                    if now_d[0]==0:
+                        now_d[0],now_d[1]=now_d[1],now_d[0]
+                    else:
+                        now_d[0],now_d[1]=now_d[1],-now_d[0]
+                else:
+                    if now_d[0]==0:
+                        now_d[0],now_d[1]=-now_d[1],now_d[0]
+                    else:
+                        now_d[0],now_d[1]=now_d[1],now_d[0]
+                return now_d
+            
+            def solve():
+                count=0
+                now_d=[0,1]
+                head,tail=[0,0],[0,0]
+                
+                for d in direction:
+                    while count<=d[0]:
+                        x,y=head[0]+now_d[0],head[1]+now_d[1]
+                        if 0<=x<N and 0<=y<N:
+                            if board[x][y]==2:
+                                count+=1
+                                return print(count)
+                            elif board[x][y]==0:
+                                board[tail[0]][tail[1]]=0
+                                board[x][y]=2
+                                head=[x,y]
+                                tail[0]+=now_d[0]
+                                tail[1]+=now_d[1]
+                                count+=1
+                            else:
+                                board[x][y]=2
+                                head=[x,y]
+                                count+=1
+                        else:
                             count+=1
                             return print(count)
-                        elif board[x][y]==0:
-                            board[tail[0]][tail[1]]=0
-                            board[x][y]=2
-                            head=[x,y]
-                            tail[0]+=now_d[0]
-                            tail[1]+=now_d[1]
-                            count+=1
-                        else:
-                            board[x][y]=2
-                            head=[x,y]
-                            count+=1
-                    else:
-                        count+=1
-                        return print(count)
-                now_d=change_direction(now_d,d[1])
-                    
-        N=int(input())
-        board=[[0]*N for _ in range(N)]
-        K=int(input())
-        for i in range(K):
-            r,c=map(int,input().split())
-            board[r-1][c-1]=1
-        board[0][0]=2
-        L=int(input())
-        direction=[]
-        for i in range(L):
-            X,C=map(str,input().split())
-            direction.append((int(X),C))
+                    now_d=change_direction(now_d,d[1])
+                        
+            N=int(input())
+            board=[[0]*N for _ in range(N)]
+            K=int(input())
+            for i in range(K):
+                r,c=map(int,input().split())
+                board[r-1][c-1]=1
+            board[0][0]=2
+            L=int(input())
+            direction=[]
+            for i in range(L):
+                X,C=map(str,input().split())
+                direction.append((int(X),C))
+                
+            solve()
+            ```
             
-        solve()
-        ```
+        - 두 번째 풀이
+            1. 빈칸, 사과, 뱀을 각 0, 1, 2로 표현하고 방향 전환 시간 및 정보를 배열에 저장
+            2. 뱀의 좌표를 저장할 배열을 이용하여 방향 전환 시간인지 확인하며 게임 진행
+            3. 진행하면서 벽을 만나거나 자기 자신과 부딪히면 종료
+            
+            신중하게 구현하면 풀 수 있다.
+            
+            - **회전할 시간을 찾을 때 인덱스를 이용하여 증가 시키면서 시간 정보만 확인하면 더 빠른 시간 안에 구현될 것 같다. 또한, 방향 정보도 인덱스를 이용하면 조금 더 깔끔하게 구현 가능하다.**
+            
+            ```python
+            from collections import deque
+            
+            def change_direction(dx, dy, play_time):
+                for time, direction in directions:
+                    if play_time==time: # 방향 전환 시간
+                        if direction=='L': # 왼쪽으로
+                            if dy==0:
+                                dx, dy= dy, dx
+                            else:
+                                dx, dy= -dy, dx
+                            
+                        else: # 오른쪽으로
+                            if dy==0:
+                                dx, dy= dy, -dx
+                            else:
+                                dx, dy= dy, dx
+                            
+                return  dx, dy, play_time
+            
+            def solution():
+                snake=deque([(0,0)])
+                play_time=0 # 총 게임 시간
+                x, y= 0, 0 # 머리 위치
+                dx, dy=0, 1 # 방향 정보
+                while True:
+                    dx, dy, play_time=change_direction(dx, dy, play_time)
+                    rx, ry= x+dx, y+dy
+                    play_time+=1
+                    
+                    if rx<0 or rx>=n or ry<0 or ry>=n or board[rx][ry]==2: # 벽 만나거나 자기 몸과 부딪힐 때
+                        break
+                
+                    if board[rx][ry]==1: # 사과 먹을 때
+                        snake.append((rx, ry))
+                        board[rx][ry]=2
+                        x, y=rx, ry
+                    else: # 빈 칸일때
+                        snake.append((rx, ry))
+                        board[rx][ry]=2
+                        x, y=rx, ry
+                        a, b=snake.popleft()
+                        board[a][b]=0
+                    
+                return print(play_time)
+            
+            n=int(input())
+            board=[[0]*n for _ in range(n)]
+            board[0][0]=2 # 뱀의 초기 위치
+            
+            k=int(input())
+            for i in range(k):
+                r, c=map(int, input().split()) # 사과의 위치
+                board[r-1][c-1]=1
+            
+            directions=[]
+            L=int(input())
+            for i in range(L):
+                time, direction=input().split() # 시간, 방향 전환 정보
+                directions.append((int(time), direction))
+            
+            solution()
+            ```
         
     2. 풀이를 본 후
         
