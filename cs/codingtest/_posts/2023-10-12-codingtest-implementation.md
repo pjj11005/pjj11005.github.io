@@ -750,10 +750,63 @@ sitemap: false
     
     1. 내 풀이
         
-        1. 우선 설치 및 삭제 가능을 확인하는 check함수 생성
-        2. build_frame 별로 check하며 작업이 가능할 때마다 기둥과 보 배열에 각각의 정보 저장
+        - 처음 풀이
+            1. 우선 설치 및 삭제 가능을 확인하는 check함수 생성
+            2. build_frame 별로 check하며 작업이 가능할 때마다 기둥과 보 배열에 각각의 정보 저장
+            
+            하지만 삭제를 어떻게 구현할지 모르겠어서 실패했다…
+            
+        - 두 번째 풀이
+            1. answer 리스트에 구조물의 좌표와 종류 저장
+            2. 작업을 진행 후 check 함수를 통해서 가능한 작업인지 확인
+            3. 작업이 가능하지 않다면 다시 작업 전의 상태로 돌림
+            4. answer 오름차순 정렬 후 출력
+            
+            ```python
+            def build_operation(x, y, a, b, answer):
+                if b==1: # 설치
+                    answer.append([x, y, a])
+                else: # 제거
+                    answer.remove([x, y, a])
+                    
+                return answer
+            
+            def check(answer):
+                for x, y, a in answer:
+                    if a==0: # 기둥
+                        if y==0 or ([x,y,1] in answer) or ([x-1,y,1] in answer) or ([x,y-1,0] in answer):
+                            continue
+                        else:
+                            return False
+                    else: # 보
+                        if ([x,y-1,0] in answer) or ([x+1,y-1,0] in answer) or (([x-1,y,1] in answer) and ([x+1,y,1] in answer)):
+                            continue
+                        else:
+                            return False
+                return True
+            
+            def solution(n, build_frame):
+                answer = [] # 최종 답
+                
+                for x, y, a, b in build_frame:
+                    answer=build_operation(x, y, a, b, answer) # 작업 진행        
+                    
+                    if check(answer): # 작업 가능
+                        continue
+                    else: # 작업 취소
+                        if b==1: # 설치 취소
+                            answer.remove([x, y, a])
+                        else: # 삭제 취소
+                            answer.append([x, y, a])
+                
+                answer.sort()
+                
+                return answer
+            ```
+    
+            > **check 함수 구성을 생각하는데 조금 오래 걸렸다. 리스트에서 특정 요소를 찾을 때는 이와 같은 방식을 떠올릴 수 있도록 해야겠다**
+
         
-        하지만 삭제를 어떻게 구현할지 모르겠어서 실패했다…
         
     2. 풀이를 본 후
         
