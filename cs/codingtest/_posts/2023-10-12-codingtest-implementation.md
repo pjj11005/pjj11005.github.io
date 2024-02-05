@@ -852,42 +852,81 @@ sitemap: false
     
     1. 내 풀이
         
-        1. 우선 치킨집과 집 사이의 거리를 나타내는 이차원 배열 생성
-        2. 그 후, 행의 합을 기준으로 오름차순 정렬 후, M개의 행을 선택
-        3. 그리고 각 열의 값중 최소값을 다 더해서 조시의 치킨거리 최소값 도출
-        
-        그런데 틀렸다…
-        
-        ```python
-        def solve():
-            answer = 0
-            sorted_distance = sorted(distance, key=lambda row: sum(row))
-            selected_rows = sorted_distance[:M]
-            for col in range(len(house)):
-                col_min = min(row[col] for row in selected_rows)
-                answer += col_min
+        - 처음 풀이
+            1. 우선 치킨집과 집 사이의 거리를 나타내는 이차원 배열 생성
+            2. 그 후, 행의 합을 기준으로 오름차순 정렬 후, M개의 행을 선택
+            3. 그리고 각 열의 값중 최소값을 다 더해서 조시의 치킨거리 최소값 도출
             
-            return print(answer)
-        
-        N, M = map(int, input().split())
-        city = [list(map(int, input().split())) for _ in range(N)]
-        house, chicken = [], []
-        for i in range(N):
-          for j in range(N):
-            if city[i][j] == 1:
-                house.append((i, j))
-            if city[i][j] == 2:
-                chicken.append((i, j))
-        
-        distance=[]
-        for c in chicken:
-            temp=[]
-            for h in house:
-                temp.append(abs(c[0]-h[0])+abs(c[1]-h[1]))
-            distance.append(temp)
-        
-        solve()
-        ```
+            그런데 틀렸다…
+            
+            ```python
+            def solve():
+                answer = 0
+                sorted_distance = sorted(distance, key=lambda row: sum(row))
+                selected_rows = sorted_distance[:M]
+                for col in range(len(house)):
+                    col_min = min(row[col] for row in selected_rows)
+                    answer += col_min
+                
+                return print(answer)
+            
+            N, M = map(int, input().split())
+            city = [list(map(int, input().split())) for _ in range(N)]
+            house, chicken = [], []
+            for i in range(N):
+                for j in range(N):
+                    if city[i][j] == 1:
+                        house.append((i, j))
+                    if city[i][j] == 2:
+                        chicken.append((i, j))
+            
+            distance=[]
+            for c in chicken:
+                temp=[]
+                for h in house:
+                    temp.append(abs(c[0]-h[0])+abs(c[1]-h[1]))
+                distance.append(temp)
+            
+            solve()
+            ```
+            
+        - 두 번째 풀이
+            1. 집, 치킨의 좌표들 저장
+            2. 치킨 집 m개의 조합마다 집들의 도시의 치킨 거리를 구해서 도시의 치킨 거릐의 최솟값 구함
+            
+            ```python
+            from itertools import combinations
+            
+            def solution():
+                chicken_combination = list(combinations(chicken, m)) # 치킨집 m개 경우의 수
+                result=1e9 # 최종 최소 도시치킨거리
+                for chicken_comb in chicken_combination:
+                    sum=0 # 각 경우의 도시치킨거리
+                    for h in house:
+                    temp=1e9 # 집마다의 치킨거리
+                    for chicken_co in chicken_comb:
+                        r1, c1 = h
+                        r2, c2 = chicken_co
+                        temp=min(temp,abs(r1-r2)+abs(c1-c2))
+                        
+                    sum+=temp  
+                
+                    result=min(result, sum)
+                
+                return print(result)
+            
+            n,m=map(int, input().split()) 
+            city=[list(map(int, input().split())) for _ in range(n)] # 도시 정보
+            house, chicken=[], [] # 집과 치킨집 좌표
+            for i in range(n):
+                for j in range(n):
+                    if city[i][j]==1:
+                        house.append((i,j))
+                    elif city[i][j]==2:
+                        chicken.append((i,j))
+            
+            solution()
+            ```
         
     2. 풀이를 본 후
         
