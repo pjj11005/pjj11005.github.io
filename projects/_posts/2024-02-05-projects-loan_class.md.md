@@ -1488,7 +1488,6 @@ sub_lgbm = get_submission(lgbm_test_predictions,'lgbm')
 
 ## Lesson
 - feature engineering, 하이퍼 파라미터 튜닝를 조금 더 시도할 시간이 있었으면 좋았을 것 같다 (5일 남기고 참가)
-- 특성 조합으로 만든 수치형 특성 스케일링을 했었어야 했다
 - 다음 대회부터는 초기부터 시작해서 더 좋은 성과를 내봐야겠다
 
 ## 참조
