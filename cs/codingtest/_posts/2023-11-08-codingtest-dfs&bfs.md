@@ -329,47 +329,91 @@ sitemap: false
 
     1. 내 풀이
         
-        1. 우선 간선의 정보를 저장한다.
-        2. 그 후, BFS 탐색을 통해서 최단 거리가 K가 되는 도시들을 answer 배열에 저장한다.
-        3. 아무것도 없으면 -1을 존재하면 오름차순으로 정렬 후 출력
-        
-        PyPy3로 제출하니 맞았다…
-        
-        ```python
-        from collections import deque
-        
-        def solve():
-          q=deque()
-          q.append((X,0))
-          visited[X]=1
-          while q:
-            x,count=q.popleft()
-            for d in dist[x]:
-              if visited[d]==0:
-                if count+1==K:
-                  visited[d]=1
-                  answer.append(d)
-                else:
-                  visited[d]=1
-                  q.append((d,count+1))
-          
-        N,M,K,X=map(int,input().split())
-        dist=[[] for _ in range(N+1)]
-        for i in range(M):
-          a,b=map(int,input().split())
-          dist[a].append(b)
-          
-        visited=[0]*(N+1)
-        answer=[]   
-        solve()
-        
-        if len(answer)==0:
-          print(-1)
-        else:
-          answer.sort()
-          for a in answer:
-            print(a)
-        ```
+        - 처음 풀이
+            1. 우선 간선의 정보를 저장한다.
+            2. 그 후, BFS 탐색을 통해서 최단 거리가 K가 되는 도시들을 answer 배열에 저장한다.
+            3. 아무것도 없으면 -1을 존재하면 오름차순으로 정렬 후 출력
+            
+            PyPy3로 제출하니 맞았다…
+            
+            ```python
+            from collections import deque
+            
+            def solve():
+                q=deque()
+                q.append((X,0))
+                visited[X]=1
+                while q:
+                    x,count=q.popleft()
+                    for d in dist[x]:
+                        if visited[d]==0:
+                            if count+1==K:
+                                visited[d]=1
+                                answer.append(d)
+                            else:
+                                visited[d]=1
+                                q.append((d,count+1))
+            
+            N,M,K,X=map(int,input().split())
+            dist=[[] for _ in range(N+1)]
+            for i in range(M):
+                a,b=map(int,input().split())
+                dist[a].append(b)
+            
+            visited=[0]*(N+1)
+            answer=[]   
+            solve()
+            
+            if len(answer)==0:
+                print(-1)
+            else:
+                answer.sort()
+                for a in answer:
+                    print(a)
+            ```
+            
+        - 두 번째 풀이
+            1. 간선의 정보를 저장
+            2. 그 후, BFS 탐색을 통해서 최단 거리가 K가 되는 도시들을 answer 배열에 저장
+            3. 아무것도 없으면 -1, 존재하면 오름차순으로 정렬 후 도시들 출력
+            
+            입력정보가 많아 PyPy3로 제출하니 맞았다, 처음 풀이와 거의 유사했다 → 다음에는 최단거리 정보를 저장하며 풀이를 진행해봐야겠다.
+            
+            ```python
+            from collections import deque
+            
+            def bfs():
+                q=deque([(x,0)])
+                visited[x]=1
+                
+                while q:
+                    a, dist=q.popleft()
+                    if dist==k:
+                        answer.append(a)
+                    
+                    for i in graph[a]:
+                        if not visited[i]:
+                            q.append((i, dist+1))
+                            visited[i]=1
+            
+            if len(answer)==0: # 존재 X
+                print(-1)
+            else:
+                answer.sort()
+                for a in answer:
+                    print(a)
+            
+            n,m,k,x=map(int, input().split()) # 도시 개수, 도로 개수, 거리, 출발 도시
+            visited=[0]*(n+1)
+            graph=[[] for _ in range(n+1)] # 간선 정보
+            for i in range(m):
+                a, b = map(int, input().split())
+                graph[a].append(b)
+            
+            answer=[]
+            
+            bfs()
+            ```
         
     2. 풀이를 본 후
         
