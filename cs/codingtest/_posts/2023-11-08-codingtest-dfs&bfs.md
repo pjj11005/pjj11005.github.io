@@ -480,16 +480,16 @@ sitemap: false
             from itertools import combinations
             
             def solve(x,y):
-            global count
-            for i in range(4):
-                nx,ny=x+dx[i],y+dy[i]
-                if 0<=nx<N and 0<=ny<M and visited[nx][ny]==0 and lab[nx][ny]==0:
-                visited[nx][ny]=1
-                lab[nx][ny]=2
-                count+=1
-                solve(nx,ny)
-                visited[nx][ny]=0
-                lab[nx][ny]=0
+                global count
+                for i in range(4):
+                    nx,ny=x+dx[i],y+dy[i]
+                    if 0<=nx<N and 0<=ny<M and visited[nx][ny]==0 and lab[nx][ny]==0:
+                        visited[nx][ny]=1
+                        lab[nx][ny]=2
+                        count+=1
+                        solve(nx,ny)
+                        visited[nx][ny]=0
+                        lab[nx][ny]=0
             
             
             N,M=map(int,input().split())
@@ -499,11 +499,11 @@ sitemap: false
             dx=[-1,1,0,0]
             dy=[0,0,-1,1]
             for i in range(N):
-            for j in range(M):
-                if lab[i][j]==0:
-                point.append((i,j))
-                if lab[i][j]==2:
-                virus.append((i,j))
+                for j in range(M):
+                    if lab[i][j]==0:
+                        point.append((i,j))
+                    if lab[i][j]==2:
+                        virus.append((i,j))
                 
             comb_point=list(combinations(point, 3))
             
@@ -511,17 +511,17 @@ sitemap: false
             answer=64
             
             for comb in comb_point:
-            count=0
-            for c in comb:
-                lab[c[0]][c[1]]=1
+                count=0
+                for c in comb:
+                    lab[c[0]][c[1]]=1
+                
+                for v in virus:
+                    solve(v[0],v[1])
+                
+                for c in comb:
+                    lab[c[0]][c[1]]=0
             
-            for v in virus:
-                solve(v[0],v[1])
-            
-            for c in comb:
-                lab[c[0]][c[1]]=0
-            
-            answer=min(answer,count)
+                answer=min(answer,count)
             
             print(len(point)-answer)
             ```
@@ -542,12 +542,12 @@ sitemap: false
             
             def dfs(x,y):
             
-            for i in range(4):
-                nx, ny=x+dx[i], y+dy[i]
-            
-                if 0<=nx<n and 0<=ny<m and temp_array[nx][ny]==0:
-                    temp_array[nx][ny]=2
-                    dfs(nx, ny)
+                for i in range(4):
+                    nx, ny=x+dx[i], y+dy[i]
+                
+                    if 0<=nx<n and 0<=ny<m and temp_array[nx][ny]==0:
+                        temp_array[nx][ny]=2
+                        dfs(nx, ny)
             
             n,m=map(int,input().split())
             array=[list(map(int,input().split())) for _ in range(n)] # 지도 정보
