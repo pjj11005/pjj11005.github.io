@@ -536,7 +536,7 @@ sitemap: false
             >    - **이렇게 하면 빈칸, 바이러스의 좌표를 저장할 필요가 없어진다**
             >- **백준에서는 PyPy3로 제출해야 한다고 함**
             
-            
+
             ```python
             from itertools import combinations
             
@@ -665,47 +665,89 @@ sitemap: false
 - 기출 문제 3: 경쟁적 전염
 
     1. 내 풀이
-        1. 우선 초기 바이러스 위치, 바이러스 종류, 시간 값을 virus 리스트에 저장 후 작은 값부터 오름차순으로 정렬
-        2. 그 후, BFS탐색을 시행하여 시간 S까지 탐색
-        3. 최종적으로 X,Y 좌표 출력
+        - 처음 풀이
+            1. 우선 초기 바이러스 위치, 바이러스 종류, 시간 값을 virus 리스트에 저장 후 작은 값부터 오름차순으로 정렬
+            2. 그 후, BFS탐색을 시행하여 시간 S까지 탐색
+            3. 최종적으로 X,Y 좌표 출력
+            
+            반복문 종료에서 어이없이 실수를 해서 조금 오래걸렸다.
+            
+            ```python
+            from collections import deque
+            
+            def solve():
+                q = deque(virus)
+                
+                while q:
+                    x, y, v, time = q.popleft()
+                    if time == S:
+                        break
+                    
+                    for i in range(4):
+                        nx, ny = x + dx[i], y + dy[i]
+                        if 0 <= nx < N and 0 <= ny < N and test[nx][ny] == 0:
+                            test[nx][ny] = v
+                            q.append((nx, ny, v, time + 1))
+            
+            N, K = map(int, input().split())
+            test = [list(map(int, input().split())) for _ in range(N)]
+            S, X, Y = map(int, input().split())
+            
+            virus = []
+            for i in range(N):
+                for j in range(N):
+                    if test[i][j] != 0:
+                        virus.append((i, j, test[i][j],0))
+            
+            virus = sorted(virus, key=lambda x: x[2])
+            dx = [-1, 1, 0, 0]
+            dy = [0, 0, -1, 1]
+            
+            solve()
+            print(test[X - 1][Y - 1])
+            ```
         
-        반복문 종료에서 어이없이 실수를 해서 조금 오래걸렸다.
-        
-        ```python
-         from collections import deque
-        
-        def solve():
-          q = deque(virus)
-          
-          while q:
-            x, y, v, time = q.popleft()
-            if time == S:
-              break
-              
-            for i in range(4):
-              nx, ny = x + dx[i], y + dy[i]
-              if 0 <= nx < N and 0 <= ny < N and test[nx][ny] == 0:
-                test[nx][ny] = v
-                q.append((nx, ny, v, time + 1))
-        
-        N, K = map(int, input().split())
-        test = [list(map(int, input().split())) for _ in range(N)]
-        S, X, Y = map(int, input().split())
-        
-        virus = []
-        for i in range(N):
-          for j in range(N):
-            if test[i][j] != 0:
-              virus.append((i, j, test[i][j],0))
-        
-        virus = sorted(virus, key=lambda x: x[2])
-        dx = [-1, 1, 0, 0]
-        dy = [0, 0, -1, 1]
-        
-        solve()
-        print(test[X - 1][Y - 1])
-        ```
-        
+        - 두 번째 풀이
+            1. 바이러스의 번호, 좌표, 시간 정보를 번호 순으로 리스트에 저장
+            2. 바이러스 번호 순서대로 BFS 탐색을 진행
+            3. S초 후, (x, y) 위치의 바이러스 번호 출력
+            
+            ```python
+            from collections import deque
+            import sys
+            input=sys.stdin.readline
+            
+            def bfs():
+                q=deque(virus)
+                while q:
+                    num, a, b, time= q.popleft()
+                    if time==s:
+                        break
+                    
+                    for i in range(4):
+                        na, nb=a+dx[i], b+dy[i]
+                        if 0<=na<n and 0<=nb<n and array[na][nb]==0:
+                            array[na][nb]=num
+                            q.append((num, na, nb, time+1))
+                
+                return print(array[x-1][y-1])
+            
+            n,k=map(int,input().split())
+            array=[list(map(int,input().split())) for _ in range(n)]
+            virus=[]
+            for i in range(n): # 바이러스들 저장
+                for j in range(n):
+                    if array[i][j]!=0:
+                        virus.append((array[i][j],i,j,0))
+            virus.sort() # 바이러스 번호 오름차순 정렬
+            
+            s,x,y=map(int,input().split())
+            dx=[-1,1,0,0]
+            dy=[0,0,-1,1]
+            
+            bfs()
+            ```
+
     2. 풀이를 본 후
         
         풀이의 방법도 거의 유사했다.
