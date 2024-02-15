@@ -468,64 +468,126 @@ sitemap: false
 - 기출 문제 2: 연구소
 
     1. 내 풀이
+        - 처음 풀이
+            1. 우선 빈칸, 바이러스의 좌표를 저장해 놓는다.
+            2. 빈칸의 좌표들 중 3개를 골라서 만들 수 있는 조합을 리스트에 저장한다.
+            3. 조합 리스트를 돌면서 가장 작게 바이러스가 퍼질때의 칸의 수를 answer에 저장한다.
+            4. 마지막으로 빈칸의 개수에서 answer를 빼준다.
+            시간 초과가 발생했다.
+            
+            ```python
+            from collections import deque
+            from itertools import combinations
+            
+            def solve(x,y):
+            global count
+            for i in range(4):
+                nx,ny=x+dx[i],y+dy[i]
+                if 0<=nx<N and 0<=ny<M and visited[nx][ny]==0 and lab[nx][ny]==0:
+                visited[nx][ny]=1
+                lab[nx][ny]=2
+                count+=1
+                solve(nx,ny)
+                visited[nx][ny]=0
+                lab[nx][ny]=0
+            
+            
+            N,M=map(int,input().split())
+            lab=[list(map(int,input().split())) for _ in range(N)]
+            point=[]
+            virus=[]
+            dx=[-1,1,0,0]
+            dy=[0,0,-1,1]
+            for i in range(N):
+            for j in range(M):
+                if lab[i][j]==0:
+                point.append((i,j))
+                if lab[i][j]==2:
+                virus.append((i,j))
+                
+            comb_point=list(combinations(point, 3))
+            
+            visited=[[0]*M for _ in range(N)]
+            answer=64
+            
+            for comb in comb_point:
+            count=0
+            for c in comb:
+                lab[c[0]][c[1]]=1
+            
+            for v in virus:
+                solve(v[0],v[1])
+            
+            for c in comb:
+                lab[c[0]][c[1]]=0
+            
+            answer=min(answer,count)
+            
+            print(len(point)-answer)
+            ```
         
-        1. 우선 빈칸, 바이러스의 좌표를 저장해 놓는다.
-        2. 빈칸의 좌표들 중 3개를 골라서 만들 수 있는 조합을 리스트에 저장한다.
-        3. 조합 리스트를 돌면서 가장 작게 바이러스가 퍼질때의 칸의 수를 answer에 저장한다.
-        4. 마지막으로 빈칸의 개수에서 answer를 빼준다.
-        시간 초과가 발생했다.
-        
-        ```python
-        from collections import deque
-        from itertools import combinations
-        
-        def solve(x,y):
-          global count
-          for i in range(4):
-            nx,ny=x+dx[i],y+dy[i]
-            if 0<=nx<N and 0<=ny<M and visited[nx][ny]==0 and lab[nx][ny]==0:
-              visited[nx][ny]=1
-              lab[nx][ny]=2
-              count+=1
-              solve(nx,ny)
-              visited[nx][ny]=0
-              lab[nx][ny]=0
-         
-          
-        N,M=map(int,input().split())
-        lab=[list(map(int,input().split())) for _ in range(N)]
-        point=[]
-        virus=[]
-        dx=[-1,1,0,0]
-        dy=[0,0,-1,1]
-        for i in range(N):
-          for j in range(M):
-            if lab[i][j]==0:
-              point.append((i,j))
-            if lab[i][j]==2:
-              virus.append((i,j))
-              
-        comb_point=list(combinations(point, 3))
-        
-        visited=[[0]*M for _ in range(N)]
-        answer=64
-        
-        for comb in comb_point:
-          count=0
-          for c in comb:
-            lab[c[0]][c[1]]=1
-        
-          for v in virus:
-            solve(v[0],v[1])
-          
-          for c in comb:
-            lab[c[0]][c[1]]=0
-          
-          answer=min(answer,count)
-        
-        print(len(point)-answer)
-        ```
-        
+        - 두 번째 풀이
+            1. 빈칸, 바이러스 좌표 저장
+            2. 빈칸에 벽 3개를 설치할 때마다 바이러스를 퍼지게 한 후 안전 영역 계산
+            3. 최댓값을 모든 조합에서 계산한 후 출력
+            
+            >- **시간이 조금 오래 걸렸다 (배열 복사를 잘못하고 있었다…)**
+            >- **풀이를 보면 벽의 설치도 DFS를 이용하여 진행했다 → 다음에는 풀이와 같이 진행해보도록 해야겠다**
+            >    - **이렇게 하면 빈칸, 바이러스의 좌표를 저장할 필요가 없어진다**
+            >- **백준에서는 PyPy3로 제출해야 한다고 함**
+            
+            
+            ```python
+            from itertools import combinations
+            
+            def dfs(x,y):
+            
+            for i in range(4):
+                nx, ny=x+dx[i], y+dy[i]
+            
+                if 0<=nx<n and 0<=ny<m and temp_array[nx][ny]==0:
+                    temp_array[nx][ny]=2
+                    dfs(nx, ny)
+            
+            n,m=map(int,input().split())
+            array=[list(map(int,input().split())) for _ in range(n)] # 지도 정보
+            zero=[] # 빈칸의 좌표들
+            second=[] # 바이러스의 좌표들
+            
+            for i in range(n):
+                for j in range(m):
+                    if array[i][j]==0:
+                        zero.append((i,j))
+                    elif array[i][j]==2:
+                        second.append((i,j))
+                
+            dx=[-1,1,0,0]
+            dy=[0,0,-1,1]
+            answer=0
+            temp_array=[[0]*m for _ in range(n)] # 복사할 지도
+            
+            for comb in list(combinations(zero,3)):
+                for i in range(n):
+                    for j in range(m):
+                        temp_array[i][j]=array[i][j]
+                
+                for i, j in comb: # 벽 설치
+                    temp_array[i][j]=1
+                
+                for x, y in second: # 바이러스 퍼짐
+                    dfs(x,y)
+                
+                count=0
+                for i in range(n):
+                    for j in range(m):
+                        if temp_array[i][j]==0:
+                            count+=1
+                
+                answer=max(answer, count)
+            
+            print(answer)
+            ```
+
     2. 풀이를 본 후
         
         아이디어는 거의 유사했다. 하지만, 조합 라이브러리를 사용하지 않고 DFS 탐색 함수 내에서 완전 탐색을 이용해서 벽을 세워주고 그때마다 탐색을 해서 값을 구하도록 했다. 이 때, 안전 영역의 값은 그냥 완전 탐색하여 0의 좌표 수를 세어 주는 것으로 했다. 또한, 벽을 세울 때마다 저장할 임의의 배열도 만들었다. 
