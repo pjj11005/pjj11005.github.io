@@ -1036,8 +1036,8 @@ sitemap: false
         add, sub, mul, div = map(int, input().split())
         
         # 최솟값과 최댓값 초기화
-        min_value = 1e9
-        max_value = -1e9
+        min_value = int(1e9)
+        max_value = int(-1e9)
         
         # 깊이 우선 탐색 (DFS) 메서드
         def dfs(i, now):
