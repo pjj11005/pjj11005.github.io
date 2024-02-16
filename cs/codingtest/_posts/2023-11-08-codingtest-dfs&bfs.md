@@ -856,7 +856,7 @@ sitemap: false
         >그 후, 재귀 함수 solution을 이용해서 조건대로 구현하고 그저 더해주면 된다. 원본 문자열에 재귀 함수를 더해주면 재귀적으로 탐색하면서 최종적인 문자열이 구해진다…
         >
         >**올바른 문자열 판단 함수 구현, 문자열의 요소는 불변이므로 리스트로 변환한 후 변경 → 이 두 가지를 배웠다**
-        
+
         ```python
         # "균형잡힌 괄호 문자열"의 인덱스 반환
         def balanced_index(p):
@@ -909,43 +909,88 @@ sitemap: false
 - 기출 문제 5:  연산자 끼워넣기
 
     1. 내 풀이
-        1. DFS로 탐색하면서 연산자의 개수가 남아있는 것들을 탐색하도록 했다.
-        2. 연산을 N-1번 하면 최소, 최대값을 갱신시켜줬다.
-        
-        하지만 연산을 이어나가는 처리를 제대로 하지 못했다.
-        
-        ```python
-        from collections import deque
-        
-        def solve(sum,plus,minus,multi,divide,idx):
-          global minimum,maximum
-          if idx==N:
-            minimum=min(sum,minimum)
-            maximum=max(sum,maximum)
-            return
+        - 처음 풀이
+            1. DFS로 탐색하면서 연산자의 개수가 남아있는 것들을 탐색하도록 했다.
+            2. 연산을 N-1번 하면 최소, 최대값을 갱신시켜줬다.
             
-          for i in range(idx,N):
-            if plus>0:
-              solve(sum+A[i],plus-1,minus,multi,divide,idx+1)
-            if minus>0:
-              solve(sum-A[i],plus,minus-1,multi,divide,idx+1)
-            if multi>0:
-              solve(sum*A[i],plus,minus,multi-1,divide,idx+1)
-            if divide>0:
-              solve(sum/A[i],plus,minus,multi,divide-1,idx+1)
-        
-          return
-        
-        N=int(input())
-        A=list(map(int,input().split()))
-        op=list(map(int,input().split()))
-        
-        minimum=1e9
-        maximum=-1e9
-        solve(A[0],op[0],op[1],op[2],op[3],1)
-        print(maximum)
-        print(minimum)
-        ```
+            하지만 연산을 이어나가는 처리를 제대로 하지 못했다.
+            
+            ```python
+            from collections import deque
+            
+            def solve(sum,plus,minus,multi,divide,idx):
+                global minimum,maximum
+                if idx==N:
+                    minimum=min(sum,minimum)
+                    maximum=max(sum,maximum)
+                    return
+                    
+                for i in range(idx,N):
+                    if plus>0:
+                        solve(sum+A[i],plus-1,minus,multi,divide,idx+1)
+                    if minus>0:
+                        solve(sum-A[i],plus,minus-1,multi,divide,idx+1)
+                    if multi>0:
+                        solve(sum*A[i],plus,minus,multi-1,divide,idx+1)
+                    if divide>0:
+                        solve(sum/A[i],plus,minus,multi,divide-1,idx+1)
+                
+                return
+            
+            N=int(input())
+            A=list(map(int,input().split()))
+            op=list(map(int,input().split()))
+            
+            minimum=1e9
+            maximum=-1e9
+            solve(A[0],op[0],op[1],op[2],op[3],1)
+            print(maximum)
+            print(minimum)
+            ```
+            
+        - 두 번째 풀이
+            1. 합, +, -, X, /, 개수 를 인자로 하는 재귀함수를 만들어 n-1번 계산하면 최솟값, 최댓값 갱신
+            
+            >하지만, 틀렸다. 풀이와 똑같이 했지만 틀려서 의문이 들었다.\
+            >`max 함수에서는 부동소수점 숫자와 정수를 비교할 때 정수가 부동소수점 숫자로 변환되어 비교되며, 값이 같을 경우에는 부동소수점 숫자가 우선된다고 한다.`\
+            >**따라서, maximum과 minimum을 정수 형으로 초기화 하거나 max와 min 연산을 할 때 total값을 우선적으로 위치 시켜야 한다…**
+            
+            ```python
+            max(1e1, 10)
+            >>> 10.0
+            max(10, 1e1)
+            >>> 10
+            ```
+            
+            ```python
+            import sys
+            input=sys.stdin.readline
+            
+            def dfs(total,plus,minus,multi,divide,count):
+                global minimum, maximum
+                if count==n:
+                    minimum=min(minimum, total)
+                    maximum=max(maximum, total)
+                    return
+                    
+                if plus:
+                    dfs(total+num[count],plus-1,minus,multi,divide,count+1)
+                if minus:
+                    dfs(total-num[count],plus,minus-1,multi,divide,count+1)
+                if multi:
+                    dfs(total*num[count],plus,minus,multi-1,divide,count+1)
+                if divide:
+                    dfs(int(total/num[count]),plus,minus,multi,divide-1,count+1)
+                
+            n=int(input())
+            num=list(map(int, input().split()))
+            op=list(map(int, input().split()))
+            minimum,maximum=int(1e9), int(-1e9) # 정수형으로 초기화 
+            
+            dfs(num[0],op[0],op[1],op[2],op[3],1)
+            print(maximum)
+            print(minimum)
+            ```
         
     2. 풀이를 본 후
         
@@ -1032,7 +1077,8 @@ sitemap: false
         {:.figcaption}
 
         
-        >책의 풀이도 내 예전 풀이와 유사했다. DFS 문제 해결시 종료조건, 탐색하는 기본 방식을 생각하면서 풀어야겠다.
+        >책의 풀이도 내 예전 풀이와 유사했다. DFS 문제 해결시 종료조건, 탐색하는 기본 방식을 생각하면서 풀어야겠다.\
+        >**나의 예전 풀이에서도 두 번째 풀이에서와 같은 처리가 필요하다**
         
 - 기출 문제 6: 감시 피하기
 
