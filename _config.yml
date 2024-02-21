@@ -50,6 +50,8 @@ author:
 
 # Add links to the sidebar.
 menu:
+  - title:             KT_AIVLE
+    url:               /kt_aivle/
   - title:             Projects
     url:               /projects/
   - title:             ML/DL
