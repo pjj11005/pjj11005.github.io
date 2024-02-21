@@ -3,10 +3,10 @@
 layout: list
 
 # The title of the tag's page.
-title: KT_AIVLE_SCHOOL
+title: KT AIVLE SCHOOL
 
 # The name of the tag, used in a post's front matter (e.g. tags: [<slug>]).
-slug: kt_aivle
+slug: ktaivle
 
 # (Optional) Write a short (~150 characters) description of this featured tag.
 description: KT AIVLE SCHOOL 5기를 진행하며 배운 내용들을 정리하는 부분입니다.
