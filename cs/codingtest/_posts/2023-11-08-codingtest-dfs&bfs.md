@@ -1083,75 +1083,151 @@ sitemap: false
 - 기출 문제 6: 감시 피하기
 
     1. 내 풀이
-        1. 전체 복도에서 완전 탐색을 하여 벽을 3개 설치
-        2. 그 때마다 선생님을 상하좌우로 이동시켜서 벽 or 범위 밖 전까지 만나는 좌표들을 ‘T’로 변경
-        3. 그 후, 학생의 수의 변화 유무로 판단
-        
-        푸는데 1시간 반 정도가 걸렸다…
-        
-        ```python
-        def move(x,y,dx,dy):
-          while True:
-            nx,ny=x+dx,y+dy
-            if nx<0 or nx>=N or ny<0 or ny>=N:
-              break
-            if 0<=nx<N and 0<=ny<N:
-              if temp[nx][ny]=='O':
-                break
-              else:
-                temp[nx][ny]='T'
-                x,y=nx,ny
-              
-        def solve(count):
-          global answer
-          if count==3:
-            s_count=0
-            for i in range(N):
-              for j in range(N):
-                temp[i][j]=land[i][j]
-        
-            for i in range(4):
-              for t in teacher:
-                move(t[0],t[1],dx[i],dy[i])
-        
-            for i in range(N):
-              for j in range(N):
-                if temp[i][j]=='S':
-                  s_count+=1
-        
-            if s_count==len(student):
-              answer='YES'
-            return
+        - 처음 풀이
+            1. 전체 복도에서 완전 탐색을 하여 벽을 3개 설치
+            2. 그 때마다 선생님을 상하좌우로 이동시켜서 벽 or 범위 밖 전까지 만나는 좌표들을 ‘T’로 변경
+            3. 그 후, 학생의 수의 변화 유무로 판단
             
-          for i in range(N):
-            for j in range(N):
-              if land[i][j]=='X':
-                count+=1
-                land[i][j]='O'
-                solve(count)
-                count-=1
-                land[i][j]='X'
+            푸는데 1시간 반 정도가 걸렸다…
+            
+            ```python
+            def move(x,y,dx,dy):
+                while True:
+                    nx,ny=x+dx,y+dy
+                    if nx<0 or nx>=N or ny<0 or ny>=N:
+                        break
+                    if 0<=nx<N and 0<=ny<N:
+                        if temp[nx][ny]=='O':
+                            break
+                        else:
+                            temp[nx][ny]='T'
+                            x,y=nx,ny
                 
-        N=int(input())
-        land=[list(input().split()) for _ in range(N)]
-        temp=[['']*N for _ in range(N)]
-        student=[]
-        teacher=[]
-        answer='NO'
-        
-        dx=[-1,1,0,0]
-        dy=[0,0,-1,1]
-        
-        for i in range(N):
-          for j in range(N):
-            if land[i][j]=='S':
-              student.append((i,j))
-            if land[i][j]=='T':
-              teacher.append((i,j))
-              
-        solve(0)
-        print(answer)
-        ```
+            def solve(count):
+                global answer
+                if count==3:
+                    s_count=0
+                    for i in range(N):
+                        for j in range(N):
+                            temp[i][j]=land[i][j]
+                
+                    for i in range(4):
+                        for t in teacher:
+                            move(t[0],t[1],dx[i],dy[i])
+                
+                    for i in range(N):
+                        for j in range(N):
+                            if temp[i][j]=='S':
+                                s_count+=1
+                    
+                    if s_count==len(student):
+                        answer='YES'
+                        return
+                    
+                for i in range(N):
+                    for j in range(N):
+                        if land[i][j]=='X':
+                            count+=1
+                            land[i][j]='O'
+                            solve(count)
+                            count-=1
+                            land[i][j]='X'
+                    
+            N=int(input())
+            land=[list(input().split()) for _ in range(N)]
+            temp=[['']*N for _ in range(N)]
+            student=[]
+            teacher=[]
+            answer='NO'
+            
+            dx=[-1,1,0,0]
+            dy=[0,0,-1,1]
+            
+            for i in range(N):
+                for j in range(N):
+                    if land[i][j]=='S':
+                        student.append((i,j))
+                    if land[i][j]=='T':
+                        teacher.append((i,j))
+                
+            solve(0)
+            print(answer)
+            ```
+            
+        - 두 번째 풀이
+            
+            DFS로 벽 설치 → 3개 설치 시 마다 같은 열 혹은 행에 학생과 선생님이 위치할 때 벽이 사이에 있는지 판단
+            
+            DFS가 제대로 종료되지 않아 실패…
+            
+            ```python
+            def dfs(count):
+                global answer
+                if count == 3:
+                    for i in range(n):
+                        for j in range(n):
+                            temp[i][j] = array[i][j]
+                
+                    bricks=[]
+                    for i in range(n):
+                        for j in range(n):
+                            if temp[i][j] == 'O':
+                                bricks.append((i, j))
+                    
+                    flag = True
+                    for sx, sy in students:
+                        for tx, ty in teachers:
+                            if (sx == tx) or (sy == ty): # 학생과 선생님이 같은 행 혹은 같은 열
+                                for bx, by in bricks:
+                                    if sx == bx: # 벽이 같은 행에 있을 때
+                                        if ((sy < by) and (by < ty)) or ((sy > by) and (by > ty)): # 막을 수 있을 때
+                                            break
+                                        else: # 막기 불가능
+                                            flag = False
+                                            break
+                                    
+                                    if sy == by: # 벽이 같은 열에 있을 때
+                                        if ((sx < bx) and (bx < tx)) or ((sx > bx) and (bx > tx)): # 막을 수 있을 때
+                                            break
+                                        else: # 막기 불가능
+                                            flag = False
+                                            break
+                                if not flag:
+                                    answer='NO'
+                                    return
+                
+                    answer='YES'
+                    return
+                
+                for i in range(n):
+                    for j in range(n):
+                        if array[i][j] == 'X':
+                            array[i][j] = 'O'
+                            count += 1
+                            dfs(count)
+                            if answer:
+                                return
+                            array[i][j] = 'X'
+                            count -= 1
+                
+                return
+            
+            n = int(input())
+            array = [list(input().split()) for _ in range(n)]  # 초기 복도
+            temp = [[''] * n for _ in range(n)]  # 벽 세운 후의 복도
+            students, teachers = [], []
+            answer=''
+            
+            for i in range(n):
+                for j in range(n):
+                    if array[i][j] == 'S':
+                        students.append((i, j))
+                    if array[i][j] == 'T':
+                        teachers.append((i, j))
+                
+            dfs(0)
+            print(answer)
+            ```
         
     2. 풀이를 본 후
         
