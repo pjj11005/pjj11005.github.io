@@ -60,8 +60,8 @@ GIT은 분산 버전 관리 시스템으로 개발자에게 매우 중요하다
         - `.git 폴더(repository)` → `저장소` (initialize 시 생성)
         
 - 동작의 의미
-    - `**add**`: `working dir` 의 파일을 `staged area`로 옮기기
-    - `**commit**`: `staged area`의 파일을 `.git 폴더(repository)`에 올리기
+    - **`add`**: `working dir` 의 파일을 `staged area`로 옮기기
+    - **`commit`**: `staged area`의 파일을 `.git 폴더(repository)`에 올리기
         - `commit`으로 생긴 버전 정보를 40자의 해시 값으로 표현 (버전 각각의 `commit` 아이디) → 내용을 기반으로 아이디 생성 (`분산 버전 관리 시스템`이기 때문)
     
 - git은 이전에 `main`에 저장한 `최신 commit id`를 바탕으로 다음 작업의 `commit` 아이디 생성 → `main`의 `last commit` 갱신 (`main`은 최신 `commit`, 가장 마지막의 작업을 가리킨다)
@@ -79,13 +79,13 @@ GIT은 분산 버전 관리 시스템으로 개발자에게 매우 중요하다
 - `head: 현재 시간, main: 마지막 시간 (시간 여행)`
 
 - **이전 버전으로 디버깅**
-    - `**check out**`: `head`를 이동시킨다
+    - **`check out`**: `head`를 이동시킨다
         - `working dir`이 예전 상태로 바꿈
         - 다시 원래 상태로 돌아올때는 `main branch`로 `checkout branch` 수행(아니면 더블 클릭)
         - **과거 버전을 확인하여 문제점을 발견한 후, 현재로 돌아와 수정 (과거는 불변, 현재는 가변)**
         - `head`가 버전을 직접 가리키게 한 후 , 새롭게 버전을 만들면 `head`는 대리자가 없기 때문에 직접 새로운 버전을 가리킨다
             - 이때 다시 `git checkout main`을 하면 다시 `head`가 `main`을 가리키고 새롭게 만든 버전은 존재하지 않았던 버전이 되어버림 (새로 만든 버전이 사라지지는 않는다)
-    - `**reset**`: `head`가 가리키는 브랜치를 바꾼다
+    - **`reset`**: `head`가 가리키는 브랜치를 바꾼다
     - git은 안정적이기 때문에 모든 작업은 `recovery` 가능하다
 
 ## 오후 강의
