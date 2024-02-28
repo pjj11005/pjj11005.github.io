@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 2주차 | 데이터 처리(Data processing)
+title: KT AIVLE SCHOOL 5기 2주차 | 데이터 처리(Data processing)(1)
 description: KT AIVLE SCHOOL 5기 2주차에 진행한 데이터 처리(Data processing) 강의 내용 정리 글입니다.
 sitemap: false
 ---
