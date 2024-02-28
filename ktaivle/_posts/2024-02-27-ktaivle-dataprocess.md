@@ -293,8 +293,13 @@ sitemap: false
             | 기초통계량 | min, max, mean, 사분위수 | 범주별 빈도수, 비율 |
             | 그래프 (시각화) | hist, kdeplot, boxplot | bar plot |
 
-            - `EDA(Exploratory Data Analysis)`: 개별 데이터의 분포, 가설이 맞는지 파악, NA, 이상치 파악 → 탐색적 데이터 분석
-            - `CDA(Confirmatory Data Analysis)`: 탐색으로 파악하기 애매한 정보는 통계적 분석 도구(가설 검정) 사용 → 확증적 데이터 분석
+            - `EDA(Exploratory Data Analysis)`: 개별 데이터의 분포, 가설이 맞는지 파악, NA, 이상치 파악 → 탐색적 데이터 분석 (그래프, 통계량)
+            - `CDA(Confirmatory Data Analysis)`: 탐색으로 파악하기 애매한 정보는 통계적 분석 도구(가설 검정) 사용 → 확증적 데이터 분석 (가설검정, 실험)
+            - 정리된 2차원 구조의 데이터셋 분석 방법
+                1. 초기 가설 + 준비된 데이터셋
+                2. EDA + CDA
+                3. 가설 확인, 전처리 대상 정리 (data pipeline), 데이터와 비즈니스에 대해 더 잘 이해
+                
             - **EDA, CDA 진행 순서**
                 1. 단변량 분석: 개별 변수의 분포
                     - ex) 타이타닉 탑승객의 나이 분석
