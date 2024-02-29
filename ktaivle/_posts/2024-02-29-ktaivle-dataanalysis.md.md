@@ -225,11 +225,6 @@ sitemap: false
             
             ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2012.png)
             
-    
-    - 표본조사
-        - [모평균] 전국 남자 고등학생 평균 키를 추정하기 위해서
-        - [표집] 50명의 학생을 뽑아,
-        - [표본평균]평균을 계산해 보았더니 173cm 였습니다
         
 3. **중심 극한 정리 (Central Limit Theorem)**
     - 표본 평균들의 분포(표집 분포) → 정규분포에 가까워 짐 (**모집단의 분포와 상관없이**)
