@@ -135,10 +135,10 @@ sitemap: false
         - -1, 1에 가까울 수록 강한 상관관계를 나타냄
 
     - 경험에 의한 대략의 기준(절대적인 기준이 절대 아님)
-        - 강한: $$0.5 <  |r|  \leq 1$$
-        - 중간 : 0.2 < | r | <= 0.5$$
-        - 약한 : $$0.1 < |r| <= 0.2$$
-        - (거의)없음 : $$|r| <= 0.1$$
+        - 강한: $$0.5 <  \vert r \vert  \leq 1$$
+        - 중간 : $$0.2 < \vert r \vert \leq 0.5$$
+        - 약한 : $$0.1 < \vert r \vert \leq 0.2$$
+        - (거의)없음 : $$ \vert r \vert \leq 0.1$$
         
         ```python
         import scipy.stats as spst
