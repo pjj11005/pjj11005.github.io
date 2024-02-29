@@ -306,12 +306,16 @@ sitemap: false
     
     - 분산 분석 **AN**alysis **O**f **VA**riance
     - 여러 집단 간에 차이 비교: 기준은 **전체 평균**
-    - $$𝐹 통계량 = \frac{집단 간 분산}{집단 내 분산} = \frac{전체 평균 − 각 집단 평균}{각 집단의 평균 − 개별 값}$$
-        - 값이 대략 2~3 이상이면 차이가 있다고 판단
+
+    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2020.png)
+
+    > $$𝐹 통계량 = \frac{집단 간 분산}{집단 내 분산} = \frac{전체 평균 − 각 집단 평균}{각 집단의 평균 − 개별 값}$$
+
+    - 값이 대략 2~3 이상이면 차이가 있다고 판단
             
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2020.png)
-            
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2021.png)
+        
+        
+        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2021.png)
             
     - `f_oneway(A, B, C)`
         - 전체 평균과 A, B, C 각각의 평균은 차이가 있나?
