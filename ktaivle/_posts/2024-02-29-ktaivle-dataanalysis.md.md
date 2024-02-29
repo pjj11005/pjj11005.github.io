@@ -185,19 +185,19 @@ sitemap: false
     > cmap(color map) : [https://matplotlib.org/stable/tutorials/colors/colormaps.html](https://matplotlib.org/stable/tutorials/colors/colormaps.html)
     > 
 
-**(4) 상관계수의 한계**
+    **(4) 상관계수의 한계**
 
-- 상관계수는 직선의 관계(선형관계)만 수치화 해준다
-    - 직선의 기울기, 비선형 관계 → 고려하지 않는다
-    - **직선의 기울기와 상관계수는 관련이 없다**
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2010.png)
-        
-- 산점도와 상관계수를 같이 파악해야 한다
-    - **Focus: 직선 (선형성, Linearity)**
-        - 얼마나 직선으로 잘 설명 가능한가?
-        - 얼마나 직선에 점들이 모여 있는가?
-    - 시각화와 수치화를 함께 수행하기
+    - 상관계수는 직선의 관계(선형관계)만 수치화 해준다
+        - 직선의 기울기, 비선형 관계 → 고려하지 않는다
+        - **직선의 기울기와 상관계수는 관련이 없다**
+            
+            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2010.png)
+            
+    - 산점도와 상관계수를 같이 파악해야 한다
+        - **Focus: 직선 (선형성, Linearity)**
+            - 얼마나 직선으로 잘 설명 가능한가?
+            - 얼마나 직선에 점들이 모여 있는가?
+        - 시각화와 수치화를 함께 수행하기
     
 
 ## 3. 평균 추정과 신뢰구간
