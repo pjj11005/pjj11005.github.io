@@ -11,6 +11,7 @@ sitemap: false
 ## 기초
 
 ### `문제 8469. 비밀번호 찾기` 
+
 1. 문제 내용
     
     ![Untitled](/assets/img/blog/KT_AIVLE/codingmasters/1/8469.png)
@@ -38,6 +39,7 @@ sitemap: false
         
     
 ### `문제 8471: 8진수와 16진수` 
+
 1.  문제 내용
     
     ![Untitled](/assets/img/blog/KT_AIVLE/codingmasters/1/8471.png)
@@ -82,6 +84,7 @@ sitemap: false
         
     
 ### `문제 8481. 우리반 아이큐왕은`
+
 1. 문제 내용
     
     ![Untitled](/assets/img/blog/KT_AIVLE/codingmasters/1/8481.png)
@@ -114,6 +117,7 @@ sitemap: false
         
     
 ### `문제 8487. 최대공약수`
+
 1. 문제 내용
     
     ![Untitled](/assets/img/blog/KT_AIVLE/codingmasters/1/8487.png)
