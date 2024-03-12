@@ -181,4 +181,142 @@ plt.show()
 # GPA --> ADMIT (수치형 변수에 따른 범주형 변수(target)의 분포 확인)
 sns.histplot(x = data['GPA'], hue = data['ADMIT'], bins = 30)
 plt.show()
+
+# 7:3으로 분리
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3,
+                                                    random_state = 1, shuffle = True, stratify = y) 
+# 시계열 데이터에서는 shuffle 금지(default: True), stratify : 라벨 별로 균등하게 분포되도록 해주는 옵션
 ```
+
+## 2.  성능 평가
+
+### 회귀 모델 성능 평가
+
+> 예측 값이 실제 값에 가까울 수록 좋은 모델 → 오차로 모델 성능 평가
+
+#### 용어 정리
+> $$y$$ : 실제값 → 실제 예측하고자 하는 값, 오차 : 이 값과 예측값의 차이\
+> $$\bar{y}$$ : 평균값 → 이미 존해하는 평균으로 예측한 값\
+> $$\hat{y}$$ : 예측값 → 새롭게 모델로 예측한 값, 평균값보다 얼마나 잘 예측했는지 확인
+
+#### 회귀 평가 지표 정리
+> $$MSE = \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{n}$$\
+> $$RMSE = \sqrt{MSE} = \sqrt{\frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{n}}$$\
+> $$MAE = \frac{\sum_{i=1}^{n} |y_i - \hat{y}_i|}{n}$$\
+> $$MAPE = \frac{\sum_{i=1}^{n} \left|\frac{y_i - \hat{y}_i}{y_i}\right|}{n}$$\
+> > 위 값 모두 작을 수록 모델 성능이 좋다
+
+#### 오차를 보는 다양한 관점
+> $$SST = \sum_{i=1}^{n} (y_i - \bar{y})^2$$ : 전체 오차\
+> $$SSE = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$ : 회귀식이 잡아내지 못한 오차\
+> $$SSR = \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2$$ : 회귀식이 잡아낸 오차\
+> $$SST = SSR + SSE$$
+
+#### 결정 계수 (R-Squared)
+- **전체 오차 중에서 회귀식이 잡아낸 오차 비율**
+- 모델의 **설명력**이라고도 부름 (값이 클수록 좋음)
+
+> $$R^{2} = \frac{SSR}{SST} = 1 -  \frac{SSE}{SST} = 1-\frac{\sum_{i=1}^{n}(y_{i}-\hat{y}_{i})^2}{\sum_{i=1}^{n}(y_{i}-\bar{y}_{i})^2}$$
+
+#### 실습
+    
+```python
+# 1. 환경 준비
+## 라이브러리 불러오기
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings(action='ignore')
+%config InlineBackend.figure_format = 'retina'
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import r2_score
+
+# 2. 데이터 이해
+## 상위 몇 개 행 확인
+data.head()
+## 변수 확인
+data.info()
+## 기술통계 확인
+data.describe().T
+## 상관관계 확인
+corr_matrix = data.corr()
+corr_matrix
+## 상관관계 시각화
+sns.heatmap(corr_matrix, annot = True, cmap = 'Blues', cbar = False, square = True,
+            fmt = '.2f', annot_kws = {'size' : 8})
+plt.show()
+## 산점도
+plt.figure(figsize = (15, 6))
+plt.subplot(1, 2, 1)
+sns.regplot(x = data['lstat'], y = data['medv'])
+plt.subplot(1, 2, 2)
+sns.regplot(x = data['rm'], y = data['medv'])
+plt.show()
+
+# 3. 데이터 준비
+## target 확인
+target = 'medv'
+## 데이터 분리
+X = data.drop(target, axis = 1)
+y = data.loc[:, target]
+## 7:3으로 분리
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 1)
+
+# 4. 모델링
+model = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+# 5. 회귀 성능 평가
+print(f'MAE : {mean_absolute_error(y_test, y_pred)}')
+print(f'MSE : {mean_squared_error(y_test, y_pred)}')
+print(f'RMSE : {mean_squared_error(y_test, y_pred, squared = False)}')
+print(f'MAPE : {mean_absolute_percentage_error(y_test, y_pred)}')
+print(f'R2 : {r2_score(y_test, y_pred)}')
+```
+    
+
+### 분류 모델 성능 평가
+
+>- 분류 모델은 0인지 1인지 예측하는 것
+>- 예측 값이 실제 값과 일치하는 값이 많을수록 좋은 모델 → 정확히 예측한 비율로 모델 성능 평가
+
+#### Confusion Matrix(혼동 행렬)
+    
+|  | 예측Negative(0) | 예측Positive(1) |
+| --- | --- | --- |
+| 실제Negative(0) | TN | FP |
+| 실제Positive(1) | FN | TP |
+
+- 용어 : **결과(T / F) + 예측 (P / N), 행렬의 역슬래시 값은 항상 정답**
+- 정확도(Accuracy) = $$\frac{TN + TP}{TN + FP + FN + TP}$$
+    - 정분류율
+    - 가장 직관적으로 모델 성능 확인 가능한 평가지표
+- 정밀도(Precision) = $$\frac{TP}{FP + TP}$$
+    - 예측 관점
+    - 정밀도가 낮을 경우 발생하는 문제
+        - 암이 아닌데 암이라 하여 불필요한 치료 발생
+- 재현율(Recall) = $$\frac{TP}{FN + TP}$$
+    - 실제 관점
+    - 민감도(Sensitivity)라고도 부름
+    - 재현율이 낮을 경우 발생하는 문제
+        - 암인 사람에게 암이 아니라고 하는 경우
+- 정밀도와 재현율은 기본적으로 **Positive**에 대해서 이야기
+    - **Negative**에 대한 정밀도와 재현율도 의미를 가짐
+- 특이도(Specificity) = $$\frac{TN}{FP + TN}$$
+    - 실제 Negative 중에서 Negative로 예측한 비율
+    - 특이도가 낮을 경우 발생하는 문제
+        - 암이 아닌데 암이라 했으니 불필요한 치료가 발생
+#### F1-Score
+- 정밀도와 재현율의 조화평균
+- 관점이 다른 경우 조화평균이 큰 의미를 가짐
+- 정밀도와 재현율이 적절하게 요구될 때 사용
+- F1-Score = $$\frac{2 \times Precision \times Recall}{Precision + Recall}$$
+
