@@ -320,3 +320,76 @@ print(f'R2 : {r2_score(y_test, y_pred)}')
 - 정밀도와 재현율이 적절하게 요구될 때 사용
 - F1-Score = $$\frac{2 \times Precision \times Recall}{Precision + Recall}$$
 
+#### 실습
+    
+```python
+# 1.환경 준비
+# 라이브러리 불러오기
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings(action='ignore')
+%config InlineBackend.figure_format = 'retina'
+
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import classification_report
+
+# 2.데이터 이해
+# 상/하위 몇 개 행 확인
+data.head()
+# 변수 확인
+data.info()
+# 기술통계 확인
+data.describe()
+# 상관관계 확인
+data.corr()
+
+# 3. 데이터 준비
+# target 확인
+target = 'ADMIT'
+# 데이터 분리
+x = data.drop(target, axis=1)
+y = data.loc[:, target]
+
+# 4. 모델링
+model = KNeighborsClassifier()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+
+# 5.분류 성능 평가
+# 성능 평가
+print('Confusion Matrix\n', confusion_matrix(y_test, y_pred), '\n')
+
+# 혼동 행렬 시각화
+plt.figure(figsize = (5, 3))
+sns.heatmap(confusion_matrix(y_test, y_pred), annot = True, cmap = 'Blues', cbar = False)
+plt.show()
+
+print(f'Accuracy : {accuracy_score(y_test, y_pred)}')
+## 참고
+print(f'평가 성능(정확도) : {model.score(x_test, y_test)}') 
+print(f'학습 성능(정확도) : {model.score(x_train, y_train)}\n')
+# 두 수의 차이로 과대적합, 과소적합을 알 수 있음 (약간 과대적합)
+
+print('Precision : ', precision_score(y_test, y_pred)) # default : 1에 대한 정밀도
+print('Precision : ', precision_score(y_test, y_pred, average = 'binary')) # default
+print('Precision : ', precision_score(y_test, y_pred, average = None)) # 둘다 출력
+print('Precision : ', precision_score(y_test, y_pred, average = 'macro')) # 평균
+print('Precision : ', precision_score(y_test, y_pred, average = 'weighted'), '\n') # 가중치
+
+print('Recall : ', recall_score(y_test, y_pred))
+print('Recall : ', recall_score(y_test, y_pred, average = None), '\n') # 둘다 출력 기억하기
+
+print('F1-Score : ', f1_score(y_test, y_pred))
+print('F1-Score : ', f1_score(y_test, y_pred, average = None), '\n') # 둘다 출력 기억하기
+
+print('Classification_report \n\n', classification_report(y_test, y_pred))
+```
