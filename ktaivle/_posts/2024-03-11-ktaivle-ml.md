@@ -292,25 +292,25 @@ print(f'R2 : {r2_score(y_test, y_pred)}')
     
 |  | 예측Negative(0) | 예측Positive(1) |
 | --- | --- | --- |
-| 실제Negative(0) | TN | FP |
-| 실제Positive(1) | FN | TP |
+| 실제Negative(0) | $$TN$$ | $$FP$$ |
+| 실제Positive(1) | $$FN$$ | $$TP$$ |
 
 - 용어 : **결과(T / F) + 예측 (P / N), 행렬의 역슬래시 값은 항상 정답**
-- 정확도(Accuracy) = $$\frac{TN + TP}{TN + FP + FN + TP}$$
+- 정확도(Accuracy) = $$\Large \frac{TN + TP}{TN + FP + FN + TP}$$
     - 정분류율
     - 가장 직관적으로 모델 성능 확인 가능한 평가지표
-- 정밀도(Precision) = $$\frac{TP}{FP + TP}$$
+- 정밀도(Precision) = $$\Large \frac{TP}{FP + TP}$$
     - 예측 관점
     - 정밀도가 낮을 경우 발생하는 문제
         - 암이 아닌데 암이라 하여 불필요한 치료 발생
-- 재현율(Recall) = $$\frac{TP}{FN + TP}$$
+- 재현율(Recall) = $$\Large \frac{TP}{FN + TP}$$
     - 실제 관점
     - 민감도(Sensitivity)라고도 부름
     - 재현율이 낮을 경우 발생하는 문제
         - 암인 사람에게 암이 아니라고 하는 경우
 - 정밀도와 재현율은 기본적으로 **Positive**에 대해서 이야기
     - **Negative**에 대한 정밀도와 재현율도 의미를 가짐
-- 특이도(Specificity) = $$\frac{TN}{FP + TN}$$
+- 특이도(Specificity) = $$\Large \frac{TN}{FP + TN}$$
     - 실제 Negative 중에서 Negative로 예측한 비율
     - 특이도가 낮을 경우 발생하는 문제
         - 암이 아닌데 암이라 했으니 불필요한 치료가 발생
@@ -318,7 +318,7 @@ print(f'R2 : {r2_score(y_test, y_pred)}')
 - 정밀도와 재현율의 조화평균
 - 관점이 다른 경우 조화평균이 큰 의미를 가짐
 - 정밀도와 재현율이 적절하게 요구될 때 사용
-- F1-Score = $$\frac{2 \times Precision \times Recall}{Precision + Recall}$$
+- F1-Score = $$\Large \frac{2 \times Precision \times Recall}{Precision + Recall}$$
 
 #### 실습
     
