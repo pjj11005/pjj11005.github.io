@@ -608,7 +608,7 @@ plt.show()
             
             - 정보 이득이 크다 = 어떤 속성으로 분할할 때 불순도가 줄어든다
             - 정보 이득이 가장 큰 속성부터 분할
-            
+
 #### 가지치기
 - 가지치기를 하지 않으면 → 과대적합, 일반화되지 못함
 - 여러 하이퍼파라미터 값을 조정해 가지치기 할 수 있음
@@ -702,4 +702,76 @@ df.sort_values(by='importance', ascending=True, inplace=True)
 plt.figure(figsize=(5, 5))
 plt.barh(df['feature'], df['importance']) # 오름차순으로 정렬해야 내림차순으로 보여진다
 plt.show()
+```
+
+### Logistic Regression
+
+#### 정의와 특징
+- 로지스틱 회귀: 확률 문제를 선형회귀로 모델링
+- 로지스틱 함수
+    - **시그모이드 함수** : $$\Large p = \frac {1} {1 + e^{-f(x)}}$$
+    - (-∞, ∞) 범위를 갖는 선형 판별식 결과로 (0, 1) 범위의 확률 값을 얻게 됨
+    - **학습 데이터를 잘 설명하는 선형 판별식의 기울기(𝑎)와 절편(𝑏)을 찾는 문제**
+
+#### 실습
+    
+```python
+# 1.환경 준비
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings(action='ignore')
+%config InlineBackend.figure_format='retina'
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, classification_report
+
+# 2.데이터 이해
+# 상위 몇 개 행 확인
+data.head()
+# 기술통계 확인
+data.describe()
+# 범주값 개수 확인
+data['Outcome'].value_counts()
+# 상관관계 확인
+data.corr()
+
+# 3.데이터 준비
+# target 확인
+target = 'Outcome'
+
+# 데이터 분리
+x = data.drop(target, axis=1)
+y = data.loc[:, target]
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1)
+
+# 4. 모델링
+model = LogisticRegression()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+# 5. 기타
+# 예측값 확인
+print(y_test.values[10:30])
+print(y_pred[10:30])
+
+# 확률값 확인
+p = model.predict_proba(x_test)
+print(p[10:30])
+
+# 1의 확률값 얻기
+p1 = p[:, [1]]
+# 임계값 0.5
+y_pred2 = np.array([1 if x > 0.5 else 0 for x in p1])
+print(y_pred2[:20])
+print(classification_report(y_test, y_pred2))
+# 임계값 0.45
+y_pred2 = np.array([1 if x > 0.45 else 0 for x in p1])
+print(y_pred2[:20])
+print(classification_report(y_test, y_pred2))
 ```
