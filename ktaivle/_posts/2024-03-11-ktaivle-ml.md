@@ -394,3 +394,311 @@ print('F1-Score : ', f1_score(y_test, y_pred, average = None), '\n') # 둘다 �
 print('Classification_report \n\n', classification_report(y_test, y_pred))
 ```
 
+## 3. 기본 알고리즘
+
+### Linear Regression
+
+#### 정의 및 특징
+- 최선의 회귀 모델 : **오차 합이 최소**가 되는 모델(오차 합이 최소가 되는 가중치, 편향을 찾기)
+- 단순 회귀 : 독립 변수 하나가 종속 변수에 영향을 미치는 선형 회귀
+    
+    ```python
+    # 회귀계수 확인
+    print(model.coef_)
+    print(model.intercept_)
+    ```
+    
+- 다중 회귀 : 여러 독립 변수가 종속 변수에 영향을 미치는 선형 회귀
+    
+    ```python
+    # 회귀계수 확인
+    print(list(x_train))
+    print(model.coef_)
+    print(model.intercept_)
+    ```
+    
+#### 실습
+    
+```python
+# 1. 환경 준비
+# 라이브러리 불러오기
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings(action='ignore')
+%config InlineBackend.figure_format='retina'
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# 2. 데이터 이해
+# 상위 몇 개 행 확인
+data.head()
+# 기술통계 확인
+data.describe()
+# speed, dist 관계
+plt.scatter(x='speed', y='dist', data=data)
+plt.xlabel('Speed(mph)')
+plt.ylabel('Dist(ft)')
+plt.show()
+
+# 3. 데이터 준비
+# target 확인
+target = 'dist'
+# 데이터 분리
+x = data.drop(target, axis=1)
+y = data.loc[:, target]
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1)
+
+# 4. 모델링
+model = LinearRegression()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+print('MAE : ', mean_absolute_error(y_test, y_pred))
+print('R2 : ', r2_score(y_test, y_pred))
+# 회귀계수 확인
+print(model.coef_)
+print(model.intercept_)
+
+# 5. 기타
+# 회귀식 만들기
+a = model.coef_
+b = model.intercept_
+speed = np.linspace(x_test.min(), x_test.max(), 10)
+dist = a * speed + b
+
+# 회귀선 표시
+dist_mean = y_train.mean()
+
+plt.scatter(x_test, y_test) # 평가 데이터
+plt.scatter(x_test, y_pred) # 학습 데이터
+plt.plot(speed, dist, color = 'r') # 학습 데이터에 대한 예측값
+plt.axhline(dist_mean, color = 'r', linestyle = '--')
+plt.title('Speed & Distance', size = 20, pad = 10)
+plt.xlabel('Speed(mph)')
+plt.ylabel('Dist(ft)')
+plt.show()
+
+# 시각화
+plt.plot(y_test.values, label='Actual')
+plt.plot(y_pred, label='Predicted')
+plt.legend()
+plt.ylabel('Dist(ft)')
+plt.show()
+```
+    
+
+### K-Nearest Neighbor
+
+#### 정의 및 특징
+- k개의 최근접 이웃의 값을 찾아 그 값들로 새로운 값을 예측하는 알고리즘
+- 회귀와 분류에 사용되는 매우 간단한 지도 학습 알고리즘 → 연산 속도는 느림
+    - k개 값의 평균으로 예측, 가장 많이 포함된 유형으로 분류
+- k값의 중요성
+    - **적절한 k값을 찾는 것이 중요(기본값 = 5)**
+    - **일반적으로 1이 아닌 홀수로 설정**
+- 거리 구하기
+    - 맨하튼 거리(두 지점의 각 좌표의 차의 절대값) ≥ 유클리드 거리(두 지점의 거리)
+- Scaling 필요성
+    - 스케일링 여부에 따라 KNN 모델 성능이 달라질 수 있음
+    - 대표적인 스케일링: **정규화(Normalization), 표준화(Standardization)**
+    - 평가용 데이터에도 **학습용 데이터** **기준**으로 스케일링 수행
+        
+        **[참고] 학습 데이터를 기준으로 정규화**
+        
+        <img src = 'https://github.com/Jangrae/img/blob/master/minmax.png?raw=true'>
+        
+#### 실습
+    
+```python
+# 1. 환경 준비
+# 라이브러리 불러오기
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings(action='ignore')
+%config InlineBackend.figure_format='retina'
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# 2. 데이터 이해
+# 상위 몇 개 행 확인
+data.head()
+# 기술통계 확인
+data.describe()
+# NaN 값 확인
+data.isnull().sum()
+
+# 3. 데이터 준비
+# 결측치 채우기
+data.interpolate(method='linear', inplace=True)
+#  변수 제거
+drop_cols = ['Month', 'Day']
+data.drop(drop_cols, axis=1, inplace=True)
+# target 확인
+target = 'Ozone'
+# 데이터 분리
+x = data.drop(target, axis=1)
+y = data.loc[:, target]
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1)
+# 정규화
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+# 4. 모델링
+model = KNeighborsRegressor() # n_neighbors를 데이터의 수로 하면 모델이 평균값이 된다
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+
+print('MAE : ', mean_absolute_error(y_test, y_pred))
+print('R2 : ', r2_score(y_test, y_pred))
+
+# 5. 기타
+# 예측값, 실젯값 시각화
+plt.plot(y_test.values, label='Actual')
+plt.plot(y_pred, label='Predicted')
+plt.legend()
+plt.ylabel('Ozone')
+plt.show()
+```
+    
+
+### Decision Tree
+
+#### 정의 및 특징
+- 특정 변수에 대한 의사결정 규칙을 **나무 가지**가 뻗는 형태로 분류해 나감
+- **분류**와 **회귀** 모두에 사용되는 지도학습 알고리즘
+- 분석 과정을 실제로 확인 가능 → **화이트 박스 모델**
+- **의미 있는 질문**을 먼저 하는 것이 중요
+- **과적합** 발생하기 쉬움
+    - **트리 깊이를 제한**하는 튜닝이 필요
+- 용어
+    - Root Node(뿌리 마디), Terminal Node(끝 마디, Leaf Node), Depth(깊이)
+- 분류와 회귀
+    - 비용함수: 분류 → **불순도**, 회귀 → **MSE**
+    - 분류: 마지막 노드에 있는 샘플들의 **최빈값**을 예측값으로 반환
+    - 회귀: 마지막 노드에 있는 샘플들의 **평균**을 예측값으로 반환
+- 불순도(Impurity)
+    - 불순도가 낮을 수록 분류가 잘 된 것
+    - 불순도 수치화 가능한 지표
+        - 지니 불순도(Gini Impurity)
+            > $$- (양성 클래스 비율^2 + 음성 클래스 비율^2)$$
+            
+            - 분류 후 얼마나 잘 분류했는지 평가하는 지표
+            - 특징
+                - 지니 불순도가 낮을수록 순도가 높음
+                - 0 ~ 0.5 사이의 값(이진 분류의 경우) → 순수하게 분류: 0, 완벽하게 섞이면: 0.5
+            - 지니 불순도가 낮은 속성으로 의사결정 트리 노드 결정
+        - 엔트로피(Entropy)
+            > $$- 음성클래스비율 \times log_2(음성 클래스 비율) - 양성클래스비율 \times log_2(양성 클래스 비율)$$
+            
+            - $$p_i$$ : 집합 안에서 속성 i의 확률
+            - 0 ~ 1사이의 값 → 순수하게 분류되면: 0, 완벽하게 섞이면: 1
+            - 정보 이득(Information Gain)
+                > $$𝐺𝑎𝑖𝑛 (𝑇, 𝑋) = 𝐸𝑛𝑡𝑟𝑜𝑝𝑦 (𝑇) − 𝐸𝑛𝑡𝑟𝑜𝑝𝑦(𝑇, 𝑋)$$
+                
+                - 정보 이득이 크다 = 어떤 속성으로 분할할 때 불순도가 줄어든다
+                - 정보 이득이 가장 큰 속성부터 분할
+- 가지치기
+    - 가지치기를 하지 않으면 → 과대적합, 일반화되지 못함
+    - 여러 하이퍼파라미터 값을 조정해 가지치기 할 수 있음
+        - **max_depth(트리의 최대 깊이(기본값: None))**
+        - **min_samples_leaf(노드를 분할하기 위한 최소한의 샘플 개수(기본값: 2))**
+        - **min_samples_split(리프 노드가 되기 위한 최소한의 샘플 수(기본값: 1))**
+    - 가장 적절한 하이퍼파라미터 값 찾도록 노력해야 함
+    - Decision Tree 분류 모델도 결국 **확률**에 근거해 **예측**을 한다
+    
+#### 실습
+    
+```python
+# 1. 환경 준비
+# 라이브러리 불러오기
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings(action='ignore')
+%config InlineBackend.figure_format='retina'
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.tree import export_graphviz
+from IPython.display import Image
+
+# 2. 데이터 이해
+# 상위 몇 개 행 확인
+data.head()
+# 기술통계 확인
+data.describe()
+# Survived 확인
+data['Survived'].value_counts()
+# NaN 값 확인
+data.isnull().sum()
+
+# 3. 데이터 준비
+# 제거 대상: PassengerId, Name, Ticket, Cabin
+drop_cols = ['PassengerId', 'Name', 'Ticket', 'Cabin']
+# 변수 제거
+data.drop(drop_cols, axis=1, inplace=True)
+# Age 결측치를 중앙값으로 채우기
+age_median = data['Age'].median()
+data['Age'].fillna(age_median, inplace=True)
+# Embarked 최빈값으로 채우기
+emb_freq = data['Embarked'].mode()[0]
+data['Embarked'].fillna(emb_freq, inplace=True)
+# target 확인
+target = 'Survived'
+# 데이터 분리
+x = data.drop(target, axis=1)
+y = data.loc[:, target]
+# 가변수화 대상: Pclass, Sex, Embarked
+dumm_cols = ['Pclass', 'Sex', 'Embarked']
+# 가변수화
+x = pd.get_dummies(x, columns=dumm_cols, drop_first=True, dtype=int)
+# 7:3으로 분리
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1)
+
+# 4. 모델링
+model = DecisionTreeClassifier(max_depth = 5, random_state=1)
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+
+print(confusion_matrix(y_test, y_pred), '\n')
+print(classification_report(y_test, y_pred))
+
+# 5. 기타
+# 이미지 파일 만들기
+export_graphviz(model,                                 # 모델 이름
+                out_file='tree.dot',                   # 파일 이름
+                feature_names=x.columns,               # Feature 이름
+                class_names=['die', 'survived'],       # Target Class 이름
+                rounded=True,                          # 둥근 테두리
+                precision=2,                           # 불순도 소숫점 자리수
+                # max_depth = 3,                         # 표시할 트리 깊이
+                filled=True)                           # 박스 내부 채우기
+
+# 파일 변환
+!dot tree.dot -Tpng -otree.png -Gdpi=300
+# 이미지 파일 표시
+Image(filename='tree.png')
+
+# 변수 중요도 데이터프레임 만들기
+df = pd.DataFrame()
+df['feature'], df['importance'] = list(x), model.feature_importances_
+df.sort_values(by='importance', ascending=True, inplace=True)
+# 시각화
+plt.figure(figsize=(5, 5))
+plt.barh(df['feature'], df['importance']) # 오름차순으로 정렬해야 내림차순으로 보여진다
+plt.show()
+```
