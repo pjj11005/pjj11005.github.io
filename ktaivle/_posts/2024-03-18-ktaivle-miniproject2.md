@@ -43,18 +43,24 @@ sitemap: false
 ### 데이터 소개
 
 - 날씨 정보 : 날씨 데이터 → **다음날에 대한 예보 데이터로 간주하여 모델링에 사용**
+- 운행 정보 : 이동 거리, 접수 건수 등 콜 택시 운행 관련 정보
 
 ### 데이터 전처리 및 분석
 
+- 날씨 정보를 하루 댕겨 와서 운행 정보와 `merge` → 이 부분이 많은 사람들에게 헷갈리는 부분이었다
 - 운행 정보는 유용한 변수들이 많았다
+- 주말과 평일에 따라 운행 정보들이 차이를 보였다
 - 날씨 정보는 그렇게 유의미하지 않았다
 - 날씨 및 운행 정보들을 각각 대기 시간과의 비율 정보를 만드니 유의미한 변수들이 많이 생성되었다
+- 익일의 평균 대기 시간을 `target`으로 설정
 
 ### 모델링
 
-- 파생 변수를 만들어 성능을 높이고자 했다 → 그렇게 향상되지 않았다
-- `LightGBM` 모델의 변수 중요도를 이용하여 상위의 변수들로만 성능 측정
-    - 결국 `Linear Regression, SVM` 모델에서 성능이 가장 좋았다
+- `Linear Regression,SVM, KNN, Decision Tree, Random Forest, Gradient Boost, XGBoost, LightGBM` 모델 사용 → `Linear Regression` 모델의 성능이 계속 좋았다
+- 파생 변수를 만들어 성능을 높이고자 했다 → 그렇게 향상되지 않았고, 여전히 `Linear Regression` 의 성능이 가장 좋았다
+- LightGBM 모델의 변수 중요도를 이용하여 상위의 변수들로만 성능 측정
+    - 결국 Linear Regression, SVM 모델에서 성능이 가장 좋았다
+    - 변수 중요도는 7일 평균 대기시간 변수가 압도적이었고 `booking_count, weekday, boarding_rate, weekday_avg_wait_time_ratio, boarding_count` ****변수들의 중요도가 높았다
 
 ### 결론
 
