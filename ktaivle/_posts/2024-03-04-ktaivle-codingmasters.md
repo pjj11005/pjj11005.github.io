@@ -307,3 +307,93 @@ sitemap: false
 3. 해결한 후
     
     처음에 문제 이해를 잘못했다
+
+## 중급
+
+## 문제 8519. 태국 택시
+
+1. 문제 내용
+    
+    ![Untitled](/assets/img/blog/KT_AIVLE/codingmasters/1/8519.png)
+    
+2. 내 풀이
+    1. 크루스칼 알고리즘을 이용하여 모든 마을 방문하기 위한 최소 금액 구함
+    
+    ```python
+    import sys
+    input = sys.stdin.readline
+    
+    def find_parent(parent, x):
+        if parent[x] != x:
+            parent[x] = find_parent(parent, parent[x])
+        return parent[x]
+    
+    def union_parent(parent, a, b):
+        a = find_parent(parent, a)
+        b = find_parent(parent, b)
+        if a < b:
+            parent[b] = a
+        else:
+            parent[a] = b 
+    
+    n, m = map(int, input().split())
+    edges = []
+    for i in range(m):
+        a, b, c = map(int, input().split())
+        edges.append((c, a, b))
+    
+    edges.sort()
+    
+    parent = [x for x in range(n + 1)]
+    result = 0
+    for c, a, b in edges:
+        if find_parent(parent, a) != find_parent(parent, b):
+            union_parent(parent, a, b)
+            result += c
+    
+    print(result)
+    ```
+    
+3. 해결한 후
+    
+    크루스칼 알고리즘을 복습할 좋은 문제이다.
+    
+
+## 문제 8521. 효율적인 화폐 구성
+
+1. 문제 내용
+    
+    ![Untitled](/assets/img/blog/KT_AIVLE/codingmasters/1/8521.png)
+    
+2. 내 풀이
+    1. 우선 구성된 화폐의 수를 1로 저장
+    2. 그 후, m 이하의 수중에서 화폐로 만들 수 있는 수이면 비교하며 최솟값을 갱신
+    3. 최종 값 출력
+    
+    ```python
+    n, m = map(int, input().split())
+    coin_values = []
+    for _ in range(n):
+        coin_values.append(int(input()))
+    
+    dp = [10001] * (m + 1)
+    dp[0] = 0
+    
+    for value in coin_values:
+        if value <= m:
+            dp[value] = 1
+    
+    for i in range(1, m + 1):
+        for value in coin_values:
+            if i - value >= 0:
+                dp[i] = min(dp[i], dp[i - value] + 1)
+    
+    if dp[m] == 10001:
+        print(-1)
+    else:
+        print(dp[m])
+    ```
+    
+3. 해결한 후
+    
+    다이나믹 프로그래밍을 이용하여 풀 때는 항상 값을 갱신시키는 조건을 생각해야한다
