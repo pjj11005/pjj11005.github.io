@@ -8,21 +8,19 @@ sitemap: false
 * this unordered seed list will be replaced by the toc
 {:toc}
 
+## CRISP-DM
+
+![Untitled](/assets/img/blog/KT_AIVLE/week5/dl00.png)
+
+## 머신러닝 알고리즘 정리
+
 ## 딥러닝 개념 익히기
 
 > 모델링 : 파라미터를 잘 찾는것 → train error를 최소화하는 과정
 > 
+> 
 > 튜닝 : val error를 최소화하는 과정
-
-
-### 가중치
-
-- 최적의 Weight 찾는 방법
-    - 최적의 모델 : 오차가 가장 적은 모델
-- 가중치 조정
-    - 조금씩 weight를 조정하며 오차가 줄어드는지 확인
-    - 지정한 횟수 혹은 더 이상 오차가 줄지 않을 때까지 위의 단계 반복
-    - 많은 머신러닝 알고리즘 및 딥러닝은 학습시킬 때 이런 방식으로 모델이 생성됨
+> 
 
 ### 학습 절차
 
@@ -57,6 +55,18 @@ sitemap: false
 - 딥러닝 구조
     - Input : 입력되는 x의 분석 단위(Layer 아님)
     - Hidden Layer
+        - layer 여러개 : **리스트[]로 입력**
+        - hidden layer
+            - **input_shape는 첫번째 layer만 필요**
+            - activation
+                - 히든 레이어는 활성함수 필요(보통 ‘relu’ 사용)
+        - output layer : 예측 결과가 1개
+        - 활성화 함수(Activation Function)
+            - 현재 레이어의 결과값을 다음 레이어(연결된 각 노드)로 어떻게 전달할지 결정  변환 해주는 함수
+            - 없으면 히든 레이어를 아무리 추가해도 그냥 선형회귀
+            - Hidden Layer: 선형함수 → 비선형 (ReLU), Output Layer: 결과값 다른 값으로 변환 (주로 분류 모델에서 필요)
+                - Sigmoid, tanh, **ReLU(Hidden Layer 국룰)**
+        - 보통 점차 줄여간다
     - Output Layer
     - Output
 
@@ -68,7 +78,7 @@ sitemap: false
     - `output` : 예측 결과가 1개 변수
 - `Compile`
     - 선언된 모델에 대해 몇가지 설정을 한 후, 컴퓨터가 이해할 수 있는 형태로 변환하는 작업
-    - loss function(오차 함수)
+    - `loss function(오차 함수)`
         - **오차 계산 무엇으로 할지 결정**
         - 회귀는 보통 mse
     - `optimizer`
@@ -85,80 +95,65 @@ sitemap: false
         - 학습 수행 과정에 가중치가 업데이트 되면서 그 때 마다의 성능 측정하여 기록
         - 학습 시 계산된 오차 기록(가이드)
     - 바람직한 곡선
-        - epoch가 증가하면서 loss가 큰 폭으로 축소
-        - 점차 loss 감소 폭이 줄어들면서 감소
+        - epoch가 증가하면서 loss가 큰 폭으로 축소 후, 점차 loss 감소 폭이 줄어들면서 감소
     - 들쑬 날쑥하면서 loss 감소 → learning_rate 줄이기
     - val_loss가 줄어들다가 다시 상승(과적합)
         - epoch와 learnig_rate 조절
-- Hidden Layer
-    - layer 여러개 : **리스트로 입력**
-    - hidden layer
-        - **input_shape는 첫번째 layer만 필요**
-        - activation
-            - 히든 레이어는 활성함수 필요
-            - 보통 ‘relu’ 사용
-    - output layer : 예측 결과가 1개
-    - 활성화 함수(Activation Function)
-        - 현재 레이어의 결과값을 다음 레이어(연결된 각 노드)로 어떻게 전달할지 결정 / 변환 해주는 함
-        - 없으면 히든 레이어를 아무리 추가해도 그냥 선형회귀
-        - Hidden Layer: 선형함수 → 비선형 (ReLU), Output Layer: 결과값 다른 값으로 변환 (주로 분류 모델에서 필요)
-            - Sigmoid, tanh, ReLU(Hidden Layer 국룰)
-    - 보통 점차 줄여간다
-- 코드
-    
-    ```python
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import *
-    from sklearn.preprocessing import MinMaxScaler
-    
-    from keras.models import Sequential
-    from keras.layers import Dense
-    from keras.backend import clear_session
-    from tensorflow.keras.optimizers import Adam
-    #from keras.optimizers import Adam : 버전에 따라 다르다
-    
-    def dl_history_plot(history):
-        plt.figure(figsize=(10,6))
-        plt.plot(history['loss'], label='train_err', marker = '.')
-        plt.plot(history['val_loss'], label='val_err', marker = '.')
-    
-        plt.ylabel('Loss')
-        plt.xlabel('Epoch')
-        plt.legend()
-        plt.grid()
-        plt.show()
-    
-    path = 'https://raw.githubusercontent.com/DA4BAM/dataset/master/boston.csv'
-    data = pd.read_csv(path)
-    
-    target = 'medv'
-    x = data.drop(target, axis = 1)
-    y = data.loc[:, target]
-    x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=.2, random_state = 20)
-    
-    scaler = MinMaxScaler()
-    x_train = scaler.fit_transform(x_train)
-    x_val = scaler.transform(x_val)
-    
-    nfeatures = x_train.shape[1]
-    model3 = Sequential([  Dense(2, input_shape = (nfeatures,), activation = 'relu'),
-                           Dense(1)   ])
-    model3.summary()
-    model3.compile( optimizer= Adam(learning_rate=0.08), loss = 'mse')
-    hist = model3.fit(x_train, y_train, epochs = 50 , validation_split= .2, verbose = 0).history
-    dl_history_plot(hist)
-    
-    pred3 = model3.predict(x_val)
-    print(f'RMSE : {mean_squared_error(y_val, pred3, squared=False)}')
-    print(f'MAE  : {mean_absolute_error(y_val, pred3)}')
-    print(f'MAPE : {mean_absolute_percentage_error(y_val, pred3)}')
-    ```
 
+### 실습
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import *
+from sklearn.preprocessing import MinMaxScaler
+
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.backend import clear_session
+from tensorflow.keras.optimizers import Adam
+#from keras.optimizers import Adam : 버전에 따라 다르다
+
+def dl_history_plot(history):
+    plt.figure(figsize=(10,6))
+    plt.plot(history['loss'], label='train_err', marker = '.')
+    plt.plot(history['val_loss'], label='val_err', marker = '.')
+
+    plt.ylabel('Loss')
+    plt.xlabel('Epoch')
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+path = 'https://raw.githubusercontent.com/DA4BAM/dataset/master/boston.csv'
+data = pd.read_csv(path)
+
+target = 'medv'
+x = data.drop(target, axis = 1)
+y = data.loc[:, target]
+x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=.2, random_state = 20)
+
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_val = scaler.transform(x_val)
+
+nfeatures = x_train.shape[1]
+model3 = Sequential([  Dense(2, input_shape = (nfeatures,), activation = 'relu'),
+                       Dense(1)   ])
+model3.summary()
+model3.compile( optimizer= Adam(learning_rate=0.08), loss = 'mse')
+hist = model3.fit(x_train, y_train, epochs = 50 , validation_split= .2, verbose = 0).history
+dl_history_plot(hist)
+
+pred3 = model3.predict(x_val)
+print(f'RMSE : {mean_squared_error(y_val, pred3, squared=False)}')
+print(f'MAE  : {mean_absolute_error(y_val, pred3)}')
+print(f'MAPE : {mean_absolute_percentage_error(y_val, pred3)}')
+```
 
 ## Feature Representation
 
@@ -288,12 +283,12 @@ print(y_train_ros.value_counts())
 
 ### 다중 분류 모델링을 위한 전처리
 
-- 다중 분류: y가 범주이고, 범주가 3개 이
+- 다중 분류: y가 범주이고, 범주가 3개 이상
 - 방법 1: 정수 인코딩 +  sparse_categorical_crossentropy
     - y: Integer Encoding → class들을 0부터 시작하여 순차 증가하는 정수로 인코딩
     - `int_encoder.classes_` → 배열의 인덱스가 인코딩 된 범주
     - `loss='sparse_categorical_crossentropy’`
-        - y는 인덱스로 사용됨 : 해당 인덱스의 예측 확률로 계산(-logy)
+        - y는 인덱스로 사용됨 : 해당 인덱스의 예측 확률로 계산($-log(y)$)
 - 방법 2: y값 one-hot encoding 하고, `loss = ‘categorical_crossentropy’`
     - y: One-Hot Encoding
     - `loss = ‘categorical_crossentropy’`
@@ -344,6 +339,7 @@ print(classification_report(y_val, pred_1))
 
 # 방법 2
 from tensorflow.keras.utils import to_categorical
+
 y_c = to_categorical(y.values, 3)
 x_train, x_val, y_train, y_val = train_test_split(x, y_c, test_size = .3, random_state = 2022)
 scaler = MinMaxScaler()
