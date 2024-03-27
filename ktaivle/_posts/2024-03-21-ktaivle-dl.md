@@ -295,3 +295,73 @@ print(y_train_ros.value_counts())
     - `loss='sparse_categorical_crossentropy’`
         - y는 인덱스로 사용됨 : 해당 인덱스의 예측 확률로 계산(-logy)
 - 방법 2: y값 one-hot encoding 하고, `loss = ‘categorical_crossentropy’`
+    - y: One-Hot Encoding
+    - `loss = ‘categorical_crossentropy’`
+
+### 실습
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import *
+from sklearn.preprocessing import MinMaxScaler
+
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.backend import clear_session
+from tensorflow.keras.optimizers import Adam
+
+path = "https://raw.githubusercontent.com/DA4BAM/dataset/master/iris.csv"
+data = pd.read_csv(path)
+data['Species'] = data['Species'].map({'setosa':0, 'versicolor':1, 'virginica':2})
+target = 'Species'
+x = data.drop(target, axis = 1)
+y = data.loc[:, target]
+
+# 방법 1
+x_train, x_val, y_train, y_val = train_test_split(x, y, test_size = .3, random_state = 20)
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_val = scaler.transform(x_val)
+
+nfeatures = x_train.shape[1] #num of columns
+
+clear_session()
+model = Sequential( Dense( 3 , input_shape = (nfeatures,), activation = 'softmax') )
+model.summary()
+model.compile(optimizer=Adam(learning_rate=0.1), loss= 'sparse_categorical_crossentropy')
+history = model.fit(x_train, y_train, epochs = 50, validation_split=0.2).history
+dl_history_plot(history)
+
+pred = model.predict(x_val)
+pred_1 = pred.argmax(axis=1)
+print(confusion_matrix(y_val, pred_1))
+print(classification_report(y_val, pred_1))
+
+# 방법 2
+from tensorflow.keras.utils import to_categorical
+y_c = to_categorical(y.values, 3)
+x_train, x_val, y_train, y_val = train_test_split(x, y_c, test_size = .3, random_state = 2022)
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_val = scaler.transform(x_val)
+
+nfeatures = x_train.shape[1] #num of columns
+clear_session()
+model = Sequential([Dense(3, input_shape = (nfeatures,), activation = 'softmax')])
+model.summary()
+model.compile(optimizer=Adam(learning_rate=0.1), loss='categorical_crossentropy')
+history = model.fit(x_train, y_train, epochs = 100,
+                    validation_split=0.2).history
+dl_history_plot(history)
+
+pred = model.predict(x_val)
+pred_1 = pred.argmax(axis=1)
+y_val_1 = y_val.argmax(axis=1)
+print(confusion_matrix(y_val_1, pred_1))
+print(classification_report(y_val_1, pred_1))
+```
