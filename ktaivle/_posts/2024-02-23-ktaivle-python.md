@@ -68,130 +68,79 @@ a1, a2, a3 = dict_a.values()
 
 ## 흐름 제어(조건문과 반복문)
 
-### Bool 연산자
-- `bool 연산자`
-    - 주어진 조건을 평가하여 참 또는 거짓의 결과를 반환하는 연산자
-    - `결과 : True / False`
-- 비교 연산자(조건문)
-    - `>, <, ≥, ≤`
-    - == 같은가?
-    - != 같지 않은가?
-- 논리 연산자
-    - `and` : 양쪽이 둘 다 참일 때만 참.
-    - `or`: 둘 중 하나만 참 이어도 참.
-    - `not` : 논리 값의 반대.
+1. Bool 연산자
+2. 조건 제어(if - else 문)      
+3. 반복 제어
+    - `for loop`
+        - `range, list, dictionary` 등 으로부터 순서대로 값을 뽑고, 코드를 반복 수행
+        - 종료 조건: `range, list, dictionary` 의 값을 모두 추출했을 때, `break`를 만났을 때
+    - `while loop`
+        - `for loop`와 사용법과 용도는 거의 유사
+        - 차이점
+            - 조건 변경문이 들어가야 함
+            - 종료 조건: 조건문이 `False`일 때, `break`를 만났을 때
+        - `무한 반복 & break`
+    - 반복 횟수가 정해지지 않을 때는 `while` 사용, 횟수가 정해져 있으면 `for`    
 
-### 조건 제어(if문)
-1. `if ~ elif ~ else` 로 조건 제어문 작성
-2. 문법상 주의점은
-    1. **`조건문의 결과는 True, False`**
-    2. 조건문 옆에는 `:`
-    3. 조건문에 따른 실행문은 `들여쓰기(identication)`
-3. 흐름
-    - 위에서 아래로 조건을 확인하며 내려간다
-4. 연습 문제
-    
-    ```python
-    math, korean, history=80, 70, 75
-    # or: |, and: &
-    if (math < 70) or (korean < 70) or (history < 70) or ((math + korean + history) / 3 <= 75):
-        print('fail')
-    else:
-        print('pass')
-    ```
-        
-### 반복 제어
-- `for loop`
-    - `range, list, dictionary` 등 으로부터 순서대로 값을 뽑고, 코드를 반복 수행
-    - 종료 조건: `range, list, dictionary` 의 값을 모두 추출했을 때, `break`를 만났을 때
-- `while loop`
-    - `for loop`와 사용법과 용도는 거의 유사
-    - 차이점
-        - 조건 변경문이 들어가야 함
-        - 종료 조건: 조건문이 `False`일 때, `break`를 만났을 때
-    - `무한 반복 & break`
-- 반복 횟수가 정해지지 않을 때는 `while` 사용, 횟수가 정해져 있으면 `for`
-- 연습 문제
-    
-    ```python
-    total = 0
-    
-    for i in range(1,101): # 모듈로 : 나머지, // : 몫
-        if i % 2 == 1:
-            total += i
-        
-    print(total)
-    ```
-    
-- `for` 반복문으로 처리된 결과를 리스트에 저장
-    
-    ```python
-    # 간단한 버전
-    multiple7 = [n for n in range(1, 101) if n % 7 == 0]
-    print(multiple7)
-    ```
-    
-- 딕셔너리와 `for loop`
-    - `.items()` 와 `변수 두 개` 사용
-    
-    ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/001.png)
-    
-### 복습 문제
-1. 피보나치 수열 생성기
-    - 수열의 길이를 지정하면 피보나치 수열이 리스트로 출력 되도록 합니다.
-    - n = 9
-    - 출력 : [1, 1, 2, 3, 5, 8, 13, 21, 34]
-    
-    ```python
-    n=9
-    fibo = [1, 1]
+```python
+# 흐름 제어
 
-    for i in range(n-2):
-        fibo.append(fibo[-1] + fibo[-2])
-    print(fibo)
-    ```
-    
-2. 소수 출력 (에라토스테네스의 체)
-    
-    링크: [https://velog.io/@changhee09/알고리즘-소수의-판별-에라토스테네스의-체](https://velog.io/@changhee09/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%86%8C%EC%88%98%EC%9D%98-%ED%8C%90%EB%B3%84-%EC%97%90%EB%9D%BC%ED%86%A0%EC%8A%A4%ED%85%8C%EB%84%A4%EC%8A%A4%EC%9D%98-%EC%B2%B4)
-    
-    - 에라토스테네스의 체 (N보다 작거나 같은 모든 소수 찾을 떄)
-        1. 2부터 N까지의 모든 자연수를 나열한다
-        2. 남은 수 중에서 아직 처리하지 않은 가장 작은 수 i를 찾는다
-        3. 남은 수 중에서 i의 배수를 모두 제거한다(i는 제거하지 않는다)
-        4. 더 이상 반복할 수 없을 때까지 2번과 3번 과정을 반복한다.
-    - 1부터 100까지 수 중, 소수(prime number)를 제외한 모든 수를 출력하시오.
-        
-        > 4,6,8,9,10,12,14,15,.....100
-        > 
-    - 소수(prime number)는 1과 자신의 수 로만 나눠지는 수 입니다.
-    - 힌트 : for loop를 중첩해서 수행해야 합니다.
-    
-    ```python
-    # 에라토스테네스의 체 이용
-    n = 100
-    array = [True] * (n+1)
-    
-    for i in range(2, n + 1):
-        if array[i]:
-            j = 2
-            while i * j <= n:
-                array[i * j] = False
-                j +=1
-    
-    for i in range(2, n + 1):
-        if not array[i]:
-            print(i, end = ',')
-    ```
-    
-    ```python
-    # 소수가 아닐떄만 바로 출력 (자신보다 작은 수로 나누어 떨어지는 경우)
-    for i in range(3, 101) :
-        for j in range(2, i) :
-            if i % j == 0 :
-                print(i)
-                break
-    ```
+## 1. 조건 제어
+math, korean, history=80, 70, 75
+
+if (math < 70) or (korean < 70) or (history < 70): # or: |, and: &
+    print('fail')
+else:
+    print('pass')
+
+## 2. 반복 제어
+total = 0
+for i in range(1,101): # 모듈로 : 나머지, // : 몫
+    if i % 2 == 1:
+        total += i
+print(total)
+
+multiple7 = [n for n in range(1, 101) if n % 7 == 0] # 리스트 컴프리헨션
+
+dict_a = { 'v1 ' : 32, 'l1' : [1, 2, 3], 'd1' : {'a' : 1, 'b' : 2}}
+for key, value in dict_a.items():
+    print('key : ', key)
+    print('value : ', value)
+
+## 3. 복습 문제: 소수 출력 - 에라토스테네스의 체 이용
+#1부터 100까지 수 중, 소수(prime number)를 제외한 모든 수를 출력
+
+### 내 풀이
+n = 100
+array = [True] * (n+1)
+
+for i in range(2, n + 1):
+    if array[i]:
+        j = 2
+        while i * j <= n:
+            array[i * j] = False
+            j +=1
+
+for i in range(2, n + 1):
+    if not array[i]:
+        print(i, end = ',')
+
+
+### 답안
+# 소수가 아닐떄만 바로 출력 (자신보다 작은 수로 나누어 떨어지는 경우)
+for i in range(3, 101) :
+    for j in range(2, i) :
+        if i % j == 0 :
+            print(i)
+            break
+```
+
+- [에라토스테네스의 체](https://velog.io/@changhee09/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%86%8C%EC%88%98%EC%9D%98-%ED%8C%90%EB%B3%84-%EC%97%90%EB%9D%BC%ED%86%A0%EC%8A%A4%ED%85%8C%EB%84%A4%EC%8A%A4%EC%9D%98-%EC%B2%B4) (N보다 작거나 같은 모든 소수 찾을 떄)
+
+    1. 2부터 N까지의 모든 자연수를 나열한다
+    2. 남은 수 중에서 아직 처리하지 않은 가장 작은 수 i를 찾는다
+    3. 남은 수 중에서 i의 배수를 모두 제거한다(i는 제거하지 않는다)
+    4. 더 이상 반복할 수 없을 때까지 2번과 3번 과정을 반복한다.
 
 ## 함수 생성 및 활용
 
