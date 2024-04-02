@@ -230,8 +230,6 @@ def date_count(today):
 
 today = datetime.now()
 date_count(today)
-
-
 ```
     
 
