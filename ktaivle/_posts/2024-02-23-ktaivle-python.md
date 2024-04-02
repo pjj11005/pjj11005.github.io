@@ -144,114 +144,71 @@ for i in range(3, 101) :
 
 ## 함수 생성 및 활용
 
+### 함수를 만드는 두 가지 목적
+- 복잡한 코드 단순화
+- 특정 기능 (function)별로 모듈화
+
 ### 함수의 구성 요소
 1. Input
     - 입력 매개변수
     - 생략 가능
 2. 처리
-    - 코드들
+    - 예외 처리
+        - `try`: 오류를 감지하고자 하는 코드 블럭
+        - `except` 오류 유형: 발생된 오류를 처리
 3. Output
     - 실행 결과
     - 생략 가능
 
-### input
-- 함수 생성
-    - 입력 매개변수 이름을 `쉼표`로 구분
-    - 입력 매개변수 이름 `= 기본값` (사용 시 매개변수 값을 입력하지 않으면 기본값으로 지정됨)
-- 함수 사용
-    - 입력 매개변수 이름 지정: 매개변수 순서와 상관 없음
-    - 입력 매개변수 이름 생략: 함수 생성 시 정의한 순서대로 입력해야 함
-    
-    ```python
-    def hello(name, loud = 1) :
-        if loud == 1 :
-            print('HELLO ' + name + ' ~!!!')
-        else :
-            print('Hello ' + name + ' ~~~')
-    
-    hello(name = 'Han', loud = 0) # 매개변수 이름과 입력값
-    hello(name = 'Han')           # 기본값 지정 매개변수 생략
-    hello('Han')                  # 기본값 지정 매개변수 생략
-    hello('Han',0)                # 입력매개변수 이름 생략
-    hello(loud = 0, name = 'Han') # 입력값 순서 바꾸기
-    ```
-    
-- 입력 매개변수 이름 앞에 `*`을 붙이면
-    - 입력 갑의 수를 정하지 않고, 사용할 때 들어오는 대로 받음
-    - 많이 사용하지 않을 수 있음
-
-### Output
-- 출력 값의 두 가지 형태
-    - `print()`
-        - 결과를 화면에 출력
-    - `return`
-        - 결과 값을 output으로 내보내고 함수 종료
-        - 함수 실행 결과 값을 받아서 사용하기 위해서는 반드시 `return` 사용
-            
-            ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/002.png)
-            
-- 여러 개의 결과 `return`
-    - `return`에 변수 두 개로 지정
-    - 함수 밖에서는 변수 두 개로 받아냄
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/003.png)
-        
-    - 여러 개의 결과를 하나도 받으면 튜플 형태로 받음
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/004.png)
-        
-- 만약, 여러 개 결과 값 중 필요 없는 것은
-    - `_, a`= 함수…
-    - `_` : 함수의 결과 중 어떤 것은 필요 없어서 그냥 받는 척 만
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/005.png)
-            
-### 예외 처리
-- 함수 내부에서 발생할 수 있는 오류
-    - 오류 메시지: 제일 마지막
-    - 나머지: 오류가 난 지점 설명
-- 오류 처리 코드 필요
-- 입력 값에 대한 유효성 점검
-    - 0으로 나누는 경우 예외 처리
-    - 타입 적절한지 확인
-- `try, except`
-    - 오류 유형 별 처리
-    - `try`: 오류를 감지하고자 하는 코드 블럭
-    - `except` 오류 유형: 발생된 오류를 처리
-        
-        ```python
-        def divide(a, b) :
-            try :
-                result = a / b
-                return result
-            
-            except ZeroDivisionError:
-                print("0으로 나눌수 없습니다.")
-                
-        divide(10, 0)
-        ```
-            
-### 정리
-1. 함수를 만드는 두 가지 목적
-    - 복잡한 코드 단순화
-    - 특정 기능 (function)별로 모듈화
-2. 함수의 구조
-    - 입력 Input
-    - 처리
-    - 출력 Output
-        - 결과를 받아서 사용해야 한다면 반드시 `return` 문 사용
-
-### 복습 문제
-1. 기념일 계산기를 만듭시다.
-- 입력 : 특별한 날(year, month, day)
-    - 입력한 year, month, day 가 날짜 형식이 맞는지 점검하고 날짜 형식으로 반환하는 함수는 제공됩니다.(date_check)
-    - 입력한 날짜가 오늘 이후 이면 안됩니다.
-- 처리 : 입력한 날로부터 오늘이 몇일째인지 계산
-    - 오늘 날짜 : datetime.now()
-    - 두 날짜의 차이를 일(day)로 표시 : (날짜 - 날짜).days
-- 출력 : "오늘은 OOO일째 입니다!"
-
 ```python
+#함수 
+
+## 1. Input
+def hello(name, loud = 1) :
+    if loud == 1 :
+        print('HELLO ' + name + ' ~!!!')
+    else :
+        print('Hello ' + name + ' ~~~')
+
+hello(name = 'Han', loud = 0) # 매개변수 이름과 입력값
+hello(name = 'Han')           # 기본값 지정 매개변수 생략
+hello('Han')                  # 기본값 지정 매개변수 생략
+hello('Han',0)                # 입력매개변수 이름 생략
+hello(loud = 0, name = 'Han') # 입력값 순서 바꾸기
+
+def numbers(*nums) : # 입력값의 갯수를 제한하지 않고 받고자 할 때 '*' 사용
+    print(nums, type(nums))
+    
+numbers(1, 2, 3)
+numbers(2, 4, 6, 8, 10)# 입력된 데이터 타입은 tuple
+
+## 2. Output
+def calculator(a, b) :
+    summ = a + b
+    mult = a * b
+    return summ, mult
+
+r1, r2 = calculator(10, 5)
+print(r1, r2)
+
+r1, _ = calculator(10, 5) # 하나의 결과만 필요하다면
+
+b = calculator(1, 3)
+print(b, type(b)) # 여러개의 결과를 하나로 받으면 튜플 형태로 받음
+
+## 3. 예외 처리
+def divide(a, b) :
+    try :
+        result = a / b
+        return result
+    
+    except ZeroDivisionError:
+        print("0으로 나눌수 없습니다.")
+        
+divide(10, 0)
+
+## 4. 복습 문제
+# 기념일 계산기
 from datetime import datetime
 def date_check(year, month, day):
     try:
@@ -273,6 +230,8 @@ def date_count(today):
 
 today = datetime.now()
 date_count(today)
+
+
 ```
     
 
