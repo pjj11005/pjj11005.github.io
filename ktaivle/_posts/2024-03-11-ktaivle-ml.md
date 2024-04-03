@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 4주차 | 머신러닝(Machine learning)(1)
+title: 4주차 | 머신러닝(Machine learning)(1)
 description: KT AIVLE SCHOOL 5기 4주차에 진행한 머신러닝(Machine learning) 강의 내용 정리 글입니다.
 sitemap: false
 ---
