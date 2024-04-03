@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 이것이 취업을 위한 코딩테스트다 | 6. 다이나믹 프로그래밍 (Dynamic Programming)
+title: 6. 다이나믹 프로그래밍 (Dynamic Programming)
 categories: 
   - cs
   - codingtest

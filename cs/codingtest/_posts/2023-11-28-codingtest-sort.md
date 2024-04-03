@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 이것이 취업을 위한 코딩테스트다 | 4. 정렬 (Sort)
+title: 4. 정렬 (Sort)
 categories: 
   - cs
   - codingtest

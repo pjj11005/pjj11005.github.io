@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 이것이 취업을 위한 코딩테스트다 | 7. 최단 경로 (Shortest Path)
+title: 7. 최단 경로 (Shortest Path)
 categories: 
   - cs
   - codingtest

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 이것이 취업을 위한 코딩테스트다 | 9. 2020년 상반기 삼성전자 기출문제 (Samsung 2020)
+title: 9. 2020년 상반기 삼성전자 기출문제 (Samsung 2020)
 categories: 
   - cs
   - codingtest
