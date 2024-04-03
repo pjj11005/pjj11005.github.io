@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 2주차 | 데이터 분석(Data analysis)(1)
+title: 2주차 | 데이터 분석(Data analysis)(1)
 description: KT AIVLE SCHOOL 5기 2주차에 진행한 데이터 분석(Data analysis) 강의 내용 정리 글입니다.
 sitemap: false
 ---
@@ -8,12 +8,10 @@ sitemap: false
 * this unordered seed list will be replaced by the toc
 {:toc}
 
-## 1. 가설 검정
+## 가설 검정
 
 1. **가설과 가설 검정**
-    
-    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled.png)
-    
+        
     > 기존 가설: 정설, 원리, 공식
     > 
     > 
@@ -31,6 +29,7 @@ sitemap: false
     - 비즈니스 이해 단계에서 비즈니스 문제로부터 우리의 관심사(**Y**)를 도출 → **Y**에 영향을 주는 요인(**X**)들을 뽑아서 가설 수립
     - 귀무가설 $$H_0$$: 영가설, 현재의 가설, 보수적인 입장
     - 대립가설 $$H_1$$: 연구가설, 새로운 가설, 내가 바라는바
+
 2. 통계적 검정
     - 표본으로부터 대립가설을 확인하고, 모집단에서도 맞을 것이라 주장
         - 대립가설: 매장 지역($$x_2$$)에 따라 수요량($$y$$)에 차이가 있다
@@ -57,9 +56,12 @@ sitemap: false
         - 분포를 통해서 그 값이 (**차이**가) 큰지, 작은 지 판단 가능
         - 손쉽게 판단할 수 있도록 계산해 준 것이 `p-value`
 
-## 2. 이변량 분석 (숫자 → 숫자)
+## 이변량 분석 (숫자 → 숫자)
 
 ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%203.png)
+
+{:.figcaption}
+이변량 분석 총정리 표
 
 > 숫자 vs 숫자 - 정리하는 방법
 > 
@@ -173,7 +175,7 @@ sitemap: false
     sns.heatmap(air.corr(), 
                 annot = True,            # 숫자(상관계수) 표기 여부
                 fmt = '.3f',             # 숫자 포멧 : 소수점 3자리까지 표기
-                cmap = 'RdYlBu_r',       # 칼라맵
+                cmap = 'RdYlBu_r',       # 컬러맵
                 vmin = -1, vmax = 1)     # 값의 최소, 최대값
     plt.show()
     ```
@@ -201,7 +203,7 @@ sitemap: false
         - 시각화와 수치화를 함께 수행하기
     
 
-## 3. 평균 추정과 신뢰구간
+## 평균 추정과 신뢰구간
 
 1. 평균과 분산, 표준편차
     - 분산, 표준편차: 한 집단 설명을 위해 대푯값으로 평균을 계산했을 때 평균으로부터 얼마나 벗어나 있는지를 나타내는 값 (이탈도, deviation)
@@ -222,10 +224,7 @@ sitemap: false
         - 모 평균에 대한 추정치
         - 추정치에는 오차가 존재, 이 오차를 **표준오차**
             
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2011.png)
-            
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2012.png)
-            
+            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2011.png)            
         
 3. **중심 극한 정리 (Central Limit Theorem)**
     - 표본 평균들의 분포(표집 분포) → 정규분포에 가까워 짐 (**모집단의 분포와 상관없이**)
@@ -250,9 +249,7 @@ sitemap: false
             
         
 
-## 4. 이변량 분석 (범주→ 숫자)
-
-![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2016.png)
+## 이변량 분석 (범주→ 숫자)
 
 1. 시각화: 두 집단(범주) → 숫자
     - 대립가설: 생존여부에 따라 나이의 차이가 있다
@@ -324,7 +321,7 @@ sitemap: false
             - 그래서, 보통 [사후분석] 진행
     
 
-## 5. 이변량 분석 (범주 → 범주)
+## 이변량 분석 (범주 → 범주)
 
 1. 교차표(crosstab)
     - ML에서 사용됨
@@ -394,7 +391,7 @@ sitemap: false
                 ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2024.png)
                 
 
-## 6. 이변량 분석 (숫자 → 범주)
+## 이변량 분석 (숫자 → 범주)
 
 1. 시각화
     - 히스토그램을 Survived로 나눠서 그리기
