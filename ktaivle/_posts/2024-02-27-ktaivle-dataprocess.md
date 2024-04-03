@@ -66,12 +66,7 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
     
     - ‘outer’: **모든** 행과 열 합치기(기본값)
     - ‘inner’: **같은** 행과 열만 합치기
-    
-    ```python
-    # 집계후 agg 사용하여 열 이름 변경
-    s1 = sales1.groupby(['Date'], as_index = False)['Qty'].agg({'Store1_Qty':'sum'})
-    ```
-    
+
 2. `merge(join)`
     - 판다스에서 `join`은 굉장히 간단
     - 자동으로 `key`를 잡아준다
@@ -79,10 +74,6 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
         
         ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/001.png)
         
-        |  | 기준 | 입력 | 방향 |
-        | --- | --- | --- | --- |
-        | concat | df의 구조 (인덱스, 열 이름 기준) | [ ] | axis = 0, 1 |
-        | merge | 특정 열의 값 | _, _ | X, 옆으로 병합 |
 3. **`pivot`**
     - `pivot` : 결합은 아니지만, 집계 후 데이터프레임 구조를 변형해서 조회하는데 종종 사용
     - 단계
@@ -90,7 +81,20 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
         - `pivot`
             
             ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/002.png)
-            
+
+4. 정리
+
+    |  | 기준 | 입력 | 방향 |
+    | --- | --- | --- | --- |
+    | concat | df의 구조 (인덱스, 열 이름 기준) | [ ] | axis = 0, 1 |
+    | merge | 특정 열의 값 | _, _ | X, 옆으로 병합 |
+    
+    ```python
+
+    pd.concat([df1, df2], axis = 0, join = 'outer')
+    # 집계후 agg 사용하여 열 이름 변경
+    s1 = sales1.groupby(['Date'], as_index = False)['Qty'].agg({'Store1_Qty':'sum'})
+    ```
 
 ## 3. 시계열 데이터 처리
 
