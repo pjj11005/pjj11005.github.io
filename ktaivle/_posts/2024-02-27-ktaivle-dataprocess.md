@@ -53,7 +53,7 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
 ```
         
 
-## 2. 데이터프레임 결합
+## 데이터프레임 결합
 
 1. `concat()` 
     
@@ -96,7 +96,7 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
     s1 = sales1.groupby(['Date'], as_index = False)['Qty'].agg({'Store1_Qty':'sum'})
     ```
 
-## 3. 시계열 데이터 처리
+## 시계열 데이터 처리
 
 > 시계열 데이터
 > 
@@ -193,7 +193,7 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
     ```
     
 
-## 4. 데이터 분석 방법
+## 데이터 분석 방법
 
 - CRISP-DM
     
@@ -253,7 +253,7 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
     >     1. 프로젝트로 실제 현장의 문제가 해결 되었는가?
     >     2. 다시 초기 단계로 돌아간다면 어떤 부분을 보완 할건가요?
 
-## 5. 시각화 라이브러리
+## 시각화 라이브러리
 
 > 수 많은 데이터를 **한 눈에 파악**하는 두 가지 방법 → 그래프(시각화), 통계량(수치화)
 > 
@@ -261,168 +261,143 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
 > 데이터 시각화의 목적: 비즈니스의 인사이트를 파악하는 것
 > 
 
-1. 기본 코드 구조
-    - `matplotlib.pyplot`: 별칭으로 `plt` 사용
-    - `Seaborn`: 별칭으로 `sns` 사용
-    - `plt.plot()`: 기본 라인 차트를 그려줌
-    - `plt.show()`: 그래프를 화면에 출력해줌
+### 기초
 
-1. 기본 차트 그리기
-    - `plt.plot`(1차원 값)
-        - x축 : 인덱스
-        - y축 : 1차원 값
-        - 라인 차트를 그려준다
-        
-    - x, y 값 지정
-        - `plt.plot(x축, y축) # 타입 1`
-            - 두 데이터의 길이(개수)가 같아야 한다
-        - `plt.plot(x축, y축, data = ) # 타입 2`
+1. **x축, y축 이름, 타이틀 붙이기**
+    
+    ```python
+    plt.plot(data['Date'], data['Ozone'])
+    
+    plt.xticks(rotation = 30)       # x축 값 꾸미기 : 방향을 30도 틀어서
+    plt.xlabel('Date')              # x축 이름 지정
+    plt.ylabel('Ozone')             # y축 이름 지정
+    plt.title('Daily Airquality')   # 타이틀
+    
+    plt.show() # 위에 있는 것들을 한꺼번에 그려줘
+    ```
+    
+2. **라인 스타일 조정**
+    - `color=`
+        - **'red','green','blue' ...**
+        - 혹은 **'r', 'g', 'b', ...**
+        - [https://matplotlib.org/stable/gallery/color/named_colors.html](https://matplotlib.org/stable/gallery/color/named_colors.html)
+    - `linestyle=`
+        - **'solid', 'dashed', 'dashdot', 'dotted'**
+        - 혹은 **'-' , '--' , '-.' , ':'**
+    - marker=
+    
+    | marker | description |
+    | --- | --- |
+    | "." | point |
+    | "," | pixel |
+    | "o" | circle |
+    | "v" | triangle_down |
+    | "^" | triangle_up |
+    | "<" | triangle_left |
+    | ">" | triangle_right |
 
-2. 차트 꾸미기
-    1. **x축, y축 이름, 타이틀 붙이기**
-        
-        ```python
-        plt.plot(data['Date'], data['Ozone'])
-        
-        plt.xticks(rotation = 30)       # x축 값 꾸미기 : 방향을 30도 틀어서
-        plt.xlabel('Date')              # x축 이름 지정
-        plt.ylabel('Ozone')             # y축 이름 지정
-        plt.title('Daily Airquality')   # 타이틀
-        
-        plt.show() # 위에 있는 것들을 한꺼번에 그려줘
-        ```
-        
-    2. **라인 스타일 조정하기**
-        - `color=`
-            - **'red','green','blue' ...**
-            - 혹은 **'r', 'g', 'b', ...**
-            - [https://matplotlib.org/stable/gallery/color/named_colors.html](https://matplotlib.org/stable/gallery/color/named_colors.html)
-        - `linestyle=`
-            - **'solid', 'dashed', 'dashdot', 'dotted'**
-            - 혹은 **'-' , '--' , '-.' , ':'**
-        - marker=
-        
-        | marker | description |
-        | --- | --- |
-        | "." | point |
-        | "," | pixel |
-        | "o" | circle |
-        | "v" | triangle_down |
-        | "^" | triangle_up |
-        | "<" | triangle_left |
-        | ">" | triangle_right |
-    3. **여러 그래프 겹쳐서 그리기**
-        
-        ```python
-        # 첫번째 그래프
-        plt.plot(data['Date'], data['Ozone'], color='green', linestyle='dotted', marker='o')
-        # 두번째 그래프
-        plt.plot(data['Date'], data['Temp'], color='r', linestyle='-', marker='s')
-        
-        plt.xlabel('Date') 
-        plt.ylabel('Ozone')
-        plt.title('Daily Airquality')
-        plt.xticks(rotation=45)
-        
-        # 위 그래프와 설정 한꺼번에 보여주기
-        plt.show()
-        ```
-        
-    4. **범례, 그리드 추가**
-        
-        ```python
-        plt.plot(data['Date'], data['Ozone'], label = 'Ozone')  # label = : 범례추가를 위한 레이블값
-        plt.plot(data['Date'], data['Temp'], label = 'Temp')
-        
-        plt.legend(loc = 'upper right')    # 레이블 표시하기. loc = : 위치
-        plt.grid()
-        
-        plt.show()
-        ```
-        
-    
-2. 추가 기능 1
-    
-    **(1) `데이터프레임.plot()`**
-    
-    - [https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html)
-    
-    **(2) 축 범위 조정하기**
+3. **여러 그래프 겹쳐서 그리기**
     
     ```python
-    plt.plot(data['Ozone'])
+    # 첫번째 그래프
+    plt.plot(data['Date'], data['Ozone'], color='green', linestyle='dotted', marker='o')
+    # 두번째 그래프
+    plt.plot(data['Date'], data['Temp'], color='r', linestyle='-', marker='s')
     
-    plt.ylim(0, 100)
-    plt.xlim(0,10)
+    plt.xlabel('Date') 
+    plt.ylabel('Ozone')
+    plt.title('Daily Airquality')
+    plt.xticks(rotation=45)
+    
+    # 위 그래프와 설정 한꺼번에 보여주기
+    plt.show()
+    ```
+    
+4. **범례, 그리드 추가**
+    
+    ```python
+    plt.plot(data['Date'], data['Ozone'], label = 'Ozone')  # label = : 범례추가를 위한 레이블값
+    plt.plot(data['Date'], data['Temp'], label = 'Temp')
+    
+    plt.legend(loc = 'upper right')    # 레이블 표시하기. loc = : 위치
     plt.grid()
-    plt.show()
-    ```
-    
-    **(3) 그래프 크기 조정**
-    
-    - `plt.figure(figsize = (4, 3))`
-    - default size는 6.4, 4.4
-    
-    **(4) 수평선 수직선 추가**
-    
-    ```python
-    plt.plot(data['Ozone'])
-    
-    plt.axhline(40, color = 'grey', linestyle = '--')
-    plt.axvline(10, color = 'red', linestyle = '--')
-    plt.show()
-    ```
-    
-    **(5) 그래프에 텍스트 추가**
-    
-    ```python
-    plt.plot(data['Ozone'])
-    
-    plt.axhline(40, color = 'grey', linestyle = '--')
-    plt.axvline(10, color = 'red', linestyle = '--')
-    
-    plt.text(5, 41, '40')
-    plt.text(10.1, 20, '10')
     
     plt.show()
     ```
-    
 
-1. 추가 기능 2: 여러 그래프 나눠서 그리기
+### 추가 기능
     
-    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/006.png)
-    
-    - `row` : 고정된 행 수
-    - `column` : 고정된 열 수
-    - `index` : 순서
-    
-    (1) 1행 3열 그래프 그리기
-    
-    ```python
-    plt.figure(figsize = (15,5))
-    plt.subplot(1,3,1)
-    plt.plot('Date', 'Temp', data = data)
-    plt.title('Temp')
-    plt.xticks(rotation = 40)
-    plt.grid()
-    
-    plt.subplot(1,3,2)
-    plt.plot('Date', 'Wind', data = data)
-    plt.title('Wind')
-    plt.xticks(rotation = 40)
-    plt.grid()
-    
-    plt.subplot(1,3,3)
-    plt.plot('Date', 'Ozone', data = data)
-    plt.title('Ozone')
-    plt.xticks(rotation = 40)
-    plt.grid()
-    
-    plt.tight_layout() # 그래프간 간격을 적절히 맞추기
-    plt.show()
-    ```
-    
-    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/007.png)
+**(1) `데이터프레임.plot()`**
+
+- [https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html)
+
+**(2) 축 범위 조정하기**
+
+```python
+plt.plot(data['Ozone'])
+
+plt.ylim(0, 100)
+plt.xlim(0,10)
+plt.grid()
+plt.show()
+```
+
+**(3) 그래프 크기 조정**
+
+- `plt.figure(figsize = (4, 3))`
+- default size는 6.4, 4.4
+
+**(4) 수평선 수직선 추가**
+
+```python
+plt.plot(data['Ozone'])
+
+plt.axhline(40, color = 'grey', linestyle = '--')
+plt.axvline(10, color = 'red', linestyle = '--')
+plt.show()
+```
+
+**(5) 그래프에 텍스트 추가**
+
+```python
+plt.plot(data['Ozone'])
+
+plt.axhline(40, color = 'grey', linestyle = '--')
+plt.axvline(10, color = 'red', linestyle = '--')
+
+plt.text(5, 41, '40')
+plt.text(10.1, 20, '10')
+
+plt.show()
+```
+   
+**(6) 그래프 여러개 그리기**
+
+```python
+plt.figure(figsize = (15,5))
+plt.subplot(1,3,1)
+plt.plot('Date', 'Temp', data = data)
+plt.title('Temp')
+plt.xticks(rotation = 40)
+plt.grid()
+
+plt.subplot(1,3,2)
+plt.plot('Date', 'Wind', data = data)
+plt.title('Wind')
+plt.xticks(rotation = 40)
+plt.grid()
+
+plt.subplot(1,3,3)
+plt.plot('Date', 'Ozone', data = data)
+plt.title('Ozone')
+plt.xticks(rotation = 40)
+plt.grid()
+
+plt.tight_layout() # 그래프간 간격을 적절히 맞추기
+plt.show()
+```
+
+![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/007.png)
     
 
 ## 6. 단변량 분석 - 숫자형
@@ -452,11 +427,7 @@ age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','jun
         ```
         
     - 그래프 읽기
-        - 축의 의미 파악
-            - x축, y축?
-        - 값의 분포로부터 파악할 내용
-            - 희박한 구간?, 밀집 구간?
-            - **희박하고 밀집된 정도에 따르는 비즈니스 의미 파악**
+        - **희박하고 밀집된 정도에 따르는 비즈니스 의미 파악**
     
     **2) 밀도 함수 그래프(`kde plot`)**
     
