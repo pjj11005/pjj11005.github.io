@@ -400,7 +400,7 @@ plt.show()
 ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/007.png)
     
 
-## 6. 단변량 분석 - 숫자형
+## 단변량 분석 - 숫자형
 
 ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/008.png)
 
@@ -490,7 +490,7 @@ plt.show()
     - 시계열 데이터는 보통 시간 축(x축)에 맞게 값들을 라인 차트로 표현
     
 
-## 7. 단변량 분석 - 범주형
+## 단변량 분석 - 범주형
 
 1. **범주형 변수**
     
