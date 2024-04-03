@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 코딩 테스트 연습 | 1차 코딩 마스터스
+title: 코딩 테스트 연습 | 1차 코딩 마스터스
 description: KT AIVLE SCHOOL 5기 1차 코딩 마스터스 정리 글입니다.
 sitemap: false
 ---
