@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 3주차 | 웹 크롤링(Web crawling)(1)
+title: 3주차 | 웹 크롤링(Web crawling)(1)
 description: KT AIVLE SCHOOL 5기 3주차에 진행한 웹 크롤링(Web crawling) 강의 내용 정리 글입니다.
 sitemap: false
 ---
@@ -8,7 +8,7 @@ sitemap: false
 * this unordered seed list will be replaced by the toc
 {:toc}
 
-## 0. Python
+## Python
 
 > cpu, ram, ssd(hdd) 활용
 
