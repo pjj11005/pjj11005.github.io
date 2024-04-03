@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 5주차 | 딥러닝(Deep learning)(1)
+title: 5주차 | 딥러닝(Deep learning)(1)
 description: KT AIVLE SCHOOL 5기 5주차에 진행한 딥러닝(Deep learning) 강의 내용 정리 글입니다.
 sitemap: false
 ---
@@ -13,6 +13,9 @@ sitemap: false
 ![Untitled](/assets/img/blog/KT_AIVLE/week5/dl00.png)
 
 ## 머신러닝 알고리즘 정리
+
+
+
 
 ## 딥러닝 개념 익히기
 
