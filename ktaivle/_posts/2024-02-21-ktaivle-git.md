@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 1주차 | GIT
+title: 1주차 | GIT
 description: KT AIVLE SCHOOL 5기 1주차에 진행한 GIT 강의 내용 정리 글입니다.
 sitemap: false
 ---
