@@ -292,38 +292,7 @@ date_count(today)
 - 기본 연산 (사칙 연산)
     
     ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/008.png)
-    
-- 배열 집계
-    - `np.sum()`, 혹은 `array.sum()`
-        - `axis = 0` : 열 기준 집계 (아래 방향)
-        - `axis = 1` : 행 기준 집계 (오른쪽 방향)
-        - 생략하면 : 전체 집계
-    - 동일한 형태로 사용 가능한 함수 : `np.max(), np.min, np.mean(), np.std()`
-    
-- 자주 사용되는 함수들
-    - 가장 큰(작은) 값의 인덱스 반환: `np.argmax`, `np.argmin`
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/009.png)
-        
-    - 조건에 따라 다른 값 지정하기: `np.where` (**중요**)
-        - 문법: `np.where(조건문, 참일때값, 거짓일때값)`
-            
-            ![Untitled](/assets/img/blog/KT_AIVLE/week1/Python/010.png)
                 
-### 정리
-1. 수치 연산을 위해 배열 (array) 를 생성하고 다루는 패키지
-2. Array 구조: `Axis, Rank, Shape`
-    - 특별히 `Axis 0`의 의미 이해
-3. Array 조회
-    - 인덱스: 특정 인덱스, 여러 인덱스, 범위 / 조건 조회
-4. Array Shape 변형: `reshape`
-5. Array 연산
-    - 기본 연산: 사칙연산, 지수 , 제곱근
-6. Array 집계
-    - `sum, mean, min, max, std` … (`axis = 0, 1` 에 따른 연산 방향)
-7. 몇가지자주사용하는함수
-    - `np.argmax, np.where, …`
-
 ```python
 # numpy
 import numpy as np
@@ -364,7 +333,6 @@ print(np.argmax(a, axis = 1)) # 열 방향 최대값의 인덱스
 
 np.where(a > 2, a, 0)
 ```
-
 
 ##  판다스(Pandas)
 
