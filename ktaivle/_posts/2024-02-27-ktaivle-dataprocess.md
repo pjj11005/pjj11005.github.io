@@ -22,115 +22,35 @@ sitemap: false
 >         - 모든 값은 **숫자**
 >         - 필요 시, 숫자의 **범위** 맞춰야
 
-## 1. 데이터프레임 변경
 
-1. 열 이름 변경
-    - `rename()`: 지정한 열 이름 변경
-        - **`inplace=True`** 옵션을 설정해야 변경 사항이 실제 반영
-    - 모든 열 이름을 변경할 때는 **columns** 속성을 변경
-        
-        ```python
-        tip.columns = ['total_bill', 'tip', 'sex', 'smoker', 'day', 'time', 'size']
-        
-        tip.rename(columns={'total_bill_amount': 'total_bill',
-        'male_female': 'sex',
-        'smoke_yes_no': 'smoker',
-        'week_name': 'day',
-        'dinner_lunch': 'time'}, inplace=True)
-        ```
-        
-2. 열 추가
-    - 맨 뒤에 열 추가
-        - 없는 열을 변경하면 그 열이 추가됨
-            
-            ```python
-            # final_amt 열추가
-            tip['final_amt'] = tip['total_bill'] + tip['tip']
-            ```
-            
-    - 지정한 위치에 열 추가
-        - `insert()` : 원하는 위치에 열을 추가할 수 있음
-            
-            ```python
-            # tip 열앞에div_tb 열추가
-            tip.insert(1, 'div_tb', tip['total_bill'] / tip['size'])
-            ```
-            
-    
-3. 열 삭제
-    - 뭔가를 삭제할 때는 **`항상 조심x100`** 해야함
-    - 잘못 되었을 때 되돌리기 위한 준비가 필요하다
-    - `copy()` 로 복사본을 생성한 후 작업 진행하기
-    
-    **1) 열 하나 삭제**
-    
-    - **`drop()`** 메소드를 사용해 열을 삭제
-    - `axis=0`: 행 삭제(기본 값)
-    - `axis=1`: 열 삭제
-    - **`inplace=True`** 옵션을 지정해야 실제로 반영이 된다
-        - `False` : 삭제한 것 처럼 보여줘(조회!)
-    
-    **2) 여러 열 삭제**
-    
-    - 삭제할 열을 리스트 형태로 전달해 한 번에 여러 열을 제거할 수 있다
-    
-4. 값 변경
-    
-    > `copy()` 로 복사본을 생성한 후 작업 진행하기
-    > 
-    
-    **1) 조건에 의한 값 변경**
-    
-    ```python
-    # Diff_Income 의 값이 1000보다 작은 경우, 0로 변경
-    data2.loc[data2['Diff_Income'] < 1000, 'Diff_Income' ] = 0
-    data2.head()
-    ```
-    
-    **2) 조건에 의한 값 변경 2(`np.where`)**
-    
-    ```python
-    # Age가 40보다 많으면 1, 아니면 0으로 변경
-    data2['Age'] = np.where(data2['Age'] > 40, 1, 0)
-    data2.head()
-    ```
-    
-    **3) `map()` 메소드**
-    
-    - 주로 범주형 값을 다른 값으로 변경
-        
-        ```python
-        # Male -> 1, Female -> 0
-        data['Gen'] = data['Gen'].map({'Male': 1, 'Female': 0})
-        ```
-        
-    
-    **4) `cut()`**
-    
-    - **`pd.cut()`** 함수를 이용하여, 숫자형 변수를 범주형 변수로 변환할 수 있다
-        - 사례 : 나이 >> 나이대, 고객 구매액 >> 고객 등급
-    - 전체 범위 균등 분할하기
-        - 값의 범위를 균등 분할하는 것이지, 값의 개수를 균등하게 맞추는 것은 아님!
-    - 분할된 범주에 이름 붙이기
-    - 내가 원하는 구간으로 자르기 : `bins = [ ]`
-        
-        ```python
-        #  3 등분으로 분할
-        age_group = pd.cut(data2['Age'], 3)
-        age_group.value_counts()
-        
-        #  3 등분으로 분할후 a,b,c로 이름 붙이기
-        age_group = pd.cut(data2['Age'], 3, labels = ['a','b','c'])
-        age_group.value_counts()
-        
-        # 나이를 다음 구간으로 분할
-        # 'young'  : =< 40 
-        # 'junior' : 40 <   =< 50
-        # 'senior' : 50 < 
-        
-        age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','junior','senior'])
-        age_group.value_counts()
-        ```
+## 데이터 프레임 변경
+
+```python
+## 데이터프레임 변경
+
+# 열 이름 변경
+tip.columns = ['total_bill', 'tip', 'sex', 'smoker', 'day', 'time', 'size']
+
+tip.rename(columns={'total_bill_amount': 'total_bill',
+'male_female': 'sex',
+'smoke_yes_no': 'smoker',
+'week_name': 'day',
+'dinner_lunch': 'time'}, inplace=True)
+
+# Income_LY 열 추가
+data['Income_LY'] = data['M_Income'] / (1+data['PctSalHike']/100 ) 
+
+# 열 삭제 (copy 후 수행하기)
+data2 = data.copy() 
+data2.drop(['JobSat2','Diff_Income'], axis=1, inplace=True) # 열 두 개 삭제(axis=0 : 행 삭제(기본값))
+
+# 값 변경 (copy 후 수행하기)
+data2.loc[data2['Diff_Income'] < 1000, 'Diff_Income' ] = 0 # Diff_Income 의 값이 1000보다 작은 경우, 0로 변경
+data2['Age'] = np.where(data2['Age'] > 40, 1, 0) # Age가 40보다 많으면 1, 아니면 0으로 바꿔 봅시다.
+data['Gen'] = data['Gen'].map({'Male': 1, 'Female': 0}) # Male -> 1, Female -> 0
+# 수치형 -> 범주형으로 변경 시 사용
+age_group = pd.cut(data2['Age'], bins =[0, 40, 50, 100] , labels = ['young','junior','senior'])
+```
         
 
 ## 2. 데이터프레임 결합
