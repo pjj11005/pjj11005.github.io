@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 2주차 | 데이터 분석(Data analysis)(1)
+title: 2주차 | 데이터 분석(Data analysis)
 description: KT AIVLE SCHOOL 5기 2주차에 진행한 데이터 분석(Data analysis) 강의 내용 정리 글입니다.
 sitemap: false
 ---
