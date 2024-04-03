@@ -1,6 +1,6 @@
 ---
 layout: post
-title: KT AIVLE SCHOOL 5기 3주차 | 1차 미니프로젝트
+title: 3주차 | 1차 미니프로젝트
 description: KT AIVLE SCHOOL 5기 3주차에 진행한 1차 미니프로젝트 내용 정리 글입니다.
 sitemap: false
 ---
