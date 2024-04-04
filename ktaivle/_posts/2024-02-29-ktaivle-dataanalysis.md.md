@@ -520,4 +520,26 @@ def eda_2_cc(feature, target, data):
 > 그래프로 판단하는게 더 좋음
 >
 
+### 이변량 분석 함수(숫자 -> 범주)
 
+```python
+def eda_2_nc(feature, target, data):
+    plt.figure(figsize = (12, 4))
+    
+    plt.subplot(1, 3, 1)
+    sns.kdeplot(x= feature, data = data, hue = target,
+            common_norm = False)
+    
+    plt.subplot(1, 3, 2)
+    sns.kdeplot(x= feature, data = data, hue = target
+            , multiple = 'fill')
+    plt.axhline(data[target].mean(), color = 'r')
+    
+    plt.subplot(1, 3, 3)
+    sns.histplot(x= feature, data = data, hue = target
+            , multiple = 'fill')
+    plt.axhline(data[target].mean(), color = 'r')
+    
+    plt.tight_layout()
+    plt.show()
+```
