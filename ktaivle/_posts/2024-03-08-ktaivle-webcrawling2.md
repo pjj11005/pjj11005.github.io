@@ -8,7 +8,7 @@ sitemap: false
 * this unordered seed list will be replaced by the toc
 {:toc}
 
-## 1. 정적 페이지 크롤링
+## 정적 페이지 크롤링
 
 ### HTML
 
@@ -170,7 +170,7 @@ sitemap: false
     ```
     
 
-## 2. selenium
+## selenium
 
 - [https://www.selenium.dev](https://www.selenium.dev)
 - 자동화를 목적으로 만들어진 다양한 브라우져와 언어를 지원하는 라이브러리
@@ -241,7 +241,7 @@ sitemap: false
     ```
     
 
-## 3. 크롤링 정책
+## 크롤링 정책
 
 - `robots.txt` : 크롤링 정책을 설명한 페이지
 - 과도한 크롤링으로 서비스에 영향을 주었을 때 법적 문제가 있을 수 있다
