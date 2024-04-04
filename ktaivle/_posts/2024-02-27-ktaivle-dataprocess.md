@@ -420,12 +420,6 @@ plt.show()
         - 구간의 개수에 따라서 파악할 수 있는 내용이 달라짐 → **`bins`를 적절히 조절**
         - 단순 해석을 넘어서 비즈니스적인 관점에서의 해석이 중요하다
         - `Seaborn` 패키지가 조금 더 유용
-        
-        ```python
-        sns.histplot(x= 'Fare', data = titanic, bins = 20) 
-        plt.show()
-        ```
-        
     - 그래프 읽기
         - **희박하고 밀집된 정도에 따르는 비즈니스 의미 파악**
     
@@ -438,14 +432,6 @@ plt.show()
         - 밀도함수 그래프 아래 면적은 1
         - 분포 확인 용으로 사용
     - 히스토그램에서 KDE plot 함께 그리기
-        
-        ```python
-        sns.histplot(titanic['Age'], bins = 16, kde = True)
-        plt.show()
-        ```
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/009.png)
-        
     
     **3) boxplot**
     
@@ -466,50 +452,72 @@ plt.show()
                     - 최근에는 이상치의 영향을 덜 받는 모델들이 많이 나옴(이상치 별로 신경 안씀)
                     - 이상탐지 영역에서는 중요
     - 히스토그램, KDE, Box plot을 한번에 시각화해서 분포확인 많이 한다
-        
-        ```python
-        plt.figure(figsize = (8, 6))
-        
-        plt.subplot(2, 1, 1)
-        sns.histplot(x = titanic['Age'], bins = 30, kde = True)
-        plt.grid()
-        
-        plt.subplot(2, 1, 2)
-        sns.boxplot(x = titanic['Age'])
-        plt.grid()
-        
-        plt.tight_layout()
-        plt.show()
-        ```
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/010.png)
-        
-    
+
     **4) 시계열 데이터 시각화**
     
     - 시계열 데이터는 보통 시간 축(x축)에 맞게 값들을 라인 차트로 표현
     
+    **5) 수치형 단변량 분석 함수**
 
+    ```python
+        def eda_1_num(data, var, bins = 30):
+
+            # 기초통계량
+            print('<< 기초통계량 >>')
+            display(data[[var]].describe().T)
+            print('=' * 100)
+
+            # 시각화
+            print('<< 그래프 >>')
+            plt.figure(figsize = (10,6))
+
+            plt.subplot(2,1,1)
+            sns.histplot(data[var], bins = bins, kde = True)
+            plt.grid()
+
+            plt.subplot(2,1,2)
+            sns.boxplot(x = data[var])
+            plt.grid()
+            plt.show()
+    ```
+    ![alt text](/assets/img/blog/KT_AIVLE/week2/data_process/eda_1_num.png)
+        
 ## 단변량 분석 - 범주형
 
-1. **범주형 변수**
+**(1) 수치화 : 기초통계량**
+
+- 범주형 변수는 범주별 **빈도수와 비율**을 확인
     
-    **(1) 수치화 : 기초통계량**
+    **1) 범주별 빈도수**
     
-    - 범주형 변수는 범주별 **빈도수와 비율**을 확인
-        
-        **1) 범주별 빈도수**
-        
-        - `.value_counts()` : 범주의 개수와 상관 없이 범주 별 개수를 count
-        
-        **2) 범주별 비율**
-        
-        - `.value_counts(normalize = True)`
+    - `.value_counts()` : 범주의 개수와 상관 없이 범주 별 개수를 count
     
-    **(2) 시각화**
+    **2) 범주별 비율**
     
-    **1) bar chart**
+    - `.value_counts(normalize = True)`
+
+**(2) 시각화**
+
+**1) bar chart**
+
+- `seaborn`의 `countplot`
+    - `plt.bar()` 를 이용하려면 먼저 집계한 후 결과를 가지고 그래프를 그려야 한다
+    - `countplot`은 집계 + `bar plot`을 한꺼번에 해결!
+
+**(3) 범주형 단변량 분석 함수**
+
+```python
+def eda_1_cat(data, var) :
+    # 기초통계량
+    t1 = data[var].value_counts()
+    t2 = data[var].value_counts(normalize = True)
+    t3 = pd.concat([t1, t2], axis = 1)
+    t3.columns = ['count','ratio']
+    display(t3)
     
-    - `seaborn`의 `countplot`
-        - `plt.bar()` 를 이용하려면 먼저 집계한 후 결과를 가지고 그래프를 그려야 한다
-        - `countplot`은 집계 + `bar plot`을 한꺼번에 해결!
+    # 그래프
+    sns.countplot(x = var, data = data)
+    plt.show()
+```
+
+![alt text](/assets/img/blog/KT_AIVLE/week2/data_process/eda_1_cat.png)
