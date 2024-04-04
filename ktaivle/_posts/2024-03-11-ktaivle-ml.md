@@ -263,7 +263,7 @@ print('F1-Score : ', f1_score(y_test, y_pred, average = None), '\n') # 둘다 �
 print('Classification_report \n\n', classification_report(y_test, y_pred))
 ```
 
-## 3. 기본 알고리즘
+## 기본 알고리즘
 
 ### Linear Regression
 
