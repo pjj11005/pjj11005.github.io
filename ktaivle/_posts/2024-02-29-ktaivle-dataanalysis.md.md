@@ -70,138 +70,151 @@ sitemap: false
 
 > **변수 간의 관계를 파악하는 도구들도 각각 한계가 있다 → 보이는게 전부가 아님을 꼭 명심!**
 
-1. **시각화: 산점도**
-    - 상관 분석
-        - 상관 분석은 연속형 변수 X에 대한 연속형 변수 Y의 관계를 분석할 때 사용된다
-        - Scatter를 통해 시각
-    - 가설 : 온도(x)가 상승하면 아이스크림 판매량(y)을 증가할까?
-        - 어떤 관계가 보이나요?
-        - 얼마나 강한 관계인가요?
-    - 숫자 vs 숫자를 비교할 때 중요한 관점: **`'직선'(Linearity)`**
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%204.png)
-        
+### **1. 시각화: 산점도**
+- 상관 분석
+    - 상관 분석은 연속형 변수 X에 대한 연속형 변수 Y의 관계를 분석할 때 사용된다
+    - Scatter를 통해 시각
+- 가설 : 온도(x)가 상승하면 아이스크림 판매량(y)을 증가할까?
+    - 어떤 관계가 보이나요?
+    - 얼마나 강한 관계인가요?
+- 숫자 vs 숫자를 비교할 때 중요한 관점: **`'직선'(Linearity)`**
     
-    **(1) 산점도**
+    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%204.png)
     
-    - 문법
-        - `plt.scatter( x축 값, y축 값 )`
-        - `plt.scatter( ‘x변수’, ‘y변수’, data = dataframe 이름)`
-    
-    - 두 변수의 관계
-        - 산점도에서 또렷한 패턴이 보인다면, 강한 관계로 볼 수 있다(특히, 직선의 패턴이 보인다면)
-            
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%205.png)
-            
-    
-    **(2) `pairplot` 한꺼번에 시각화**
-    
-    - 숫자형 변수들에 대한 산점도를 한꺼번에 그려준다
-    - 그러나 **시간이 많이 걸림**
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%206.png)
-        
-        - 아래, 위 중 한쪽을 선택해서 그래프 보기
-    
-    **(3)  `jointplot, regplot`**
-    
-    - `jointplot`은 산점도와 각각의 히스토그램을 함께 보여준다
-        
-        ```python
-        sns.jointplot(x='Temp', y='Ozone', data = air)
-        plt.show()
-        ```
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%207.png)
-        
-    - `regplot`
-        
-        ```python
-        sns.regplot(x='Solar.R', y='Ozone', data = air)
-        plt.show()
-        ```
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%208.png)
-        
-        - 장점: 직선을 그려줘서 관계를 잘 알 수 있음
-        - 단점: 무조건 직선을 그려서 관계가 없어도 있어 보이는 느낌이 든다
-            
-            
-2. **수치화 : 상관분석**
-    
-    **(1) 상관계수, p-value**
-    
-    - 상관계수 $$r$$
-        - 공분산을 표준화 한 값
-        - -1 ~ 1 사이의 값
-        - -1, 1에 가까울 수록 강한 상관관계를 나타냄
 
-    - 경험에 의한 대략의 기준(절대적인 기준이 절대 아님)
-        - 강한: $$0.5 <  \vert r \vert  \leq 1$$
-        - 중간 : $$0.2 < \vert r \vert \leq 0.5$$
-        - 약한 : $$0.1 < \vert r \vert \leq 0.2$$
-        - (거의)없음 : $$ \vert r \vert \leq 0.1$$
+**(1) 산점도**
+
+- 문법
+    - `plt.scatter( x축 값, y축 값 )`
+    - `plt.scatter( ‘x변수’, ‘y변수’, data = dataframe 이름)`
+
+- 두 변수의 관계
+    - 산점도에서 또렷한 패턴이 보인다면, 강한 관계로 볼 수 있다(특히, 직선의 패턴이 보인다면)
         
-        ```python
-        import scipy.stats as spst
+        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%205.png)
         
-        # 상관계수와 p-value 
-        spst.pearsonr(air['Temp'], air['Ozone'])
-        ```
-        
-        - 결과: 튜플 (상관계수, p-value)
-            - 첫 번째 값 : 상관계수
-            - 두 번째 값 : p-value
-                - 귀무가설 : 상관 관계가 없다 (상관계수가 0이다)
-                - 대립가설 : 상관 관계가 있다 (상관계수가 0이 아니다)
-            
-            > 주의 사항 : 값에 NaN이 있으면 계산되지 않는다 → 반드시 `.notnull()`로 제외하고 수행해야 한다
-            > 
+
+**(2) `pairplot` 한꺼번에 시각화**
+
+- 숫자형 변수들에 대한 산점도를 한꺼번에 그려준다
+- 그러나 **시간이 많이 걸림**
     
-    **(2) 데이터프레임 한꺼번에 상관계수 구하기**
+    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%206.png)
     
-    - `air.corr()`
-        - 위 결과로 부터,
-            1. 같은 변수끼리 구한 값 1은 의미 없다 (**대각선은 의미 없음**) → 아래나 위쪽 데이터만 보기
-            2. 상관계수의 절대값이
-                - 1에 가까울 수록 강한 상관관계
-                - 0에 가까울 수록 약한 상관관계
-            3. +는 양의 상관관계, -는 음의 상관관계
-    
-    **(3) 상관계수를 heatmap으로 시각화**
+    - 아래, 위 중 한쪽을 선택해서 그래프 보기
+
+**(3)  `jointplot, regplot`**
+
+- `jointplot`은 산점도와 각각의 히스토그램을 함께 보여준다
     
     ```python
-    plt.figure(figsize = (8, 8))
-    sns.heatmap(air.corr(), 
-                annot = True,            # 숫자(상관계수) 표기 여부
-                fmt = '.3f',             # 숫자 포멧 : 소수점 3자리까지 표기
-                cmap = 'RdYlBu_r',       # 컬러맵
-                vmin = -1, vmax = 1)     # 값의 최소, 최대값
+    sns.jointplot(x='Temp', y='Ozone', data = air)
     plt.show()
     ```
     
-    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%209.png)
+    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%207.png)
     
-    > 칼라를 변경하려면 아래 링크로 가서 color map 을 확인하고 조정
-    > 
-    > 
-    > cmap(color map) : [https://matplotlib.org/stable/tutorials/colors/colormaps.html](https://matplotlib.org/stable/tutorials/colors/colormaps.html)
-    > 
-
-    **(4) 상관계수의 한계**
-
-    - 상관계수는 직선의 관계(선형관계)만 수치화 해준다
-        - 직선의 기울기, 비선형 관계 → 고려하지 않는다
-        - **직선의 기울기와 상관계수는 관련이 없다**
-            
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2010.png)
-            
-    - 산점도와 상관계수를 같이 파악해야 한다
-        - **Focus: 직선 (선형성, Linearity)**
-            - 얼마나 직선으로 잘 설명 가능한가?
-            - 얼마나 직선에 점들이 모여 있는가?
-        - 시각화와 수치화를 함께 수행하기
+- `regplot`
     
+    ```python
+    sns.regplot(x='Solar.R', y='Ozone', data = air)
+    plt.show()
+    ```
+    
+    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%208.png)
+    
+    - 장점: 직선을 그려줘서 관계를 잘 알 수 있음
+    - 단점: 무조건 직선을 그려서 관계가 없어도 있어 보이는 느낌이 든다
+            
+            
+### **2. 수치화 : 상관분석**
+    
+**(1) 상관계수, p-value**
+
+- 상관계수 $$r$$
+    - 공분산을 표준화 한 값
+    - -1 ~ 1 사이의 값
+    - -1, 1에 가까울 수록 강한 상관관계를 나타냄
+
+- 경험에 의한 대략의 기준(절대적인 기준이 절대 아님)
+    - 강한: $$0.5 <  \vert r \vert  \leq 1$$
+    - 중간 : $$0.2 < \vert r \vert \leq 0.5$$
+    - 약한 : $$0.1 < \vert r \vert \leq 0.2$$
+    - (거의)없음 : $$ \vert r \vert \leq 0.1$$
+    
+    ```python
+    import scipy.stats as spst
+    
+    # 상관계수와 p-value 
+    spst.pearsonr(air['Temp'], air['Ozone'])
+    ```
+    
+    - 결과: 튜플 (상관계수, p-value)
+        - 첫 번째 값 : 상관계수
+        - 두 번째 값 : p-value
+            - 귀무가설 : 상관 관계가 없다 (상관계수가 0이다)
+            - 대립가설 : 상관 관계가 있다 (상관계수가 0이 아니다)
+        
+        > 주의 사항 : 값에 NaN이 있으면 계산되지 않는다 → 반드시 `.notnull()`로 제외하고 수행해야 한다
+        > 
+
+**(2) 데이터프레임 한꺼번에 상관계수 구하기**
+
+- `air.corr()`
+    - 위 결과로 부터,
+        1. 같은 변수끼리 구한 값 1은 의미 없다 (**대각선은 의미 없음**) → 아래나 위쪽 데이터만 보기
+        2. 상관계수의 절대값이
+            - 1에 가까울 수록 강한 상관관계
+            - 0에 가까울 수록 약한 상관관계
+        3. +는 양의 상관관계, -는 음의 상관관계
+
+**(3) 상관계수를 heatmap으로 시각화**
+
+```python
+plt.figure(figsize = (8, 8))
+sns.heatmap(air.corr(), 
+            annot = True,            # 숫자(상관계수) 표기 여부
+            fmt = '.3f',             # 숫자 포멧 : 소수점 3자리까지 표기
+            cmap = 'RdYlBu_r',       # 컬러맵
+            vmin = -1, vmax = 1)     # 값의 최소, 최대값
+plt.show()
+```
+
+![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%209.png)
+
+> 칼라를 변경하려면 아래 링크로 가서 color map 을 확인하고 조정
+> 
+> 
+> cmap(color map) : [https://matplotlib.org/stable/tutorials/colors/colormaps.html](https://matplotlib.org/stable/tutorials/colors/colormaps.html)
+> 
+
+**(4) 상관계수의 한계**
+
+- 상관계수는 직선의 관계(선형관계)만 수치화 해준다
+    - 직선의 기울기, 비선형 관계 → 고려하지 않는다
+    - **직선의 기울기와 상관계수는 관련이 없다**
+        
+        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2010.png)
+        
+- 산점도와 상관계수를 같이 파악해야 한다
+    - **Focus: 직선 (선형성, Linearity)**
+        - 얼마나 직선으로 잘 설명 가능한가?
+        - 얼마나 직선에 점들이 모여 있는가?
+    - 시각화와 수치화를 함께 수행하기
+
+### **3. 이변량 분석 함수(숫자 -> 숫자)**
+
+```python
+def eda_2_nn(var, target, data):
+    result = spst.pearsonr(data[var], data[target])
+    print(f'상관계수 : {result[0]}, p-value : {result[1]}')
+    
+    sns.scatterplot(x=var, y = target, data = data)
+    plt.grid()
+    plt.show()
+```
+
+![alt text](/assets/img/blog/KT_AIVLE/week2/data_analysis/eda_2_nn.png)
 
 ## 평균 추정과 신뢰구간
 
@@ -276,7 +289,7 @@ sitemap: false
     ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2018.png)
     
 
-1. 수치화: t-test, anova(분산분석)
+2. 수치화: t-test, anova(분산분석)
     - 범주가 **두 개 일 때**와 **세 개 이상일 때** 평균을 비교하는 방법
     - t-test와 anova
         - 범주형 x와 숫자형 y의 관계를 검정하기 위한 도구
