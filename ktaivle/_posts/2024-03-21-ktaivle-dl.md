@@ -14,7 +14,11 @@ sitemap: false
 
 ## 머신러닝 알고리즘 정리
 
-
+|                 | 선형 회귀           | 로지스틱 회귀                                                | KNN                                                       | SVM                                                       | Decision Tree                                           | Random Forest                                           | Gradient Boost (GBM, XGB, LGBM)                                     |
+| ---             | ---                 | ---                                                         | ---                                                       | ---                                                       | ---                                                     | ---                                                     | ---                                                                 |
+| **개념**        | - 오차를 최소화하는 직선, 평면               | - 오차를 최소화하는 직선, 평면 <br> - 직선을 로지스틱 함수로 변환(0 ~ 1값)     | - 예측할 데이터와 train set과의 거리 계산<br>- 가까운 k개의 이웃 y의 평균으로 예측 | - 마진을 최대화하는 초평면 찾기<br>- 데이터 커널 변환                    | - 정보전달량 = 부모불순도 - 자식 불순도<br>- 정보 전달량이 가장 큰 변수를 기준으로 split | - 여러개의 트리<br>- 각각 예측 값의 평균<br>- 행과 열에 대한 랜덤 : 조금씩 다른 트리들 생성 | - 여러개의 트리를 더해서 하나의 모델로 생성<br>- 더해지는 트리는 오차를 줄이는 모델           |
+| **전제 조건**   | - NA 조치<br>- 가변수화<br>- x들 간 독립 | - NA 조치<br>- 가변수화<br>- x들 간 독립                                  | - NA 조치<br>- 가변수화<br>- 스케일링                           | - NA 조치<br>- 가변수화<br>- 스케일링                           | - NA 조치<br>- 가변수화                                   | - NA 조치<br>- 가변수화                                   | - NA 조치<br>- 가변수화                                           |
+| **성능**        | - 변수 선택 중요<br>- x가 많을수록 복잡     | - 변수 선택 중요<br>- x가 많을수록 복잡                                 | 주요 hp<br>- n_neighbors : k 작을수록 복잡<br>- metric : 거리 계산법        | 주요 hp<br>- C : 클수록 복잡<br>- gamma : 클수록 복잡            | 주요 hp<br>- max_depth : 클수록 복잡<br>- min_samples_leaf : 작을수록 복잡 | 주요 hp (기본값으로 충분)<br>- n_estimators<br>- max_features<br>- 기본 값으로 생성된 모델 → 과적합 회피 | 주요 hp<br>- n_estimators<br>- learning_rate<br>- XGB, LGBM → 과적합 회피를 위한 규제 |
 
 
 ## 딥러닝 개념 익히기
