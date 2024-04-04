@@ -214,8 +214,6 @@ def eda_2_nn(var, target, data):
     plt.show()
 ```
 
-![alt text](/assets/img/blog/KT_AIVLE/week2/data_analysis/eda_2_nn.png)
-
 ## 평균 추정과 신뢰구간
 
 1. 평균과 분산, 표준편차
@@ -366,73 +364,97 @@ def eda_2_cn_anova(df, var, target):
 
 ## 이변량 분석 (범주 → 범주)
 
-1. 교차표(crosstab)
-    - ML에서 사용됨
-    - `Pandas`의 교차표 함수: `crosstab`
-        - 두 범주형 변수에 사용 가능
-        - `pd.crosstab(titanic['Survived'], titanic['Sex'])`
-            - `normalize` 옵션: 비율로 변환
-                - `columns`: 열 기준 100%
-                - `index`: 행 기준 100%
-                - `all`: 전체 기준 100%
+### 교차표(crosstab)
+- ML에서 사용됨
+- `Pandas`의 교차표 함수: `crosstab`
+    - 두 범주형 변수에 사용 가능
+    - `pd.crosstab(titanic['Survived'], titanic['Sex'])`
+        - `normalize` 옵션: 비율로 변환
+            - `columns`: 열 기준 100%
+            - `index`: 행 기준 100%
+            - `all`: 전체 기준 100%
+                
+        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2022.png)
                     
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2022.png)
-                    
-2. 시각화 (`mosaic plot`)
-    - `mosaic plot`: 범주별 양과 비율을 나타냄
-        - `mosaic(dataframe, [ feature, target])`
+### 시각화 (`mosaic plot`)
+- `mosaic plot`: 범주별 양과 비율을 나타냄
+    - `mosaic(dataframe, [ feature, target])`
+        
+        ```python
+        # Pclass별 생존여부를 mosaic plot으로 그려 봅시다.
+        mosaic(titanic, [ 'Pclass','Survived'])
+        plt.axhline(1- titanic['Survived'].mean(), color = 'r')
+        plt.show()
+        ```
+        
+        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2023.png)
+        
+        - 빨간선은 전체 평균 (전체 사망률, 전체 생존율)
+        
+        ① X축 길이는 각 객실등급별 승객비율을 나타냅니다.
+        
+        ② 그 중 3등급 객실에 대해서 보면, y축의 길이는, 3등급 객실 승객 중에서 사망, 생존 비율을 의미합니다.
+        
+    - 두 범주형 변수가 아무런 상관이 없다면
+        - 범주 별 비율의 차이가 전혀 없음
+        - 조금이라도 관련이 있으면, 비율 혹은 bar의 크기에 조금이라도 차이가 남
+    
+### 수치화 (카이제곱검정)
+- 카이제곱검정 : 범주형 변수들 사이에 어떤 관계가 있는지, 수치화 하는 방법
+    - **기대빈도**: 아무런 관련이 없을 때 나올 수 있는 빈도수
+    - **실제 데이터**: 관측된 값들
+- 카이제곱 통계량: 기대빈도와 실제 데이터의 차이
+    
+    > $$x^2 = \frac{(관측빈도 - 기대빈도)^2}{기대빈도}$$
+    
+    - 카이 제곱 통계량은
+        - 클수록 기대빈도로부터 실제 값에 차이가 크다는 의미
+        - 계산식으로 볼 때, 범주의 수가 늘어날 수록 값은 커지게 되어 있음
+        - 보통, 자유도의 2~3배 보다 크면, 차이가 있다고 본다
+- 범주형 변수의 자유도 : **범주의 수 - 1**
+- 카이제곱검정에서는
+    - (x 변수의 자유도) × (y 변수의 자유도)
+    - ex : `Pclass` --> `Survived`
+        - `Pclass` : 범주가 3개, Survived : 2개
+        - (3-1) * (2-1) = 2
+        - 그러므로, 2의 2 ~ 3배인 4 ~ 6 보다 카이제곱 통계량이 크면, 차이가 있다고 볼 수 있음
             
             ```python
-            # Pclass별 생존여부를 mosaic plot으로 그려 봅시다.
-            mosaic(titanic, [ 'Pclass','Survived'])
-            plt.axhline(1- titanic['Survived'].mean(), color = 'r')
-            plt.show()
+            # 1) 먼저 교차표 집계 (normalized 옵션 사용하면 안됨)
+            table = pd.crosstab(titanic['Survived'], titanic['Pclass'])
+            print(table)
+            print('-' * 50)
+            
+            # 2) 카이제곱검정
+            spst.chi2_contingency(table)
             ```
             
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2023.png)
-            
-            - 빨간선은 전체 평균 (전체 사망률, 전체 생존율)
-            
-            ① X축 길이는 각 객실등급별 승객비율을 나타냅니다.
-            
-            ② 그 중 3등급 객실에 대해서 보면, y축의 길이는, 3등급 객실 승객 중에서 사망, 생존 비율을 의미합니다.
-            
-        - 두 범주형 변수가 아무런 상관이 없다면
-            - 범주 별 비율의 차이가 전혀 없음
-            - 조금이라도 관련이 있으면, 비율 혹은 bar의 크기에 조금이라도 차이가 남
+            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2024.png)
+                
+### 이변량 분석 함수(범주 -> 범주)
+
+```python
+def eda_cat_cat(feature, target, data):
+    # 먼저 집계
+    table = pd.crosstab(data[target], data[feature])
+    table_norm = pd.crosstab(data[target], data[feature], normalize = 'columns')
+    print('교차표\n', table)
+    print('-' * 100)
+    print('교차표 (norm = columns) \n', table_norm)
+    print('-' * 100)
     
-3. 수치화 (카이제곱검정)
-    - 카이제곱검정 : 범주형 변수들 사이에 어떤 관계가 있는지, 수치화 하는 방법
-        - **기대빈도**: 아무런 관련이 없을 때 나올 수 있는 빈도수
-        - **실제 데이터**: 관측된 값들
-    - 카이제곱 통계량: 기대빈도와 실제 데이터의 차이
-        
-        > $$x^2 = \frac{(관측빈도 - 기대빈도)^2}{기대빈도}$$
-        
-        - 카이 제곱 통계량은
-            - 클수록 기대빈도로부터 실제 값에 차이가 크다는 의미
-            - 계산식으로 볼 때, 범주의 수가 늘어날 수록 값은 커지게 되어 있음
-            - 보통, 자유도의 2~3배 보다 크면, 차이가 있다고 본다
-    - 범주형 변수의 자유도 : **범주의 수 - 1**
-    - 카이제곱검정에서는
-        - (x 변수의 자유도) × (y 변수의 자유도)
-        - ex : `Pclass` --> `Survived`
-            - `Pclass` : 범주가 3개, Survived : 2개
-            - (3-1) * (2-1) = 2
-            - 그러므로, 2의 2 ~ 3배인 4 ~ 6 보다 카이제곱 통계량이 크면, 차이가 있다고 볼 수 있음
-                
-                ```python
-                # 1) 먼저 교차표 집계 (normalized 옵션 사용하면 안됨)
-                table = pd.crosstab(titanic['Survived'], titanic['Pclass'])
-                print(table)
-                print('-' * 50)
-                
-                # 2) 카이제곱검정
-                spst.chi2_contingency(table)
-                ```
-                
-                ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2024.png)
-                
+    mosaic(data, [feature, target])
+    plt.axhline(1- data[target].mean(), color = 'r')
+    plt.show()
+    
+    # 카이제곱검정
+    result = spst.chi2_contingency(table)
+    print('-' * 100)
+    print('카이제곱통계량', result[0])
+    print('p-value', result[1])
+    print('자유도', result[2])
+    print('기대빈도\n',result[3])
+```
 
 ## 이변량 분석 (숫자 → 범주)
 
