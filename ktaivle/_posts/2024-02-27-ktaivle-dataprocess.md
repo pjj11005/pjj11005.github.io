@@ -404,87 +404,88 @@ plt.show()
 
 ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_process/008.png)
 
-1. 숫자형 변수 - 정리하는 두 가지 방법
-    1. 숫자로 요약하기: 정보의 대푯값 → 기초 통계량 (`mean, median, mode`)
-        - 평균은 정규분포와 같은 분포를 나타낼 때 좋다 → 극단적인 경우에 좋지 않을 수 있다
-        - 사분위수: 데이터를 오름차순으로 정렬 후, 사등분 → 대략적인 분포를 알 수 있게 해준다
-        - `df.describe()`: 기초 통계량 확인
-        - **Box plot**
-    2. 구간을 나누고 빈도수(`frequency`) 계산 → 도수분포표
-        - **histogram, Density plot(KDE)**
-2. 시각화
-    
-    **(1) 히스토그램**
-    
-    - 구간을 나누고 그 구간에 따른 빈도수를 나타낸 그래프
-        - 구간의 개수에 따라서 파악할 수 있는 내용이 달라짐 → **`bins`를 적절히 조절**
-        - 단순 해석을 넘어서 비즈니스적인 관점에서의 해석이 중요하다
-        - `Seaborn` 패키지가 조금 더 유용
-    - 그래프 읽기
-        - **희박하고 밀집된 정도에 따르는 비즈니스 의미 파악**
-    
-    **2) 밀도 함수 그래프(`kde plot`)**
-    
-    - 히스토그램의 단점
-        - 구간(bin)의 너비를 어떻게 잡는 지에 따라 전혀 다른 모양이 될 수 있음
-    - 밀도 함수 그래프
-        - 막대의 너비를 가정하지 않고 모든 점에서 데이터의 밀도를 추정하는 커널 밀도 추정(Kernel Density Estimation)방식을 사용하여 이러한 단점을 해결
-        - 밀도함수 그래프 아래 면적은 1
-        - 분포 확인 용으로 사용
-    - 히스토그램에서 KDE plot 함께 그리기
-    
-    **3) boxplot**
-    
-    - `plt.boxplot()`
-        - 값에 **NaN**이 있으면 그래프가 그려지지 않는다
-        - 방향은 `vert` 옵션 → `True`(종, 기본 값), `False` (횡)
-    - `sns.boxplot()`
-        - `seaborn` 패키지 함수들은 NaN을 알아서 빼줌
-        - 방향은 `x, y`로 바꿈
-    - 두 부분: 박스 & 수염
-        - 박스: 4분위수
-        - 수염
-            - IQR: 3사분위수 - 1사분위수
-                - Actual Whisker Length: 1.5 * IQR 범위 이내의 최소, 최대값으로 결정
-                - Potential Whisker Length: 1.5 * IQR 범위, 잠재적 수염의 길이 범위
-                - 값의 분포도 그려볼 수 있다
-                - 이상치 확인도 가능
-                    - 최근에는 이상치의 영향을 덜 받는 모델들이 많이 나옴(이상치 별로 신경 안씀)
-                    - 이상탐지 영역에서는 중요
-    - 히스토그램, KDE, Box plot을 한번에 시각화해서 분포확인 많이 한다
+### 숫자형 변수 정리하는 방법
+1. 숫자로 요약하기: 정보의 대푯값 → 기초 통계량 (`mean, median, mode`)
+    - 평균은 정규분포와 같은 분포를 나타낼 때 좋다 → 극단적인 경우에 좋지 않을 수 있다
+    - 사분위수: 데이터를 오름차순으로 정렬 후, 사등분 → 대략적인 분포를 알 수 있게 해준다
+    - `df.describe()`: 기초 통계량 확인
+    - **Box plot**
+2. 구간을 나누고 빈도수(`frequency`) 계산 → 도수분포표
+    - **histogram, Density plot(KDE)**
 
-    **4) 시계열 데이터 시각화**
+### 시각화
     
-    - 시계열 데이터는 보통 시간 축(x축)에 맞게 값들을 라인 차트로 표현
-    
-    **5) 수치형 단변량 분석 함수**
+**1) 히스토그램**
 
-    ```python
-        def eda_1_num(data, var, bins = 30):
+- 구간을 나누고 그 구간에 따른 빈도수를 나타낸 그래프
+    - 구간의 개수에 따라서 파악할 수 있는 내용이 달라짐 → **`bins`를 적절히 조절**
+    - 단순 해석을 넘어서 비즈니스적인 관점에서의 해석이 중요하다
+    - `Seaborn` 패키지가 조금 더 유용
+- 그래프 읽기
+    - **희박하고 밀집된 정도에 따르는 비즈니스 의미 파악**
 
-            # 기초통계량
-            print('<< 기초통계량 >>')
-            display(data[[var]].describe().T)
-            print('=' * 100)
+**2) 밀도 함수 그래프(`kde plot`)**
 
-            # 시각화
-            print('<< 그래프 >>')
-            plt.figure(figsize = (10,6))
+- 히스토그램의 단점
+    - 구간(bin)의 너비를 어떻게 잡는 지에 따라 전혀 다른 모양이 될 수 있음
+- 밀도 함수 그래프
+    - 막대의 너비를 가정하지 않고 모든 점에서 데이터의 밀도를 추정하는 커널 밀도 추정(Kernel Density Estimation)방식을 사용하여 이러한 단점을 해결
+    - 밀도함수 그래프 아래 면적은 1
+    - 분포 확인 용으로 사용
+- 히스토그램에서 KDE plot 함께 그리기
 
-            plt.subplot(2,1,1)
-            sns.histplot(data[var], bins = bins, kde = True)
-            plt.grid()
+**3) boxplot**
 
-            plt.subplot(2,1,2)
-            sns.boxplot(x = data[var])
-            plt.grid()
-            plt.show()
-    ```
-    ![alt text](/assets/img/blog/KT_AIVLE/week2/data_process/eda_1_num.png)
+- `plt.boxplot()`
+    - 값에 **NaN**이 있으면 그래프가 그려지지 않는다
+    - 방향은 `vert` 옵션 → `True`(종, 기본 값), `False` (횡)
+- `sns.boxplot()`
+    - `seaborn` 패키지 함수들은 NaN을 알아서 빼줌
+    - 방향은 `x, y`로 바꿈
+- 두 부분: 박스 & 수염
+    - 박스: 4분위수
+    - 수염
+        - IQR: 3사분위수 - 1사분위수
+            - Actual Whisker Length: 1.5 * IQR 범위 이내의 최소, 최대값으로 결정
+            - Potential Whisker Length: 1.5 * IQR 범위, 잠재적 수염의 길이 범위
+            - 값의 분포도 그려볼 수 있다
+            - 이상치 확인도 가능
+                - 최근에는 이상치의 영향을 덜 받는 모델들이 많이 나옴(이상치 별로 신경 안씀)
+                - 이상탐지 영역에서는 중요
+- 히스토그램, KDE, Box plot을 한번에 시각화해서 분포확인 많이 한다
+
+**4) 시계열 데이터 시각화**
+
+- 시계열 데이터는 보통 시간 축(x축)에 맞게 값들을 라인 차트로 표현
+
+### 수치형 단변량 분석 함수
+
+```python
+    def eda_1_num(data, var, bins = 30):
+
+        # 기초통계량
+        print('<< 기초통계량 >>')
+        display(data[[var]].describe().T)
+        print('=' * 100)
+
+        # 시각화
+        print('<< 그래프 >>')
+        plt.figure(figsize = (10,6))
+
+        plt.subplot(2,1,1)
+        sns.histplot(data[var], bins = bins, kde = True)
+        plt.grid()
+
+        plt.subplot(2,1,2)
+        sns.boxplot(x = data[var])
+        plt.grid()
+        plt.show()
+```
+![alt text](/assets/img/blog/KT_AIVLE/week2/data_process/eda_1_num.png)
         
 ## 단변량 분석 - 범주형
 
-**(1) 수치화 : 기초통계량**
+### 수치화 : 기초통계량
 
 - 범주형 변수는 범주별 **빈도수와 비율**을 확인
     
@@ -496,7 +497,7 @@ plt.show()
     
     - `.value_counts(normalize = True)`
 
-**(2) 시각화**
+### 시각화
 
 **1) bar chart**
 
@@ -504,7 +505,7 @@ plt.show()
     - `plt.bar()` 를 이용하려면 먼저 집계한 후 결과를 가지고 그래프를 그려야 한다
     - `countplot`은 집계 + `bar plot`을 한꺼번에 해결!
 
-**(3) 범주형 단변량 분석 함수**
+### 범주형 단변량 분석 함수
 
 ```python
 def eda_1_cat(data, var) :
