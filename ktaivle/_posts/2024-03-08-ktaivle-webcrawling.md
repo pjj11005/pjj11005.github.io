@@ -85,7 +85,7 @@ type(acc)
 - 데이터 타입(=클래스)
     - 데이터 타입(클래스)가 다르다는 의미 : 사용 가능한 변수(함수)가 다름
 
-## 1. Web
+## Web
 
 ### Server & Client Architecture
 
@@ -182,7 +182,7 @@ type(acc)
 - 해저 케이블을 사용하여 전세계 컴퓨터에 접속
 - 무선 인터넷은 매체(media)를 주파수 사용
 
-## 2. Web Crawling
+## Web Crawling
 
 - 웹 페이지에서 데이터를 수집하는 방법
 
@@ -207,7 +207,7 @@ type(acc)
 
 - requests json > requests html >> selenium (브라우저가 메모리 많이 잡아먹는다)
 
-## 3. 동적 페이지 크롤링
+## 동적 페이지 크롤링
 
 ### Crawling Naver Stock Data
 
