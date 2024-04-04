@@ -434,7 +434,7 @@ def eda_2_cn_anova(df, var, target):
 ### 이변량 분석 함수(범주 -> 범주)
 
 ```python
-def eda_cat_cat(feature, target, data):
+def eda_2_cc(feature, target, data):
     # 먼저 집계
     table = pd.crosstab(data[target], data[feature])
     table_norm = pd.crosstab(data[target], data[feature], normalize = 'columns')
@@ -458,64 +458,66 @@ def eda_cat_cat(feature, target, data):
 
 ## 이변량 분석 (숫자 → 범주)
 
-1. 시각화
-    - 히스토그램을 Survived로 나눠서 그리기
-        
-        ```python
-        sns.histplot(x='Age', data = titanic, hue = 'Survived')
-        plt.show()
-        ```
-        
-        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2025.png)
-        
-    - `sns.kdeplot()`
-        1. `kdeplot( , hue = 'Survived')`
-            - 생존여부의 비율이 유지된 채로 그려짐
-            - 두 그래프의 아래 면적의 합이 1
-                
-                ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2026.png)
-                
-        2. `kdeplot( , hue = 'Survived', common_norm = False)`
-            - `common_norm = False`: 생존자, 사망자 각각 `kde plot` 그리기
-            - 생존여부 각각 아래 면적의 합이 1인 그래프
-            - 생존자와 사망자 그래프가 만나는 부분 → 5곳 (**전체 평균과 같은 지점**)
-                
-                ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2027.png)
-                
-        3. `kdeplot( , hue = 'Survived', multiple = 'fill')`
-            - `multiple = ‘fill’`: 모든 구간에 대한 100% 비율로 `kde plot` 그리기
-            - 나이에 따라 생존여부 **비율**을 비교해볼 수 있음. (양의 비교가 아닌 비율!)
-            - 빨간선: **전체 평균 생존율**
-                
-                ```python
-                sns.kdeplot(x='Age', data = titanic, hue ='Survived'
-                            , multiple = 'fill')
-                plt.axhline(titanic['Survived'].mean(), color = 'r')
-                plt.show()
-                ```
-                
-                ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2028.png)
-                
-                ```python
-                sns.histplot(x='Age', data = titanic, bins = 16
-                             , hue ='Survived', multiple = 'fill')
-                plt.axhline(titanic['Survived'].mean(), color = 'r')
-                plt.show()
-                ```
-                
-                ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2029.png)
-                
-                > `mosaic plot`과 비슷한 방식으로 분석
-                > 
-                
-        4. 수치형 변수에 따른 범주형 변수의 차이(관련성) 확인
-            
-            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2030.png)
-            
-2. 수치화 (미봉책)
-    1. 수치형 X → 범주형 X
-    2. 로지스틱 회귀 (파라미터 p-value 검정)
-    3. 수치형 → 범주형, 범주형 → 수치형
+### 시각화
+- 히스토그램을 Survived로 나눠서 그리기
     
-    > 그래프로 판단하는게 더 좋음
-    >
+    ```python
+    sns.histplot(x='Age', data = titanic, hue = 'Survived')
+    plt.show()
+    ```
+    
+    ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2025.png)
+    
+- `sns.kdeplot()`
+    1. `kdeplot( , hue = 'Survived')`
+        - 생존여부의 비율이 유지된 채로 그려짐
+        - 두 그래프의 아래 면적의 합이 1
+            
+            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2026.png)
+            
+    2. `kdeplot( , hue = 'Survived', common_norm = False)`
+        - `common_norm = False`: 생존자, 사망자 각각 `kde plot` 그리기
+        - 생존여부 각각 아래 면적의 합이 1인 그래프
+        - 생존자와 사망자 그래프가 만나는 부분 → 5곳 (**전체 평균과 같은 지점**)
+            
+            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2027.png)
+            
+    3. `kdeplot( , hue = 'Survived', multiple = 'fill')`
+        - `multiple = ‘fill’`: 모든 구간에 대한 100% 비율로 `kde plot` 그리기
+        - 나이에 따라 생존여부 **비율**을 비교해볼 수 있음. (양의 비교가 아닌 비율!)
+        - 빨간선: **전체 평균 생존율**
+            
+            ```python
+            sns.kdeplot(x='Age', data = titanic, hue ='Survived'
+                        , multiple = 'fill')
+            plt.axhline(titanic['Survived'].mean(), color = 'r')
+            plt.show()
+            ```
+            
+            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2028.png)
+            
+            ```python
+            sns.histplot(x='Age', data = titanic, bins = 16
+                            , hue ='Survived', multiple = 'fill')
+            plt.axhline(titanic['Survived'].mean(), color = 'r')
+            plt.show()
+            ```
+            
+            ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2029.png)
+            
+            > `mosaic plot`과 비슷한 방식으로 분석
+            > 
+            
+    4. 수치형 변수에 따른 범주형 변수의 차이(관련성) 확인
+        
+        ![Untitled](/assets/img/blog/KT_AIVLE/week2/data_analysis/Untitled%2030.png)
+            
+### 수치화 (미봉책)
+1. 수치형 X → 범주형 X
+2. 로지스틱 회귀 (파라미터 p-value 검정)
+3. 수치형 → 범주형, 범주형 → 수치형
+
+> 그래프로 판단하는게 더 좋음
+>
+
+
