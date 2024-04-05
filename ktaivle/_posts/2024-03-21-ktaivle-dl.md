@@ -68,7 +68,7 @@ sitemap: false
             - 없으면 히든 레이어를 아무리 추가해도 그냥 선형회귀
             - Hidden Layer: 선형함수 → 비선형 (ReLU), Output Layer: 결과값 다른 값으로 변환 (주로 분류 모델에서 필요)
                 - Sigmoid, tanh, **ReLU(Hidden Layer 국룰)**
-        - 보통 점차 줄여간다
+        - 보통 노드의 수를 점차 줄여간다
     - Output Layer
     - Output
 
@@ -363,3 +363,91 @@ y_val_1 = y_val.argmax(axis=1)
 print(confusion_matrix(y_val_1, pred_1))
 print(classification_report(y_val_1, pred_1))
 ```
+
+## 요약
+
+![Untitled](/assets/img/blog/KT_AIVLE/week5/total.png)
+
+## 참조
+
+### 가중치 업데이트
+
+- Gradient : 기울기(벡터)
+- Gradient Descent(경사 하강법, optimizer의 기본)
+    - $w$의 초기값 지정 : $w_0$
+    - 기울기 -이면 오른쪽, +이면 왼쪽 방향
+    - eta, learning rate로 조정하는 비율 설정
+
+### Vanishing Gradient(기울기 소실)
+
+- 기울기 소실
+    - 네트워크의 깊은 부분으로 갈수록 기울기가 점점 작아져서, 가중치가 거의 또는 전혀 업데이트되지 않게 되는 현상
+- 문제 최소화 노력
+    - 초기 sigmoid에서 심각 → ReLU로 기울기 소실 문제 완화
+    - ReLU의 변형된 활성화 함수
+        - Leaky ReLU, PReLU, ELU : 음수 입력에 대해서도 매우 작은 기울기를 허용
+    - 그외 방법들
+        - 가중치 초기화, 배치 정규화, Residual Connections, Gradient Clipping
+
+### 클래스 불균형 문제
+
+- Class Imbalances
+    - 일반적인 알고리즘들
+        - 데이터가 클래스 내에서 **고르게 분포**되어 있다고 가정
+        - **다수 클래스를 더 많이 예측하는 쪽으로 모델이 편향**되는 경향이 있음
+            - 소수의 클래스에서 오분류 비율이 높아짐
+    - 문제점
+        - Accuracy는 높지만 적은 클래스 쪽 Recall은 형편없이 낮게 나옴
+- 해결 방법
+    
+    
+    > 전반적인 성능을 높이기 위한 작업이 아니라 **소수 class의 성능을 높이기 위한 작업(다수 class의 성능 떨어짐)**
+    > 
+    
+    1. Resampling
+        - Down Sampling(비복원 추출)
+            - 다수 class의 데이터를 소수 class 수만큼 random sampling
+        - Up Sampling(복원 추출)
+            - 소수 class의 데이터를 다수 class 수 만큼 random sampling
+        - SMOTE
+            - 소수 class의 데이터를 보간법(Interpolation)으로 새로운 데이터를 만들어냄
+    2. Class Weight 조정
+        - 모델링 절차
+            1. 모델의 구조 잡기
+            2. 초기값(parameter) 할당
+            3. 예측
+            4. 오차 계산
+            5. 오차를 줄이는 방향으로 parameter 조정
+            6. 다시 3단계에서 반복
+        - Resampling 없이 클래스에 가중치를 부여하여 해결
+            - 학습 동안 알고리즘의 **비용 함수에서 소수 클래스에 더 많은 가중치 부여**
+        - sklearn의 알고리즘 대부분 **class_weight** 옵션 제공
+- 코드
+    
+    ```python
+    from imblearn.under_sampling import RandomUnderSampler # down
+    from imblearn.over_sampling import RandomOverSampler, SMOTE  # up, smote
+    
+    ## Resampling
+    # Down sampling : 적은 쪽 클래스는 그대로, 많은 쪽 클래스는 랜덤 샘플링(적은쪽 클래수 수 만큼)
+    rus = RandomUnderSampler(random_state = 4)
+    x_d, y_d = rus.fit_resample(x, y)
+    
+    # Up sampling : 많은 클래스는 그대로, 적은 클래스는 랜덤 복원추출(많은 클래스 만큼)
+    ros = RandomOverSampler(random_state = 4)
+    x_u, y_u = ros.fit_resample(x, y)
+    
+    # SMOTE : 많은쪽은 그대로(혹은 약간 down sampling), 적은쪽은 보간법!
+    smote = SMOTE(random_state = 4)
+    x_sm, y_sm = smote.fit_resample(x, y)
+    
+    ## Class Weight
+    # class_weight 조정1
+    model1 = SVC(kernel='linear', class_weight='balanced')
+    model1.fit(x, y)
+    
+    # class_weight 조정2
+    weight_1 = 0.99
+    model1 = SVC(kernel='linear', class_weight= { 0:(1-weight_1)  , 1:weight_1} )
+    model1.fit(x, y)
+    ```
