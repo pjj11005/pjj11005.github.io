@@ -374,7 +374,7 @@ print(classification_report(y_val_1, pred_1))
 
 - Gradient : 기울기(벡터)
 - Gradient Descent(경사 하강법, optimizer의 기본)
-    - $w$의 초기값 지정 : $w_0$
+    - $$w$$의 초기값 지정 : $$w_0$$
     - 기울기 -이면 오른쪽, +이면 왼쪽 방향
     - eta, learning rate로 조정하는 비율 설정
 
