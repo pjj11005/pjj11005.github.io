@@ -80,7 +80,8 @@ sitemap: false
 - 우리 문제 해결을 위해 사전 학습 모델을 변형 시켜 사용
     1. Pretrained CNN
     2. Fine Tuning
-    
+        - Frozen : 가중치 update X
+        
     ![Untitled](/assets/img/blog/KT_AIVLE/week7/002.png)
     
 
