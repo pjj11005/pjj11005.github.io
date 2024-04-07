@@ -75,7 +75,7 @@ sitemap: false
         - 이미지 내 Detection 정보를 별도의 설명 파일로 제공되는 것
         - Annotation은 Object의 Bounding Box 위치나 Object 이름 등을 특정 포맷으로 제공
         - YOLO: txt 형식으로 Annotation 파일 존재
-- Neral Net 관점에서 지도 학습 : Error를 줄여나가는 방향으로 가중치 update
+- Neural Net 관점에서 지도 학습 : Error를 줄여나가는 방향으로 가중치 update
 - CNN 은 Object Detection에서 **위치 정보를 보존하여 feature represent하는 역할을 함**
 - Object Detection 모델의 구성
     - Backbone(CNN 모델, 과거 Resnet 많이 사용)
