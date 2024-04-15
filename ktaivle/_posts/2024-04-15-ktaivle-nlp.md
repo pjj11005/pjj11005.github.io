@@ -19,7 +19,7 @@ sitemap: false
 > 주어진 문서를 요약할 때 어떠한 부분을 가지고 요약을 하는 지에 대한 논의
 > 
 > 
-> $TF(t, d) * IDF(t, D)$
+> $$TF(t, d) * IDF(t, D)$$
 > 
 
 - 단어 표현 (Word Representation, Word Embedding, Word Vector)
