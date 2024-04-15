@@ -17,7 +17,7 @@ sitemap: false
 
 ### 데이터 소개
 
-- 데이터 출처: https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones
+- 데이터 출처: [https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones](https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones)
 - 수집 방식
     - 가속도 센서 : x, y, z축 **선형가속도** 측정, 자이로스코프 센서: 회전하는 물체의 **각속도** 측정
     - 하나의 센서에서 수집된 신호를 가공방법을 달리하여 집계
@@ -95,4 +95,5 @@ sitemap: false
 
 ## 느낀점
 
-- 데이터 분석 및 머신러닝, 딥러닝 프로젝트 진행 시 필요한 점들을 또 한번 배울 수 있었다. 배운 부분을 정리하여 나의 능력으로 만들어야겠다
+- 데이터 분석 및 머신러닝, 딥러닝 프로젝트 진행 시 필요한 점들을 또 한번 배울 수 있었다
+- 배운 부분을 정리하여 나의 능력으로 만들어야겠다
