@@ -290,7 +290,7 @@ print(y_train_ros.value_counts())
     - y: Integer Encoding → class들을 0부터 시작하여 순차 증가하는 정수로 인코딩
     - `int_encoder.classes_` → 배열의 인덱스가 인코딩 된 범주
     - `loss='sparse_categorical_crossentropy’`
-        - y는 인덱스로 사용됨 : 해당 인덱스의 예측 확률로 계산($-log(y)$)
+        - y는 인덱스로 사용됨 : 해당 인덱스의 예측 확률로 계산($$-log(y)$$)
 - 방법 2: y값 one-hot encoding 하고, `loss = ‘categorical_crossentropy’`
     - y: One-Hot Encoding
     - `loss = ‘categorical_crossentropy’`
