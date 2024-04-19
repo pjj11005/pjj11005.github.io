@@ -142,3 +142,35 @@ sitemap: false
     - **Content-based Filtering(CBF)** : 내용 자체의 키워드가 중요함
         - TF-IDF 방식(원하는 키워드가 존재하는 지에 대한 카운팅이 필수)
     - 최근에는 두 가지 방식을 결합하여 사용
+
+## 언어지능 신경망
+
+### Introduction
+
+- 딥러닝 학습 및 추론 과정
+    1. Deep Learning Model setup
+    2. Training (with Large-scale Dataset)
+    3. Inference / Testing (Real-Word Execution)
+- Overfitting 방지 방법
+    - 더 많은 training data
+    - Autoencoding(or variational auto-encoder (VAE))
+    - Dropout
+    - Regularization
+- 딥러닝 모델의 종류
+    - CNN, RNN,…
+
+### Linear Functions
+
+1. Linear Regression
+    - training vs learning
+        - training: 데이터를 통해 최적의 파라미터를 찾는 과정
+        - learning: 새로운 데이터에 대해서 일반화를 잘하게 하는 과정
+2. Binary Classification
+3. Softmax Classification
+
+### Nonlinear Functions
+
+1. ANN
+    - 인공 신경망의 단점
+        1. 레이어를 많이 쌓지 못했다 → ReLU
+        2. 2차원 이상 처리 불가하다 → CNN
