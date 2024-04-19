@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 9주차 | 언어지능 딥러닝(1)
+title: 9주차 | 언어지능 딥러닝
 description: KT AIVLE SCHOOL 5기 9주차에 진행한 언어지능 딥러닝 강의 내용 정리 글입니다.
 sitemap: false
 ---
