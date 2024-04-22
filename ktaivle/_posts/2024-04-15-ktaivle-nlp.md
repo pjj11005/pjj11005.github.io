@@ -118,6 +118,7 @@ sitemap: false
 - Word2Vec
     - one hot encoding : text를 벡터로 변환
         - 유사도 판단이 불가능하다
+        - 고차원 저밀도라서 학습하기 힘들다
     - Embedding
         - **dense vector with similarity**
     - **Word2Vec**
@@ -174,3 +175,82 @@ sitemap: false
     - 인공 신경망의 단점
         1. 레이어를 많이 쌓지 못했다 → ReLU
         2. 2차원 이상 처리 불가하다 → CNN
+
+### Advanced Topics
+
+1. GAN(Generative Adversarial Network)
+    - generator, discriminator 두 가지 학습 → 두 가지를 경쟁하여 성능 향상
+    - Discriminator Model: 순수 이진 분류기(진위 판별) → 지도 학습
+    - Generator Model: train data의 분포를 학습 → 비지도 학습
+        - 학습 데이터의 분포를 따라가도록 학습 수행
+        - Noise → Generator Model → Image
+    - G의 목적 함수 → max G
+    - D의 목적 함수 → min G, max D
+
+1. PCA / LDA
+    - 차원 축소: 목적에 맞게 W값을 잘 조절하여 차원을 축소하자
+    - PCA: 최대한 원래의 분포를 유지하며 차원 축소
+    - LDA: 차원 축소 시켰을 때 분류가 잘되게 하는 방법
+
+1. Overfitting
+    - 방지 방법
+        1. 더 많은 데이터로 학습
+        2. Reduce the number of features → **Autoencoding**, Dropout, Regularization
+            - Autoencoding: 최대한 핵심 정보를 포함 시키도록 차원 축소하여 학습
+            - 일반적으로 Dropout 사용
+
+## RNN
+
+- Sequence Data
+    - 단어를 이전 단어 + 다음 단어(time series)에 기반하여 이해한다
+- 이전 값과 input을 이용하여 다음 값을 예측해 나간다
+- RNN applications
+    - Language Modeling, Speech Recognition, Machine Translation, Question Answering (QA) Systems, Conversation Modeling, Image/Video Captioning, Image/Music/Dance Generation
+    - one to many: Image Captioning
+    - many to one: Sentiment Classification
+    - many to many: Machine Translation, Video Classification on frame level
+
+## 강화 학습
+
+- RL: 학습 수행 반복과 보상을 통해 학습하는 과정
+- DRL: 신경망을 활용하여 가장 성능이 좋은 함수 선택
+
+![Untitled](/assets/img/blog/KT_AIVLE/week9/001.png)
+
+## LLM
+
+- GPT(Generative Pre-Trained)
+- 세대 별 발전
+    - 1세대 : 딥러닝 이전 기술/태스크에 딥러닝 적용
+        - 미리 정의한 label중 top-1출력 방식, 응용 태스크 마다 별도의 학습 데이터 구축
+    - 2세대: 대용량 데이터로부터 일반적 지식을 (사전)학습
+        1. 응용 태스크 마다 별도의 학습 데이터 필요
+        2. 사전 학습 모델의 품질이 응용 태스크의 성능 좌우
+    - 3세대: 초거대 AI 모델의 가능성 탐색
+        - 사전 학습 모델을 추가 학습 없이 그래로 활용(필요 시, 예제 제공)
+- 트랜스포머
+    - 인코더, 디코더로 이루어짐
+    - 학습을 위한 인코딩, 추론을 위한 디코딩
+- 강화 학습 기반 LLM
+    1. 신경망을 통한 학습 (Pre-trained)
+    2. 강화 학습을 통해 성능 개선 및 추론
+    - reward를 기반으로 학습하고 맞춰나가는 경향이 있음
+- GPT3
+    - (글쓰기 능력) 뉴스 기사 생성
+    - (산술 추론) Arithmetic
+    - (언어 추론) Learning and Using Novel Words
+- InstructGPT
+    - (1단계) Pre-trained Model → (2단계) Instruction-tuned Model
+    - 2단계 : 사용자 의도 일치(alignment) 학습
+        - rule-base 기반
+- 향후 연구 방향
+    - multi-agent, personalization, robot intelligence
+
+## 정리
+
+- TF를 보고 겹치는게 많으면 유사
+    - Contents-Based Filtering
+    - 자카드 유사도
+- 벡터로 만들어, 각도가 좁으면 유사(코사인 유사도)
+    - Collaborative Filtering
+    - 코사인 유사도
