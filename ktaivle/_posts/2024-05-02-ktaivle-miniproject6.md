@@ -1,0 +1,442 @@
+---
+layout: post
+title: 10 ~ 11주차 | 6차 미니프로젝트
+description: KT AIVLE SCHOOL 5기 10 ~ 11주차에 진행한 6차 미니프로젝트 내용 정리 글입니다.
+sitemap: false
+---
+
+* this unordered seed list will be replaced by the toc
+{:toc}
+
+## 1일차
+
+### 프로젝트 개요
+
+- 주제: 시계열 데이터 기반 **상품 판매량 예측**
+- 배경 소개 및 비즈니스 상황
+    - 미국 전역에 매장이 있는 유통 회사 K-Mart → **과재고와 재고 부족 문제** 존재
+        - 수요가 많거나 급증하는 상품 : 재고 부족
+        - 수요가 적거나 급감하는 상품 : 과재고
+        - 재고 = 자산, 재고가 많이 남으면 자산이 묶여있음 → 좋지 못한 상황
+    - 새로운 해결책: AI 기반 수요량 예측 시스템
+        - 가장 매출이 높은 **44번 매장**에 대해 파일럿 프로젝트 진행
+        - **핵심 상품 3개**를 선정하고, 이들에 대한 수요 예측을 기반 발주 시스템 가능성 검토
+    - 기본 비즈니스 절차
+        - **매일 저녁 9시에 매장 업무 마감**
+        - 발주 담당자: 당일 및 최근 판매량과 리드 타임(발주(상품 주문) 후 입고까지 기간)에 기초하여 발주(**매일 저녁 10시에 주문**)
+        - 발주 후 상품은 각각의 리드 타임에 맞게 입고
+- 문제 정의: 고객사의 주요 매장(ID - 44)의 핵심 상품에 대한 수요량을 예측하고 재고를 최적화
+- 평가 : **일 평균 재고액 = (일 기초재고 + 일 기말재고) / 2 * (판매가 50%)**
+
+### 데이터 셋 소개
+
+- sales(판매), products(상품), stores(매장), orders(고객 방문 수 = 구매 고객 수), oil_price(일별 유가)
+
+### 과제 요구 사항
+
+- Target 정의
+    - ex) 해당 날짜의 target은 **해당 제품의 리드 타임 일수 만큼 경과한 날의 판매량**
+- 데이터 탐색
+    - 시계열 패턴을 찾기
+        - 라인차트를 이용해서, 시간의 흐름에 따른 패턴을 찾기
+        - 찾은 패턴 → 데이터셋의 칼럼과 timestep 수 결정에 활용
+    - 다양한 기간으로 탐색
+        - 전체 기간 : 3년 동안의 긴 기간 흐름을 파악
+        - 일부 기간 : 좀 더 짧은 기간 흐름을 파악
+    - 여러 요인 비교하기
+        - 기간에 따라, 판매량과 다른 요인들과 비교하여 관련이 있는지 확인
+- [참조] 마트를 이용하는 고객 관점에서 생각해 보기
+    - 일별 휘발유 가격
+        - 휘발유 가격이 조금씩 오르거나 내릴 수록 마트 방문 횟수, 혹은 구매수량이 조금씩 달라질 것인가?
+        - 아니면, 최근 휘발유 가격이 높거나 아니면 낮은 정도(범주)에 따라 방문횟수 혹은 구매량에 영향을 줄 것인가?
+    - 같은 매장 지역 고객 방문객수
+        - 같은 지역 매장의 고객 방문객 수가 증가하면, 44번 매장도 증가할까?
+        - 아니면 내려가거나 상관이 없을까?
+
+### 추가 자료
+
+- 시계열 데이터 분해(Decomposition)
+    - Trend : 큰 흐름 패턴, 추세 → 이동 평균
+    - Seasonal : 기간에 따른 사이클(반복 패턴) → 패턴은 지정한 기간내의 패턴을 나타냄
+    - Residual : 시계열 모델의 잔차(화이트 노이즈) → 아무런 패턴 X
+    - Original = Trend + Seasonal + Residual
+
+### 정리
+
+- `sns.lineplot` 으로 시계열 데이터의 추이를 보도록 하자
+- 각각 함수를 구현하여 보기
+- 전 단계와의 차이 변수는 유용한 정보를 가지고 있을 수 있음
+
+## 2일차
+
+### 추가 정보
+
+- 분석 단위: (하루, 일별 판매 품목)
+- 3, 12, 42번 품목 → 리드 타임 2일
+    - y를 2일 후의 각 품목의 판매량으로 정하면 된다
+- 보고서 받는 대상: 고객사의 데이터 분석 팀장
+
+### 데이터 전처리
+
+- weekday, 요일별 평균 판매량, 고객 방문수, 판매량 7일 이동 평균 변수 추가
+- 3, 12, 42번 제품 별로 각각의 데이터셋 생성
+
+### 잔차 분석
+
+- 정의
+    - 시계열 모델을 적용한 후에 모델이 데이터에 얼마나 잘 맞는 지를 평가하는 과정
+    - 이 과정에서는 모델로부터 얻은 잔차(예측 값과 실제 값의 차이)에 대해 여러 가정을 검토하고, 이를 통해 모델의 적절성을 판단
+- 수행 단계
+    1. **정규성 검정**
+        - 잔차들이 정규 분포를 따르는지 확인
+        - Shapiro-Wilk 테스트와 같은 통계적 검정을 사용하여 정규성을 평가 (일반적으로 p-value가 0.05보다 크면 정규성 가정 만족)
+    2. **정상성 검정**
+        - 시계열 데이터의 정상성(stationarity): 시간에 따라 평균이 일정하고 분산이 시간에 따라 일정한지를 의미
+        - 잔차가 정상성을 만족하는지를 확인하기 위해 Augmented Dickey-Fuller 검정(ADF 검정)과 같은 통계적 검정을 사용 (일반적으로 p-value가 0.05보다 작으면 시계열 데이터가 정상성을 만족 X)
+    3. **자기상관성 확인**
+        - 잔차의 자기상관성(autocorrelation) 평가
+        - 시계열 데이터의 잔차가 자기상관성을 가지는 경우, 모델이 데이터의 일부 구조를 잡아내지 못했거나 모델이 완전하지 않다는 것을 의미
+        - 자기상관함수(ACF)와 부분자기상관함수(PACF)를 사용하여 잔차의 자기상관성을 시각적으로 확인 가능
+
+### 스케일링
+
+- X
+    - 거리 계산 알고리즘 : KNN, SVM, K-MEANS
+    - DL : 학습 속도(최적화) → 오차가 최저점으로 수렴하는 속도
+- y
+    - ML : X(sklearn, …)
+    - DL : y가 `수십` 이상의 수이면 보통 스케일링 → 학습 속도 때문
+
+### 시계열 데이터를 위한 Cross Validation
+
+- Forward Chaining
+
+## 3일차
+
+### 평가
+
+- 결과 보고서
+    - 보고서 길이 3 ~ 4장으로 제한
+    - DS 팀장님에게 보고
+
+- 데이터 파이프라인 구축
+    - 각각의 5개의 데이터셋이 들어오면 모델에서 사용 가능한 형태로 만드는 함수 생성
+
+- 학습 결과
+    - LSTM 모델이 CNN모델보다 성능이 좋음
+    - 3번 제품(LSTM )
+        - RMSE: 2790.83, MAE : 1919.23, MAPE: 9.053514349541678e+17, R2  : 0.51
+    - 12번 제품(LSTM)
+        - RMSE: 2768.24, MAE : 1754.43, MAPE: 1.1882827514662006e+18, R2  : 0.38
+    - 42번 제품(LSTM)
+        - RMSE: 11.57, MAE : 9.04, MAPE: 0.11, R2  : 0.42
+
+- 비즈니스 평가
+    - 재고 금액 평가
+        - 기회 손실 수량은 0이 되는 최소의 안전 재고 설정 → 이때의 일평균 재고 금액 확인
+        - 3번 제품
+            - 안전 재고 : 2216, 제품 가격: 8
+            - 일평균 재고량 : 10293.4, 일평균 재고 금액 : 82347.2, 일평균 재고 회전율 : 1.204, 기회 손실 수량 : 0.0
+        - 12번 제품
+            - 안전 재고 : 4110, 제품 가격: 6
+            - 일평균 재고량 : 10953.775, 일평균 재고 금액 : 65722.65, 일평균 재고회전율 : 1.084, 기회손실 수량     : 0.0
+        - 42번 제품
+            - 안전 재고 : 36, 제품 가격: 5
+            - 일평균 재고량 : 94.2, 일평균 재고 금액 : 471.0, 일평균 재고회전율 : 1.235, 기회손실 수량     : 0.0
+
+### 느낀점
+
+- 시계열 데이터 예측 모델링에서는 날짜의 요소가 중요했고, 추이를 확인해보는 것이 중요하다
+- 더 많은 데이터가 있었다면 좋은 성능의 모델을 만들 수 있었을 것 같다
+
+## 4일차
+
+### 프로젝트 개요
+
+- 주제: LLM을 활용한 간단한 QA챗봇 구현
+- 동작 방식
+    1. 질문하기
+    2. 질문에 해당하는 문서 검색(BM25 or Sentence BERT)
+    3. 질문과 검색된 문서를 기반으로 LLM에게 질문할 프롬프트 구성
+    4. 프롬프트를 이용하여 LLM에게 질문
+    5. LLM 답변 사용자에게 전달
+
+### LLM이란?
+
+- 언어의 특징 벡터
+    - 딥러닝에서 언어의 심볼을 인식할 수 있게 만든 특징 벡터
+    - 단어 임베딩: 단어를 대표하는 특징 벡터
+    - 문장 임베딩: 문장을 대표하는 특징 벡터
+    - 특징 벡터 공간에서 거리, 유사도 등으로 벡터간 정보 비교 가능
+
+- 자연어 처리의 역사
+    1. 자연어의 이해
+        - 단어의 `특징 벡터`, 문장 분류/ 토큰 분류
+        - `Word2Vec`
+        - 데이터에서 단어의 관계를 잘 표현하는 벡터를 학습(~ 10M 파라미터)
+    2. 기계번역
+        - Seq2Seq
+        - `Transformer`
+        - 조건부 **`문장 생성`**
+        - 원문을 벡터로 만들고 그 벡터를 이용하여 번역문을 생성(~ 100M 파라미터)
+    3. PLM
+        - `BERT`
+        - **`사전 학습`**/미세조정
+        - 문맥을 이해하는 **`특징 벡터`**
+        - 문장 분류 / 토큰 분류
+        - 많은 데이터를 이용해 사전 학습해서 인공지능이 문맥을 이해 하는 능력을 학습하고, 미세 조정에서 좋은 성능을 획득(~ 1B 파라미터)
+    4. LLM
+        - GPT-3
+        - 더 많은 파라미터
+        - 더 많은 데이터로 학습
+        - 인간 언어를 이해하고 답변 **`문장 생성`**
+        - 별도의 학습(미세 조정) 없이 사람의 명령을 이해하고, 명령을 수행할 수 있는 인공지능을 학습(~ 1T 파라미터)
+    
+- Neural Machine Translation
+    - Sequence to Sequence
+        - 2015년에 제안된 기계번역 모델(Encoder, Decoder(언어 모델))
+        - 딥러닝을 이용해서 언어를 생성할 수 있음을 보임
+        - 원문의 정보를 압축한 벡터를 조건으로 번역문 생성
+
+- Attention
+    - Sequence to Sequence + Attention
+        - Sequence to Sequence에 Attention을 적용해서 기계번역 성능을 크게 향상
+        - 원문의 정보를 압축한 벡터가 너무 작아 Decoder에 필요한 정보를 Encoder에서 직접 가져오자 → 필요한 유사도 가져옴(`**dot-product**`)
+
+- Transformer
+    - 2017년 구글 (Attention Is All You Need)
+    - Attention만으로 구성, 기계 번역의 성능을 한 단계 끌어올림
+    - 자연어처리, 비전, 음성 등 다양한 곳에 사용되는 **사실상 표준**
+    - Attention 성능이 좋으니 Attention 만으로 네트워크를 구성(RNN → Attention)
+
+- Transfer Learning
+    - Transfer Learning
+        - **구하기 쉬운 데이터를 많이 사용**하여 인공지능 모델을 **사전 학습**
+        - 사전 학습 과정에서 모델은 **데이터의 특성을 파악하고 이해하는 능력** 획득
+        - 라벨이 있는 데이터를 학습할 때, 사전 학습을 통해 획득한 능력을 활용하여 **미세조정**
+    - Self Supervised Learning
+        - 라벨이 없는 데이터는 인터넷을 통해서 구하기 쉬움
+        - 데이터의 일부에 **노이즈를 주입하고 원본을 복원하는 방식으로 학습**
+        - 이와 같은 방법으로 많은 데이터를 이용해서 사전학습
+
+- GPT-1
+    - Improving Language Understanding by Generative Pre-Training
+        - 2018년 OpenAI
+        - **이전 단어들을 보고 다음 단어를 예측**하는 방식으로 사전 학습
+        - 미세조정을 위해서 마지막 layer만 추가, 나머지는 모두 사전 학습 된 파라미터 사용
+        - Transformer가 성능이 좋으니 **Transformer Decoder를 사용해서 사전 학습 후 미세조정**
+
+- BERT
+    - Bidirectional Encoder Representations from Transformers
+        - 2018년 Google
+        - **주변 단어들을 보고 중심 단어를 예측**하는 방식으로 사전 학습
+        - **미세조정을 위해서 마지막 layer만 수정**, 나머지는 모두 사전 학습 된 파라미터 사용
+        - **Transformer Encoder를 사용**해서 주변 단어를 보고 중심 단어를 예측하는 방식의 사전학습 후 미세조정
+
+- GPT-3
+    - Language Models are Few-Shot Learners
+        - 2020년 OpenAI
+        - GPT-1, GPT-2, GPT-3 모두 **이전 단어들을 보고 다음 단어를 예측**하는 방식으로 사전학습
+        - GPT-3 정도의 파라미터와 데이터로 학습한 결과 **IN CONTEXT LEARNING** 능력 확보
+
+- In Context Learning (ICL)
+    - Zero-shot, One-shot: 샘플의 개수에 따라
+    - Few-shot: 모델이 커지면서 몇 개의 예제와 질문을 함께 입력하면, 인공지능 모델이 문맥을 이해하고, 정답을 예측하는 능력 향상
+
+- Instruct GPT
+    - RLHF: Reinforcement Learning with Human Feedback
+        1. Instruction 데이터셋을 수집하여 SFT(supervised fine-tuning) 수행
+        2. SFT model의 출력을 사람이 평가하여 reward model 학습
+        3. PPO 알고리즘을 사용하여 reward model을 기반으로 정책 최적화
+
+- Llama
+    - Llama: Large Language Model Meta AI
+        - 2022년 Meta. 학습 파라미터 유출 (7B, 13B, 33B, 65B)
+        - 이후 학계에서 Llama를 기반으로 많은 SFT 연구 수행
+        - 2023년 상용 서비스에 사용 가능한 Llama-2 공개
+        - 2024년 GPT-4와 비슷한 성능의 Llama-3 공개
+        - Alpaca, Vicuna → SFT 방식만 사용
+        
+>- **RLHF방식 사용이 SFT방식보다 비용 면에서 비싸지만 성능은 훨씬 좋음**
+>- [https://velog.io/@wkshin89/Paper-Review-Training-Compute-Optimal-Large-Language-Models-NeurIPS-2022](https://velog.io/@wkshin89/Paper-Review-Training-Compute-Optimal-Large-Language-Models-NeurIPS-2022)
+>    - 학습 토큰수/파라미터 수 = 20이면 성능이 좋다
+>- [https://heegyukim.medium.com/large-language-model의-scaling-law와-emergent-ability-6e9d90813a87](https://heegyukim.medium.com/large-language-model%EC%9D%98-scaling-law%EC%99%80-emergent-ability-6e9d90813a87)
+>    - 충분히 큰 모델, 데이터, 컴퓨팅 환경 등이 있어야 ICL 능력을 가질 수 있음
+
+- LLM 리더보드
+    - Open LLM Leaderboard
+        - 다양한 평가 데이터를 이용해서, LLM의 성능을 비교 평가
+        - Open LLM Leaderboard: 주로 LLM의 언어이해(NLU) 성능을 비교 평가
+            - [https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard)
+        
+        - Open Ko-LLM Leaderboard:Open LLM Leaderboard의 한국어 버전
+            - [https://huggingface.co/spaces/upstage/open-ko-llm-leaderboard](https://huggingface.co/spaces/upstage/open-ko-llm-leaderboard)
+        
+        - LMSYS Chatbot Arena Leaderboard : 주로 언어생성(NLG) 성능을 비교 평가
+            - [https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard](https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard)
+        
+    - 호랑이 리더보드 [http://horangi.ai/](http://horangi.ai/) → NLU, NLG 능력 평가
+
+### 데이터 소개
+
+- NSMC(네이버 영화 리뷰 감정 분류)
+
+### 수행 절차 및 조건
+
+- SLLM SFT(Small Large Language Model SFT)
+- Hugging Face
+    - Access Token: 일부 라이센스가 있는 모델을 사용하거나 API 레벨의 권한이 필요할 때 사용
+    - Transformers
+        - 공개된 유명 아키텍처 코드 지원 (예, Llama, Gemma)
+        - Tokenizer를 함께 제공, 학습/배포/추론 통합 가능
+        - Hugging Face의 모델을 이용하면 소스코드와 함께 학습된 모델 파라미터 다운로드 및 활용 가능
+        - 다양한 외부 유명 라이브러리와 쉽게 연동 가능(Wandb, Deepspeed, Bitsandbytes 등)
+        - 사실상의 표준 라이브러리
+    - Gradio
+        - Model을 웹으로 손쉽게 사용할 수 있게 해주는 라이브러리이자 플랫폼
+    - Datasets
+        - 데이터셋을 공개하고, 다운로드 할 수 있는 공간
+        - 라이센스 필수 확인 (상용화 가능 여부)
+    - Models
+        - 학습된 모델의 파라미터를 공개하고, 다운로드 할 수 있는 공간
+        - 라이센스 필수 확인 (상용화 가능 여부)
+    - google/gemma-1.1-2b-it
+        - 구글에서 공개한 SLLM (2b, 7b)
+        - Hugging Face 로그인 후 추가로 gemma 라이센스 동의 필요
+- LoRA
+    - Residual Connection
+        - hidden(ℎ0)과 hidden의 변화량(∆ℎ)의 합을 계산
+    - LLM Fine-tuning
+        - Pre-trained LLM의 파라미터 𝑊0가 있을 때
+        - Fine-tuning의 후 파라미터 W를 얻게 됨
+        - 결국 fine-tuning은 파라미터의 𝑊0 의 변화량 ∆𝑊를 학습한 것과 같음
+    - LoRA
+        - LLM을 fine-tuning할 때 기존 LLM 파라미터는 고정하고 최소한의 변경될 부분만을 별도로 학습
+        - Pre-train 파라미터 𝑊0는 학습되지 않도록 고정
+        - Fine-tuning을 위한 파라미터 ∆𝑊만 별도로 학습
+            - 파라미터 수를 줄이기 위해 ∆𝑊를 𝐴 ∈ ℝ𝑟×𝑑와 B ∈ ℝ𝑑×𝑟 분할하여 파라미터 수를 줄임
+        - 낮은 사양의 GPU에서도 fine-tuning 가능
+        - LoRA의 학습 방법이 full fine-tuning과 비슷하거나 성능이 좋음
+        - r의 크기를 줄이더라도 성능이 크게 감소하지 않음
+        - PEFT
+            - Hugging Face PEFT library를 사용해서 쉽게 적용 가능
+    - Bits and Bytes
+        - FP32 vs FP16 vs BF16
+            - FP16 또는 BF16을 사용하면 메모리 및 연산 양을 줄일 수 있음
+            - BF16의 성능이 더 좋음 → 3090 이상의 GPU에서만 지원
+            - T4 GPU를 사용하기 때문에 FP16 방식 사용
+        - INT8 vs INT4
+            - FP32를 INT8, INT4과 같은 매우 작은 범위로 양자화를 해도 비슷한 성능으로 적은 메모리에서 빠른 추론 가능
+        - QLoRA → 수행할 방식
+            - Pre-trained 파라미터는 **4-bit 양자화**로 로딩
+            - 학습할 부분만 LoRA 학습
+            
+
+### RAG(Retrieval-Augmented Generation)
+
+- 문제점
+    - Hallucination: LLM이 개체 간의 정보, 사건 등을 혼합하여 사실이 아닌 그럴듯한 문장을 완성
+    - 최신 정보 미 반영: 사전학습 과정에서 습득된 지식을 기반으로 응답하므로 최신 정보를 반영하기 어려움
+- RAG
+    - 질문 관련 검색된 문서의 내용을 참고해서 답변
+    - 샘플을 잘 설명할 수 있는 특징이 좋은 특징
+    - BM25
+        - TF-IDF의 스코어를 보완하기 위한 파라미터 추가
+- Sentence Transformer
+    - 동일한 BERT를 이용해서 두 문장 A, B의 특징 벡터 𝑢, 𝑣를 획득
+    - 두 벡터 𝑢, 𝑣의 유사도가 높아지도록 학습
+    - Negative Sample을 함께 넣어서 성능 향상 가능
+- DPR (Dense Passage Retrieval)
+    - BERTQ 를 이용해서 질문의 특징 벡터 ℎ𝑞 획득,
+    - BERTP 를 이용해서 문서의 특징 벡터 ℎ𝑝 획득,
+    - 두 벡터 ℎ𝑞, ℎ𝑝의 유사도가 높아지도록 학습
+    - Negative Sample을 함께 넣어서 성능 향상 가능
+
+### 진행 내용
+
+- hugging face 라이브러리를 통해 Gemma 2b 모델 사용
+    - 모델의 크기가 커서 4bit 양자화를 하여 불러옴
+- 학습 시 메모리 초과 방지를 위해 LoRA를 적용하여 학습
+    - max_steps:2000, logging_steps: 100으로 변경 후 학습
+    - 최종 train loss : 1.480900
+- NSMC 리뷰를 학습한 gemma 모델로 평가하여 리뷰의 긍정 유무를 출력하는 챗봇 생성
+
+## 5일차
+
+### 데이터 소개
+
+- 한국어 위키(위키 백과)
+    - 2024년 4월 19일 기준
+    - WikiExtractor를 통해서 생성된 파일 개수는 1,789개
+    - 위키 문서 개수는 1,448,350개
+- 수행 절차
+    - chunk_db.json 생성 → 형태소 단위로 분절
+    - BM25 문서 검색 → 글자 기반 검색
+    - Sentence Transformer 문서 검색
+        - 분절된 chunk들 chunk_embedding 벡터 계산
+        - 질문 query_embedding 벡터 계산
+        - 둘의 유사도 계산 후 가장 높은 유사도의 문장 10개 반환
+        - 검색 방법은 BM25, SentenceTransformer 중 선택
+    - RAG 성능 개선을 위한 조언
+        - 더 큰 파라미터를 가진 SLLM 사용 : [https://huggingface.co/google/gemma-1.1-7b-it](https://huggingface.co/google/gemma-1.1-7b-it)
+        - 띄어쓰기 단위가 아닌 의미 단위의 chunk 분할 (gpt-4 활용)
+        - 향상된 검색 기능 활용 (DPR 또는 **DPR+BM25**)
+        - 벡터DB 사용 (많은 문서 저장 가능)
+        - GPT-4를 이용해 질문에 대한 답변을 생성하고 이를 이용해 fine-tuning
+            - 최소 1,000개
+            - 데이터 품질에 따라서 성능 좌우
+            - 상용화의 경우는 라이센스 검토 필요
+
+### 진행 내용
+
+- 한국어 위키 문서 데이터 베이스 생성: chunk 단위로 분리하여 (128단어 = 1라인)으로 문서 저장
+    - 총 350 라인의 chunk_db.json 형태로 저장
+- BM25
+    - 저장해둔 chunk_db.json 파일의 chunk들만 추출
+    - chunk들을 tokenize한 후 BM25로 변형
+    - BM25 검색함수 생성
+        - 검색어와 유사도가 높은 상위 10개의 문서 보여줌
+- SentenceTransformers
+    - 검색을 위한 SentenceTransformer 모델 불러옴
+    - 저장해둔 chunk_db.json 파일의 chunk들만 추출 → 모델을 통해 chunk_embeddings 생성
+    - SentenceTransformers 검색 함수
+        - 검색어와 유사도가 높은 상위 10개의 문서 보여줌
+- RAG QA 챗봇 생성
+    - Gemma 2b 모델 사용
+        - 모델의 크기가 커서 4bit 양자화를 하여 불러옴
+    - 문서들을 참고하여 질문에 맞는 답변을 하는 챗봇 생성
+    - **SLLM RAG with BM25**
+        - RAG chatbot
+            - 질문과 유사도가 높은 상위 5개 이하의  문서들을 bm25를 이용해서 구함
+            - 질문과 함께 문서 5개를 SLLM에 입력(prompt 형태로)
+            - 응답 결과 확인
+    - **SLLM RAG with SentenceTransformers**
+        - RAG chatbot
+            - 질문과 유사도가 높은 상위 5개의  문서들을 SentenceTransformers를 이용해서 구함
+            - 질문과 함께 문서 5개를 SLLM에 입력(prompt 형태로)
+            - 응답 결과 확인
+            
+
+## 6일차
+
+### 진행 내용
+
+- RAG 성능 확장 실습 (재시작 필요)
+    - CHUNK_FN의 전체 문서 사용
+    - 'google/gemma-1.1-7b-it' 로 크기가 더 큰 LLM 적용
+    - BM25
+        - query와 유사도가 높은 상위 15개의 문서 사용
+        - SLLM 모델로 질문에 대한 답변 생성(위의 문서들을 참고하여)
+    - SentenceTransformers
+        - query와 유사도가 높은 상위 5개의 문서 사용 → 메모리 문제
+        - SLLM 모델로 질문에 대한 답변 생성(위의 문서들을 참고하여)
+    - 나무위키 데이터를 추가해여 더 많은 데이터 학습 시도 → 데이터의 양이 너무 많아 실패
+        - 벡터DB로의 변환이 필요했다
+    - BM25 + DPR기법을 사용하면 검색 성능 향상이 가능하다는 논문이 있음 -> 한국어를 지원하는 DPR 모델이 없어 실패
+        - 추후에 따로 한국어를 학습시켜서 시도해봐야함
+
+## 느낀점
+
+- LLM에 적용되는 기법들을 잘 확인할 수 있었다
+- RAG 기반 LLM을 통한 챗봇 생성 과정을 숙지하고 있어야겠다
+- 데이터 추가, DPR 기법을 사용해서 챗봇 성능 향상을 추후에 시도해봐야겠다
